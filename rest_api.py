@@ -12,8 +12,12 @@ Created on 27 sept. 2017
 '''
 
 #!/usr/bin/python3
+# rest_api.py
+
 import sys
-import um_profiling, um_sharing_model, um_assesment
+import src.um_profiling as um_profiling
+import src.um_sharing_model as um_sharing_model
+import src.um_assesment as um_assesment
 
 from flask import Flask, request, Response, json
 from flask_restful import Resource, Api
@@ -82,19 +86,6 @@ class SharingModel(Resource):
 
 api.add_resource(SharingModel, '/api/sharingmodel')
 
-
-# def main():
-#     try:
-#         total = len(sys.argv)
-#         cmdargs = str(sys.argv)
-#         print("> The total numbers of args passed to the script: %d " % total)
-#         print("> Args list: %s " % cmdargs)
-#         print("> Script name: %s" % str(sys.argv[0]))
-#         print("> Starting server in port " + sys.argv[1] + " ...")
-#         app.run(host='0.0.0.0', port=sys.argv[1])
-#     except:
-#         print("> Starting server in default port 5002 ...")
-#         app.run(host='0.0.0.0', port='5002')
 
 
 def main():
