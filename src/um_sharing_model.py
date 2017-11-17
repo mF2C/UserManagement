@@ -13,10 +13,11 @@ Created on 27 sept. 2017
 
 #!/usr/bin/python3
 
+
 #
-def getSharingModel():
+def getSharingModelValues(user_id):
     try:
-        print("> getSharingModel: " + user_id)
+        print("> getSharingModelValues: " + user_id)
         # TODO
     except:
         print('> Unknown error detected.')
@@ -24,9 +25,9 @@ def getSharingModel():
 
 
 #
-def initSharingModel(data):
+def initSharingModelValues(user_id, data):
     try:
-        print("> setSharingModel: " + user_id)
+        print("> initSharingModelValues: " + user_id)
         # TODO
     except:
         print('> Unknown error detected.')
@@ -34,10 +35,20 @@ def initSharingModel(data):
 
 
 #
-def updateSharingModel(data):
+def updateSharingModelValues(user_id, data):
     try:
-        print("> updateSharingModel: " + user_id)
+        print("> updateSharingModelValues: " + user_id)
         # TODO
     except:
         print('> Unknown error detected.')
     return {'SharingModel': 'put', 'data': data}
+
+
+#
+def deleteSharingModelValues(user_id):
+    try:
+        print("> deleteSharingModelValues: " + user_id)
+        # TODO
+    except:
+        print('> Unknown error detected.')
+    return {'SharingModel': 'delete'}

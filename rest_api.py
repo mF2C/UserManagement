@@ -12,9 +12,9 @@ Created on 27 sept. 2017
 '''
 
 #!/usr/bin/python3
+
 # rest_api.py
 
-import sys
 import src.um_profiling as um_profiling
 import src.um_sharing_model as um_sharing_model
 import src.um_assesment as um_assesment
@@ -27,7 +27,8 @@ app = Flask(__name__)
 api = Api(app)
 
 
-@app.route('/api/', methods=['GET'])
+# 'home' Route
+@app.route('/api/v1/', methods=['GET'])
 def default_route():
     data = {
         'app': 'User Management Module REST API',
@@ -37,18 +38,19 @@ def default_route():
     return resp
 
 
-# Assesment process
-@app.route('/api/assesment-process', methods=['GET', 'POST', 'DELETE'])
-def assesment_process():
-    data = {}
-    if request.method == 'GET':
-        data = um_assesment.status()
-    elif request.method == 'POST':
-        data = um_assesment.start()
-    elif request.method == 'DELETE':
-        data = um_assesment.stop()
-    resp = Response(json.dumps(data), status=200, mimetype='application/json')
-    return resp
+# Assessment Route
+class Assessment(Resource):
+    def get(self):
+        return um_assesment.status()
+
+    def post(self):
+        return um_assesment.start()
+
+    def put(self):
+        data = request.get_json() # stop / restart
+        return um_assesment.stop()
+
+api.add_resource(Assessment, '/api/v1/assesment-process')
 
 
 # Profiling Route
@@ -68,23 +70,26 @@ class Profiling(Resource):
         data = request.get_json()
         return um_profiling.deleteProfile(user_id, data)
 
-api.add_resource(Profiling, '/api/profiling/<string:user_id>')
+api.add_resource(Profiling, '/api/v1/profiling/<string:user_id>')
 
 
 # SharingModel Route
 class SharingModel(Resource):
-    def get(self):
-        return um_sharing_model.getSharingModel()
+    def get(self, user_id):
+        return um_sharing_model.getSharingModelValues(user_id)
 
-    def post(self):
+    def post(self, user_id):
         data = request.get_json()
-        return um_sharing_model.initSharingModel(data)
+        return um_sharing_model.initSharingModelValues(user_id, data)
 
-    def put(self):
+    def put(self, user_id):
         data = request.get_json()
-        return um_sharing_model.updateSharingModel(data)
+        return um_sharing_model.updateSharingModelValues(user_id, data)
 
-api.add_resource(SharingModel, '/api/sharingmodel')
+    def delete(self, user_id):
+        return um_sharing_model.deleteSharingModelValues(user_id)
+
+api.add_resource(SharingModel, '/api/v1/sharingmodel/<string:user_id>')
 
 
 

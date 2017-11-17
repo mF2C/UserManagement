@@ -16,10 +16,11 @@ Created on 27 sept. 2017
 def start():
     return {'module': 'assesment-process', 'result': 'started'}
 
+def restart():
+    return {'module': 'assesment-process', 'result': 'restarted'}
 
 def stop():
     return {'module': 'assesment-process', 'result': 'stopped'}
-
 
 def status():
     return {'module': 'assesment-process', 'result': '???'}

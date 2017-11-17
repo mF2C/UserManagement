@@ -13,6 +13,9 @@ Created on 27 sept. 2017
 
 #!/usr/bin/python3
 
+import src.um_sharing_model as um_sharing_model
+
+
 # Get user profile
 def getProfiling(user_id):
     try:
@@ -44,10 +47,12 @@ def updateProfiling(user_id, data):
 
 
 # Deletes user
-def deleteProfile(user_id, data):
+def deleteProfile(user_id):
     try:
         print("> deleteProfile: " + user_id)
         # TODO
+
+        um_sharing_model.deleteSharingModelValues(user_id)
     except:
         print('> Unknown error detected.')
-    return {'Profiling': 'delete', 'user_id': user_id, 'data': data}
+    return {'Profiling': 'delete', 'user_id': user_id}
