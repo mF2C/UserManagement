@@ -11,16 +11,21 @@ Created on 27 sept. 2017
 @author: Roi Sucasas - ATOS
 '''
 
-#!/usr/bin/python3
+#!/usr/bin/python
 
+import src.prassessment as pa
+
+
+# start process
 def start():
-    return {'module': 'assesment-process', 'result': 'started'}
+    return {'module': 'assesment-process', 'operation': 'start', 'result': pa.start()}
 
-def restart():
-    return {'module': 'assesment-process', 'result': 'restarted'}
 
+# stop process
 def stop():
-    return {'module': 'assesment-process', 'result': 'stopped'}
+    return {'module': 'assesment-process', 'operation': 'stop', 'result': pa.stop()}
 
+
+# get process status
 def status():
-    return {'module': 'assesment-process', 'result': '???'}
+    return {'module': 'assesment-process', 'operation': 'get-status', 'result': pa.getStatus()}
