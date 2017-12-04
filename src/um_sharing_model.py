@@ -19,46 +19,46 @@ import logs
 # Get shared resources
 def getSharingModelValues(user_id):
     try:
-        logs.info("> getSharingModelValues: " + user_id)
+        logs.info("Sharing_model: getSharingModelValues: " + user_id)
         # TODO
 
         return {'module': 'sharing_model', 'result': ''}
     except:
-        logs.error('Error (0)')
+        logs.error('Error (0): Sharing_model: getSharingModelValues: Exception')
         return {'module': 'sharing_model', 'error': 'Exception', 'user_id': user_id}
 
 
 # Initializes shared resources values
 def initSharingModelValues(user_id, data):
     try:
-        logs.info("> initSharingModelValues: " + user_id)
+        logs.info("Sharing_model: initSharingModelValues: " + user_id)
         # TODO
 
         return {'module': 'sharing_model', 'result': ''}
     except:
-        logs.error('Error (0)')
+        logs.error('Error (0): Sharing_model: initSharingModelValues: Exception')
         return {'module': 'sharing_model', 'error': 'Exception', 'user_id': user_id}
 
 
 # Updates shared resources values
 def updateSharingModelValues(user_id, data):
     try:
-        logs.info("> updateSharingModelValues: " + user_id)
+        logs.info("Sharing_model: updateSharingModelValues: " + user_id)
         # TODO
 
         return {'module': 'sharing_model', 'result': ''}
     except:
-        logs.error('Error (0)')
+        logs.error('Error (0): Sharing_model: updateSharingModelValues: Exception')
         return {'module': 'sharing_model', 'error': 'Exception', 'user_id': user_id}
 
 
 # Deletes  shared resources values
 def deleteSharingModelValues(user_id):
     try:
-        logs.info("> deleteSharingModelValues: " + user_id)
+        logs.info("Sharing_model: deleteSharingModelValues: " + user_id)
         # TODO
 
         return {'module': 'sharing_model', 'result': ''}
     except:
-        logs.error('Error (0)')
+        logs.error('Error (0): Sharing_model: deleteSharingModelValues: Exception')
         return {'module': 'sharing_model', 'error': 'Exception', 'user_id': user_id}

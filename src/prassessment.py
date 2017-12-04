@@ -49,7 +49,7 @@ def daemon():
 
             time.sleep(10)
     except:
-        logs.error('Error (0)')
+        logs.error('>> Error (0): Assesment process: thread: Exception')
         return {'module': 'assesment-process', 'result': 'Exception', 'message': 'Error (0)'}
 
 
@@ -70,10 +70,10 @@ def start():
                 d.start()
                 return "started"
             else:
-                logs.warning('>> start() >> execute: ' + str(execute) + '; d.isAlive(): ' + str(d.isAlive()))
+                logs.warning('Assesment process: start() >> execute: ' + str(execute) + '; d.isAlive(): ' + str(d.isAlive()))
                 return "???"
     except:
-        logs.error('Error (0)')
+        logs.error('Error (0): Assesment process: start')
         return "Exception"
 
 
@@ -84,13 +84,13 @@ def stop():
     try:
         execute = False
         if d is None:
-            logs.warning('>> stop() >> execute: ' + str(execute) + '; d.isAlive(): None')
+            logs.warning('Assesment process: stop() >> execute: ' + str(execute) + '; d.isAlive(): None')
             return "Stopped"
         else:
             d.join()
             return "Stopped"
     except:
-        logs.error('Error (0)')
+        logs.error('Error (0): Assesment process: stop')
         return "Exception"
 
 

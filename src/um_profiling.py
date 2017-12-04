@@ -21,48 +21,48 @@ import logs
 # Get user profile
 def getProfiling(user_id):
     try:
-        logs.info("> getProfiling: " + user_id)
+        logs.info("Profiling: getProfiling: " + user_id)
         # TODO
 
         return {'module': 'profiling', 'result': {'email': '', 'service_consumer': '', 'resource_contributor': ''}}
     except:
-        logs.error('Error (0)')
+        logs.error('Error (0): Profiling: getProfiling: Exception')
         return {'module': 'profiling', 'error': 'Exception', 'user_id': user_id}
 
 
 # Initializes user's profile
 def userRegistration(user_id, data):
     try:
-        logs.info("> userRegistration: " + user_id)
+        logs.info("Profiling: userRegistration: " + user_id)
         # TODO
 
         return {'module': 'profiling', 'result': {'email': '', 'service_consumer': '', 'resource_contributor': ''}}
     except:
-        logs.error('Error (0)')
+        logs.error('Error (0): Profiling: userRegistration: Exception')
         return {'module': 'profiling', 'error': 'Exception', 'user_id': user_id}
 
 
 # Updates user's profile
 def updateProfiling(user_id, data):
     try:
-        logs.info("> updateProfiling: " + user_id)
+        logs.info("Profiling: updateProfiling: " + user_id)
         # TODO
 
         return {'module': 'profiling', 'result': {'email': '', 'service_consumer': '', 'resource_contributor': ''}}
     except:
-        logs.error('Error (0)')
+        logs.error('Error (0): Profiling: updateProfiling: Exception')
         return {'module': 'profiling', 'error': 'Exception', 'user_id': user_id}
 
 
 # Deletes user's profile
 def deleteProfile(user_id):
     try:
-        logs.info("> deleteProfile: " + user_id)
+        logs.info("Profiling: deleteProfile: " + user_id)
         # TODO
 
         um_sharing_model.deleteSharingModelValues(user_id)
 
         return {'module': 'profiling', 'result': 'deleted'}
     except:
-        logs.error('Error (0)')
+        logs.error('Error (0): Profiling: deleteProfile: Exception')
         return {'module': 'profiling', 'error': 'Exception', 'user_id': user_id}
