@@ -23,7 +23,8 @@ The User Management module is a component of the European Project mF2C.
 
 ### Description
 
-...
+The User Management is responsible for managing the user’s profile and the definition of the user’s device resources that will be shared in mF2C.
+It is also responsible for checking that the mF2C applications act according to these sharing model and profile properties.
 
 -----------------------
 
@@ -37,7 +38,25 @@ The User Management module is a component of the European Project mF2C.
 
 ##### 1. Requirements
 
-...
+1. Docker
+2. Docker-Compose
+3. Python 2.7.9 - 2.7.14
+
+#### Launch with Docker
+
+- Build application:
+
+```bash
+sudo docker build -t um-app .
+```
+
+- Run application:
+
+```bash
+sudo docker run -p 5001:5000 um-app
+```
+
+#### Launch with Docker-Compose
 
 ...
 
@@ -46,6 +65,8 @@ The User Management module is a component of the European Project mF2C.
 ### Usage Guide
 
 ...
+
+
 
 -----------------------
 

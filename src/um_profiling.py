@@ -11,48 +11,58 @@ Created on 27 sept. 2017
 @author: Roi Sucasas - ATOS
 '''
 
-#!/usr/bin/python3
+#!/usr/bin/python
 
 import src.um_sharing_model as um_sharing_model
+import logs
+
 
 
 # Get user profile
 def getProfiling(user_id):
     try:
-        print("> getProfiling: " + user_id)
+        logs.info("> getProfiling: " + user_id)
         # TODO
+
+        return {'module': 'profiling', 'result': {'email': '', 'service_consumer': '', 'resource_contributor': ''}}
     except:
-        print('> Unknown error detected.')
-    return {'Profiling': 'get', 'user_id': user_id}
+        logs.error('Error (0)')
+        return {'module': 'profiling', 'error': 'Exception', 'user_id': user_id}
 
 
-# Initializes user
+# Initializes user's profile
 def userRegistration(user_id, data):
     try:
-        print("> userRegistration: " + user_id)
+        logs.info("> userRegistration: " + user_id)
         # TODO
+
+        return {'module': 'profiling', 'result': {'email': '', 'service_consumer': '', 'resource_contributor': ''}}
     except:
-        print('> Unknown error detected.')
-    return {'Profiling': 'post', 'user_id': user_id, 'data': data}
+        logs.error('Error (0)')
+        return {'module': 'profiling', 'error': 'Exception', 'user_id': user_id}
 
 
-# Updates profile
+# Updates user's profile
 def updateProfiling(user_id, data):
     try:
-        print("> updateProfiling: " + user_id)
+        logs.info("> updateProfiling: " + user_id)
         # TODO
+
+        return {'module': 'profiling', 'result': {'email': '', 'service_consumer': '', 'resource_contributor': ''}}
     except:
-        print('> Unknown error detected.')
-    return {'Profiling': 'put', 'user_id': user_id, 'data': data}
+        logs.error('Error (0)')
+        return {'module': 'profiling', 'error': 'Exception', 'user_id': user_id}
 
 
-# Deletes user
+# Deletes user's profile
 def deleteProfile(user_id):
     try:
-        print("> deleteProfile: " + user_id)
+        logs.info("> deleteProfile: " + user_id)
         # TODO
 
         um_sharing_model.deleteSharingModelValues(user_id)
+
+        return {'module': 'profiling', 'result': 'deleted'}
     except:
-        print('> Unknown error detected.')
-    return {'Profiling': 'delete', 'user_id': user_id}
+        logs.error('Error (0)')
+        return {'module': 'profiling', 'error': 'Exception', 'user_id': user_id}

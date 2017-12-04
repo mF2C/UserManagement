@@ -11,44 +11,54 @@ Created on 27 sept. 2017
 @author: Roi Sucasas - ATOS
 '''
 
-#!/usr/bin/python3
+#!/usr/bin/python
+
+import logs
 
 
-#
+# Get shared resources
 def getSharingModelValues(user_id):
     try:
-        print("> getSharingModelValues: " + user_id)
+        logs.info("> getSharingModelValues: " + user_id)
         # TODO
+
+        return {'module': 'sharing_model', 'result': ''}
     except:
-        print('> Unknown error detected.')
-    return {'SharingModel': 'get'}
+        logs.error('Error (0)')
+        return {'module': 'sharing_model', 'error': 'Exception', 'user_id': user_id}
 
 
-#
+# Initializes shared resources values
 def initSharingModelValues(user_id, data):
     try:
-        print("> initSharingModelValues: " + user_id)
+        logs.info("> initSharingModelValues: " + user_id)
         # TODO
+
+        return {'module': 'sharing_model', 'result': ''}
     except:
-        print('> Unknown error detected.')
-    return {'SharingModel': 'post', 'data': data}
+        logs.error('Error (0)')
+        return {'module': 'sharing_model', 'error': 'Exception', 'user_id': user_id}
 
 
-#
+# Updates shared resources values
 def updateSharingModelValues(user_id, data):
     try:
-        print("> updateSharingModelValues: " + user_id)
+        logs.info("> updateSharingModelValues: " + user_id)
         # TODO
+
+        return {'module': 'sharing_model', 'result': ''}
     except:
-        print('> Unknown error detected.')
-    return {'SharingModel': 'put', 'data': data}
+        logs.error('Error (0)')
+        return {'module': 'sharing_model', 'error': 'Exception', 'user_id': user_id}
 
 
-#
+# Deletes  shared resources values
 def deleteSharingModelValues(user_id):
     try:
-        print("> deleteSharingModelValues: " + user_id)
+        logs.info("> deleteSharingModelValues: " + user_id)
         # TODO
+
+        return {'module': 'sharing_model', 'result': ''}
     except:
-        print('> Unknown error detected.')
-    return {'SharingModel': 'delete'}
+        logs.error('Error (0)')
+        return {'module': 'sharing_model', 'error': 'Exception', 'user_id': user_id}
