@@ -60,6 +60,57 @@ sudo docker run -p 5001:5000 um-app
 
 ...
 
+#### Launch application and dataClay
+
+
+
+###### 1. dataClay
+
+1.1. Download [dataClay](https://github.com/mF2C/dataClay)
+
+1.2. Initialize the dataClay services
+
+```bash
+cd orchestration
+docker-compose rm  # to clean the previous containers, if exist
+docker-compose up
+```
+
+###### 2. User Mgmt module
+
+2.1. register
+
+```bash
+sudo bash register.sh
+```
+
+2.2. launch python virtualenv
+
+```bash
+virtualenv env
+source env/bin/activate
+```
+
+```bash
+deactivate
+```
+
+2.3. client.properties
+
+```bash
+HOST=192.168.252.42
+TCPPORT=11034
+```
+
+2.4. launch application
+
+(/usr/bin/python2.7)
+
+```bash
+python rest_api.py
+```
+
+
 -----------------------
 
 ### Usage Guide

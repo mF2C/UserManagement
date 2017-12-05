@@ -15,7 +15,12 @@ Created on 27 sept. 2017
 
 import src.um_sharing_model as um_sharing_model
 import logs
+# dataClay
+from model_mf2c.classes import *
+from dataclay import api
 
+
+api.init()
 
 
 # Get user profile
@@ -35,6 +40,13 @@ def userRegistration(user_id, data):
     try:
         logs.info("Profiling: userRegistration: " + user_id)
         # TODO
+
+        logs.info('#######################')
+        # Create and store user. This would be done in the cloud, but I do it here for testing
+        user_key = "id-user"
+        my_user = User(user_id=user_key, email="email", name="name")
+        logs.info(my_user.getID())
+        logs.info('#######################')
 
         return {'module': 'profiling', 'result': {'email': '', 'service_consumer': '', 'resource_contributor': ''}}
     except:
