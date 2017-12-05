@@ -53,12 +53,12 @@ def updateSharingModelValues(user_id, data):
 
 
 # Deletes  shared resources values
-def deleteSharingModelValues(user_id):
+def deleteSharingModelValues(data):
     try:
-        logs.info("Sharing_model: deleteSharingModelValues: " + user_id)
+        logs.info("Sharing_model: deleteSharingModelValues: " + str(data))
         # TODO
 
         return {'module': 'sharing_model', 'result': ''}
     except:
         logs.error('Error (0): Sharing_model: deleteSharingModelValues: Exception')
-        return {'module': 'sharing_model', 'error': 'Exception', 'user_id': user_id}
+        return {'module': 'sharing_model', 'error': 'Exception', 'data': str(data)}

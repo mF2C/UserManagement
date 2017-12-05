@@ -70,22 +70,26 @@ api.add_resource(Assessment, '/api/v1/user-management/assesment')
 
 # Profiling Route
 class Profiling(Resource):
+    def post(self):
+        data = request.get_json()
+        return um_profiling.userRegistration(data)
+
+    def put(self):
+        data = request.get_json()
+        return um_profiling.updateProfiling(data)
+
+    def delete(self):
+        data = request.get_json()
+        return um_profiling.deleteProfile(data)
+
+api.add_resource(Profiling, '/api/v1/user-management/profiling/')
+
+# GetProfiling Route
+class GetProfiling(Resource):
     def get(self, user_id):
         return um_profiling.getProfiling(user_id)
 
-    def post(self, user_id):
-        data = request.get_json()
-        return um_profiling.userRegistration(user_id, data)
-
-    def put(self, user_id):
-        data = request.get_json()
-        return um_profiling.updateProfiling(user_id, data)
-
-    def delete(self, user_id):
-        data = request.get_json()
-        return um_profiling.deleteProfile(user_id, data)
-
-api.add_resource(Profiling, '/api/v1/user-management/profiling/<string:user_id>')
+api.add_resource(GetProfiling, '/api/v1/user-management/profiling/<string:user_id>')
 
 
 # SharingModel Route
