@@ -91,9 +91,7 @@ virtualenv env
 source env/bin/activate
 ```
 
-```bash
-deactivate
-```
+(deactivate)
 
 2.3. client.properties
 
