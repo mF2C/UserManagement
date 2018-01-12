@@ -32,6 +32,7 @@ try:
     logs.info('[API_DOC_URL=' + config.dic['API_DOC_URL'] + ']')
     logs.info('[CERT_CRT=' + config.dic['CERT_CRT'] + ']')
     logs.info('[CERT_KEY=' + config.dic['CERT_KEY'] + ']')
+    logs.info('[DEBUG=' + str(config.dic['DEBUG']) + ']')
 
     # CIMI URL
     CIMI_API_ENV_NAME = "CIMI_API"
@@ -336,7 +337,7 @@ def main():
     # logs.info('[CIMI_API_ENV_VALUE=' + CIMI_API_ENV_VALUE + ']')
     # START SERVER
     context = (config.dic['CERT_CRT'], config.dic['CERT_KEY'])
-    app.run(host='0.0.0.0', port=config.dic['SERVER_PORT'], ssl_context=context, threaded=True, debug=True)
+    app.run(host='0.0.0.0', port=config.dic['SERVER_PORT'], ssl_context=context, threaded=True, debug=config.dic['DEBUG'])
 
 
 if __name__ == "__main__":

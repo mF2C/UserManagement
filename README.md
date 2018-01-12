@@ -36,7 +36,7 @@ It is also responsible for checking that the mF2C applications act according to 
 
 ### Installation Guide
 
-##### 1. Requirements
+##### Requirements
 
 1. Docker
 2. Docker-Compose
@@ -53,7 +53,7 @@ sudo docker build -t um-app .
 - Run application:
 
 ```bash
-sudo docker run -p 5001:5000 um-app
+sudo docker run -p 5001:8083 um-app
 ```
 
 #### Launch with Docker-Compose
@@ -61,7 +61,6 @@ sudo docker run -p 5001:5000 um-app
 ...
 
 #### Launch application and dataClay
-
 
 
 ###### 1. dataClay

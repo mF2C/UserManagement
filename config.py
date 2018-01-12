@@ -16,4 +16,5 @@ Created on 27 sept. 2017
 dic = { "SERVER_PORT":  8083,
         "API_DOC_URL":  "/api/v1/spec",
         "CERT_CRT":     "cert/ia.crt",
-        "CERT_KEY":     "cert/ia.key"}
+        "CERT_KEY":     "cert/ia.key",
+        "DEBUG":        False}
