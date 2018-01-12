@@ -13,80 +13,56 @@ Created on 27 sept. 2017
 
 #!/usr/bin/python
 
-import src as um_profiling
-import src as um_sharing_model
-import src as um_assesment
-from src.utils import logs
+import src.modules.um_profiling as um_profiling
+import src.modules.um_sharing_model as um_sharing_model
+import src.modules.um_assesment as um_assesment
+import src.utils.logs as logs
+import src.utils.auth as auth
+import config
 
 from flask_cors import CORS
 from flask import Flask, request, Response, json
 from flask_restful import Resource, Api
 from flask_restful_swagger import swagger
-from functools import wraps
 
 
-# SERVER PORT
-SERVER_PORT = 8083
-# API SPEC URL
-API_DOC_URL = "/api/v1/spec"
-# CERTs
-CERT_CRT = "cert/ia.crt"
-CERT_KEY = "cert/ia.key"
-# CIMI URL
-CIMI_API_ENV_NAME = "CIMI_API"
-CIMI_API_ENV_VALUE = "http://...."
+try:
+    # CONFIGURATION values
+    logs.info('[SERVER_PORT=' + str(config.dic['SERVER_PORT']) + ']')
+    logs.info('[API_DOC_URL=' + config.dic['API_DOC_URL'] + ']')
+    logs.info('[CERT_CRT=' + config.dic['CERT_CRT'] + ']')
+    logs.info('[CERT_KEY=' + config.dic['CERT_KEY'] + ']')
 
-# APP
-app = Flask(__name__)
-CORS(app)
+    # CIMI URL
+    CIMI_API_ENV_NAME = "CIMI_API"
+    CIMI_API_ENV_VALUE = "http://...."
 
-# API DOC
-api = swagger.docs(Api(app),
-                   apiVersion='1.0',
-                   api_spec_url=API_DOC_URL,
-                   produces=["application/json", "text/html"],
-                   swaggerVersion="1.2",
-                   description='User Management component REST API - mF2C',
-                   basePath='http://localhost:' + str(SERVER_PORT),
-                   resourcePath='/')
+    # APP
+    app = Flask(__name__)
+    CORS(app)
 
-
-#
-def __check_auth(username, password):
-    """
-    This function is called to check if a username / password combination is valid.
-    """
-    return username == 'admin' and password == 'secret'
-
-
-#
-def __authenticate():
-    """
-    Sends a 401 response that enables basic auth
-    """
-    return Response("Could not verify your access level for that URL.\nYou have to login with proper credentials", 401,
-                    {'WWW-Authenticate': 'Basic realm="Login Required"'})
-
-
-def requires_auth(f):
-    @wraps(f)
-    def decorated(*args, **kwargs):
-        auth = request.authorization
-        if not auth or not __check_auth(auth.username, auth.password):
-            return __authenticate()
-        return f(*args, **kwargs)
-    return decorated
+    # API DOC
+    api = swagger.docs(Api(app),
+                       apiVersion='1.0',
+                       api_spec_url=config.dic['API_DOC_URL'],
+                       produces=["application/json", "text/html"],
+                       swaggerVersion="1.2",
+                       description='User Management component REST API - mF2C',
+                       basePath='http://localhost:' + str(config.dic['SERVER_PORT']),
+                       resourcePath='/')
+except ValueError:
+    logs.error('ERROR')
 
 
 # 'home' Route
 @app.route('/api/v1/', methods=['GET'])
-@requires_auth
+@auth.requires_auth # to test basic auth
 def default_route():
     data = {
         'app': 'User Management Module REST API',
         'status': 'Running',
-        'api_doc_json': 'https://localhost:' + str(SERVER_PORT) + API_DOC_URL,
-        'api_doc_html': 'https://localhost:' + str(SERVER_PORT) + API_DOC_URL + '.html#!/spec'
+        'api_doc_json': 'https://localhost:' + str(config.dic['SERVER_PORT']) + config.dic['API_DOC_URL'],
+        'api_doc_html': 'https://localhost:' + str(config.dic['SERVER_PORT']) + config.dic['API_DOC_URL'] + '.html#!/spec'
     }
     resp = Response(json.dumps(data), status=200, mimetype='application/json')
     return resp
@@ -359,8 +335,8 @@ def main():
     # CIMI_API_ENV_VALUE = os.environ.get(CIMI_API_ENV_NAME, '...')
     # logs.info('[CIMI_API_ENV_VALUE=' + CIMI_API_ENV_VALUE + ']')
     # START SERVER
-    context = (CERT_CRT, CERT_KEY)
-    app.run(host='0.0.0.0', port=SERVER_PORT, ssl_context=context, threaded=True, debug=True)
+    context = (config.dic['CERT_CRT'], config.dic['CERT_KEY'])
+    app.run(host='0.0.0.0', port=config.dic['SERVER_PORT'], ssl_context=context, threaded=True, debug=True)
 
 
 if __name__ == "__main__":

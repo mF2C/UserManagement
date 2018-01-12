@@ -1,4 +1,4 @@
-'''
+"""
 User Management Assesment module operations
 This is being developed for the MF2C Project: http://www.mf2c-project.eu/
 
@@ -9,23 +9,22 @@ This code is licensed under an Apache 2.0 license. Please, refer to the LICENSE.
 Created on 27 sept. 2017
 
 @author: Roi Sucasas - ATOS
-'''
+"""
 
-#!/usr/bin/python
 
-import src.prassessment as pa
+import src.modules.assessment_process as process
 
 
 # start process
 def start():
-    return {'module': 'assesment-process', 'operation': 'start', 'result': pa.start()}
+    return {'module': 'assesment-process', 'operation': 'start', 'result': process.start()}
 
 
 # stop process
 def stop():
-    return {'module': 'assesment-process', 'operation': 'stop', 'result': pa.stop()}
+    return {'module': 'assesment-process', 'operation': 'stop', 'result': process.stop()}
 
 
 # get process status
 def status():
-    return {'module': 'assesment-process', 'operation': 'get-status', 'result': pa.getStatus()}
+    return {'module': 'assesment-process', 'operation': 'get-status', 'result': process.getStatus()}

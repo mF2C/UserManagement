@@ -1,4 +1,4 @@
-'''
+"""
 User Management Assesment process / daemon
 This is being developed for the MF2C Project: http://www.mf2c-project.eu/
 
@@ -9,14 +9,12 @@ This code is licensed under an Apache 2.0 license. Please, refer to the LICENSE.
 Created on 27 sept. 2017
 
 @author: Roi Sucasas - ATOS
-'''
+"""
 
-#!/usr/bin/python
 
-import requests
 import time
 import threading
-import logs
+from src.utils import logs
 
 
 execute = True

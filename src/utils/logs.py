@@ -1,4 +1,4 @@
-'''
+"""
 logs wrapper
 This is being developed for the MF2C Project: http://www.mf2c-project.eu/
 
@@ -9,9 +9,7 @@ This code is licensed under an Apache 2.0 license. Please, refer to the LICENSE.
 Created on 27 sept. 2017
 
 @author: Roi Sucasas - ATOS
-'''
-
-#!/usr/bin/python
+"""
 
 import logging
 
@@ -21,23 +19,28 @@ logs.setLevel(logging.DEBUG)
 #fileHandler = logging.FileHandler("logs.log")
 #rootLogger.addHandler(fileHandler)
 consoleHandler = logging.StreamHandler()
+
 # create a logging format
 formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
 consoleHandler.setFormatter(formatter)
 logs.addHandler(consoleHandler)
 
-# wrapper
+
+# info wrapper
 def info(m):
     logs.info(m)
 
-# wrapper
+
+# error wrapper
 def error(m):
     logs.error(m)
 
-# wrapper
+
+# debug wrapper
 def debug(m):
     logs.debug(m)
 
-# wrapper
+
+# warning wrapper
 def warning(m):
     logs.warning(m)
