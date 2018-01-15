@@ -23,26 +23,37 @@ The User Management module is a component of the European Project mF2C.
 
 ### Description
 
-The User Management is responsible for managing the user’s profile and the definition of the user’s device resources that will be shared in mF2C.
+The User Management module is responsible for managing the user’s profile and the definition of the user’s device resources that will be shared in mF2C.
 It is also responsible for checking that the mF2C applications act according to these sharing model and profile properties.
 
 -----------------------
 
 ### Component architecture
 
-...
+This module is part of the Agent Controller component:
+
+![Agent Controller](resources/ac.png)
+
+This module is composed of three components that will be described in the next subsections:
+- Profiling
+- Sharing Model
+- User Management Assessment
 
 -----------------------
 
 ### Installation Guide
 
-##### Requirements
+#### 1. Requirements
 
 1. Docker
 2. Docker-Compose
-3. Python 2.7.9 - 2.7.14
+3. Python
+    - 2.7.9 - 2.7.14 (when working directly with Dataclay - Data Management module)
+    - 3.* (when using CIMI)
 
-#### Launch with Docker
+#### 2. Launch application
+
+###### 2.1. Launch with Docker
 
 - Build application:
 
@@ -56,18 +67,20 @@ sudo docker build -t um-app .
 sudo docker run -p 5001:8083 um-app
 ```
 
-#### Launch with Docker-Compose
+###### 2.2. Launch with Docker-Compose
 
-...
+_-not ready-_
 
-#### Launch application and dataClay
+###### 2.3. Launch application and dataClay
+
+_-not ready-_
 
 
-###### 1. dataClay
+#### 3. Working with Dataclay - Data Management module
 
-1.1. Download [dataClay](https://github.com/mF2C/dataClay)
+1. Download [Dataclay](https://github.com/mF2C/dataClay)
 
-1.2. Initialize the dataClay services
+2. Initialize the Dataclay services
 
 ```bash
 cd orchestration
@@ -75,31 +88,33 @@ docker-compose rm  # to clean the previous containers, if exist
 docker-compose up
 ```
 
-###### 2. User Mgmt module
+###### 3.1. User Mgmt module
 
-2.1. register
+1. register
 
 ```bash
 sudo bash register.sh
 ```
 
-2.2. launch python virtualenv
+2. launch python virtualenv
 
 ```bash
 virtualenv env
 source env/bin/activate
 ```
 
-(deactivate)
+```bash
+deactivate
+```
 
-2.3. client.properties
+3. Edit _client.properties_ file
 
 ```bash
 HOST=192.168.252.42
 TCPPORT=11034
 ```
 
-2.4. launch application
+4. launch application
 
 (/usr/bin/python2.7)
 
@@ -112,7 +127,8 @@ python rest_api.py
 
 ### Usage Guide
 
-...
+REST API can be accessed a in port 5001. For example:
+_https://localhost:5001/api/v1//api/v1/user-management_
 
 
 
@@ -120,4 +136,4 @@ python rest_api.py
 
 ### Relation to other mF2C components
 
-...
+_--_
