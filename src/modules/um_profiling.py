@@ -12,71 +12,107 @@ Created on 27 sept. 2017
 """
 
 
-import src as um_sharing_model
+import src.modules.um_sharing_model as um_sharing_model
 from src.utils import logs
 from flask import Response, json
 
-# dataClay
+
+# TODO Dataclay / CIMI initialization
 # from model_mf2c.classes import *
 # from dataclay import api
 #
 #
 # api.init()
+# ...
 
 
 # Get user profile
-def getProfiling(user_id):
+def get_profiling(user_id):
     try:
-        logs.info("Profiling: getProfiling: " + user_id)
-        # TODO
+        logs.info("User-Management: Profiling module: Get user profile: " + user_id)
 
-        return {'module': 'profiling', 'result': {'email': '', 'service_consumer': '', 'resource_contributor': ''}}
+        # TODO Dataclay or CIMI
+        # Get user profile:
+        #user_profile = User.get_by_alias(user_id)
+        #...
+
+        # TEST
+        return {'error': False, 'message': 'User found', 'user_id': user_id,
+                'profile': {'email': 'TEST@EMAIL.COM', 'service_consumer': True, 'resource_contributor': True}}
     except:
-        logs.error('Error (0): Profiling: getProfiling: Exception')
-        return {'module': 'profiling', 'error': 'Exception', 'user_id': user_id}
+        logs.error('Error (User-Management): Profiling module: get_profiling: Exception')
+        return Response(json.dumps({'error': True, 'message': 'Exception', 'user_id': '', 'profile': {}}),
+                        status=500, content_type='application/json')
 
 
-# Initializes user's profile
-def userRegistration(data):
+# Initializes users profile
+#   data: {'user_id':'', 'email':''}
+def register_user(data):
     try:
-        logs.info("Profiling: userRegistration: " + str(data))
-        # data: user_id=user_key, email="email", name="name"
-        if 'user_id' not in data or 'email' not in data or 'name' not in data:
-            logs.error('Profiling: userRegistration: user_id / email / name not found')
-            return Response(json.dumps({'module': 'profiling', 'error': 'user_id / email / name not found'}),
-                            status=406, content_type='application/json')
+        logs.info("User-Management: Profiling module: Register user: " + str(data))
+
+        if 'user_id' not in data or 'email' not in data:
+            logs.error('User-Management: Profiling module: Register user: parameter not found: user_id / email')
+            return Response(json.dumps({'error': True, 'message': 'parameter not found: user_id / email'}),
+                            status=405, content_type='application/json')
         else:
-            logs.info('Profiling: userRegistration: Registering user...')
-            # Create and store user
-            # my_user = User(user_id=data['user_key'], email=data['email'], name=data['name'])
-            # logs.info('Profiling: userRegistration:' my_user.getID())
-            return {'module': 'profiling', 'result': {'user_id': data['user_id'], 'email': data['email'], 'name': data['name']}}
+            # TODO Dataclay or CIMI
+            # Create and store user:
+            #my_user = User(user_id=data['user_key'], email=data['email'], name=data['name'])
+            #my_user.make_persistent(alias=data['user_key'])
+            #...
+
+            # TEST
+            return {'error': False, 'message': 'User saved', 'user_id': data['user_id'],
+                    'profile': {'email': data['email'], 'service_consumer': True, 'resource_contributor': True}}
     except:
-        logs.error('Error (0): Profiling: userRegistration: Exception')
-        return {'module': 'profiling', 'error': 'Exception', 'data': str(data)}
+        logs.error('Error (User-Management): Profiling module: register_user: Exception')
+        return Response(json.dumps({'error': True, 'message': 'Exception', 'profile': {}}),
+                        status=500, content_type='application/json')
 
 
-# Updates user's profile
-def updateProfiling(data):
+# Updates users profile
+#   data: {'user_id':'', 'email':'', 'service_consumer': '', 'resource_contributor': ''}
+def update_profile(data):
     try:
-        logs.info("Profiling: updateProfiling: " + str(data))
-        # TODO
+        logs.info("User-Management: Profiling module: Updates user's profile: " + str(data))
 
-        return {'module': 'profiling', 'result': {'email': '', 'service_consumer': '', 'resource_contributor': ''}}
+        if 'user_id' not in data:
+            logs.error('User-Management: Profiling module: Update profile: parameter not found: user_id')
+            return Response(json.dumps({'error': True, 'message': 'parameter not found: user_id'}),
+                            status=405, content_type='application/json')
+        else:
+            # TODO Dataclay or CIMI
+            #...
+
+            # TEST
+            return {'error': False, 'message': 'Profile updated', 'user_id': data['user_id'],
+                    'profile': {'email': 'TEST@EMAIL.COM', 'service_consumer': True, 'resource_contributor': True}}
     except:
-        logs.error('Error (0): Profiling: updateProfiling: Exception')
-        return {'module': 'profiling', 'error': 'Exception', 'data': str(data)}
+        logs.error('Error (User-Management): Profiling module: update_profile: Exception')
+        return Response(json.dumps({'error': True, 'message': 'Exception', 'profile': {}}),
+                        status=500, content_type='application/json')
 
 
-# Deletes user's profile
-def deleteProfile(data):
+# Deletes users profile
+#   data: {'user_id':''}
+def delete_profile(data):
     try:
-        logs.info("Profiling: deleteProfile: " + str(data))
-        # TODO
+        logs.info("User-Management: Profiling module: Deletes users profile: " + str(data))
 
-        um_sharing_model.deleteSharingModelValues(data)
+        if 'user_id' not in data:
+            logs.error('Error (User-Management): Assessment module: operation: Exception - parameter not found: user_id')
+            return Response(json.dumps({'error': True, 'message': 'parameter not found: user_id', 'profile': {}}),
+                            status=406, content_type='application/json')
 
-        return {'module': 'profiling', 'result': 'deleted'}
+        # TODO Dataclay or CIMI
+        #...
+
+        # TEST
+        um_sharing_model.delete_sharing_model_values(data)
+
+        return {'error': False, 'message': 'Profile deleted', 'user_id': data['user_id']}
     except:
-        logs.error('Error (0): Profiling: deleteProfile: Exception')
-        return {'module': 'profiling', 'error': 'Exception', 'data': str(data)}
+        logs.error('Error (User-Management): Profiling module: delete_profile: Exception')
+        return Response(json.dumps({'error': True, 'message': 'Exception', 'profile': {}}),
+                        status=500, content_type='application/json')

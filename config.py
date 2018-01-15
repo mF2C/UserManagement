@@ -11,10 +11,10 @@ Created on 27 sept. 2017
 @author: Roi Sucasas - ATOS
 """
 
-#!/usr/bin/env python
+#!/usr/bin/python
 
 dic = { "SERVER_PORT":  8083,
-        "API_DOC_URL":  "/api/v1/spec",
+        "API_DOC_URL":  "/api/v1/user-management",
         "CERT_CRT":     "cert/ia.crt",
         "CERT_KEY":     "cert/ia.key",
         "DEBUG":        False}

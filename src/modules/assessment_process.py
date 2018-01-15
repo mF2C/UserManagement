@@ -24,77 +24,67 @@ d = None
 # daemon process
 def daemon():
     global execute
-    try:
-        while execute:
-            # TODO
-            logs.info('>> assessment daemon >> executing ...')
 
-            # 1. get profile
+    while execute:
+        # TODO
+        logs.debug('>> assessment daemon >> executing ...')
 
-            # 2. get shared resources
+        # 1. get profile
 
-            # 3. get services running in device
+        # 2. get shared resources
 
-            # 4. get resources used by apps ==> landscaper.GetSubgraph(serviceID)
-            # http://docs.python-requests.org/en/master/
-            # r = requests.get('https://api.github.com/user', auth=('user', 'pass'))
-            # if r.status_code == 200:
-            #     logs.info('status_code = 200')
-            # else:
-            #     logs.error('Error (1): status_code != 200')
+        # 3. get services running in device
 
-            # 5. compare and send warning if needed
+        # 4. get resources used by apps ==> landscaper.GetSubgraph(serviceID)
+        # http://docs.python-requests.org/en/master/
+        # r = requests.get('https://api.github.com/user', auth=('user', 'pass'))
+        # if r.status_code == 200:
+        #     logs.info('status_code = 200')
+        # else:
+        #     logs.error('Error (1): status_code != 200')
 
-            time.sleep(10)
-    except:
-        logs.error('>> Error (0): Assesment process: thread: Exception')
-        return {'module': 'assesment-process', 'result': 'Exception', 'message': 'Error (0)'}
+        # 5. compare and send warning if needed
+
+        time.sleep(10)
 
 
 # start process
 def start():
     global execute
     global d
-    try:
-        execute = True
-        if d is None:
-            d = threading.Thread(name='daemon', target=daemon)
+
+    execute = True
+    if d is None:
+        d = threading.Thread(name='daemon', target=daemon)
+        d.setDaemon(True)
+        d.start()
+        return "started"
+    else:
+        if execute == False and d.isAlive() == False:
             d.setDaemon(True)
             d.start()
             return "started"
         else:
-            if execute == False and d.isAlive() == False:
-                d.setDaemon(True)
-                d.start()
-                return "started"
-            else:
-                logs.warning('Assesment process: start() >> execute: ' + str(execute) + '; d.isAlive(): ' + str(d.isAlive()))
-                return "???"
-    except:
-        logs.error('Error (0): Assesment process: start')
-        return "Exception"
+            logs.warning('Assesment process: start() >> execute: ' + str(execute) + '; d.isAlive(): ' + str(d.isAlive()))
+            return "???"
 
 
 # stop process
 def stop():
     global execute
     global d
-    try:
-        execute = False
-        if d is None:
-            logs.warning('Assesment process: stop() >> execute: ' + str(execute) + '; d.isAlive(): None')
-            return "Stopped"
-        else:
-            d.join()
-            return "Stopped"
-    except:
-        logs.error('Error (0): Assesment process: stop')
-        return "Exception"
 
+    execute = False
+    if d is None:
+        logs.warning('Assesment process: stop() >> execute: ' + str(execute) + '; d.isAlive(): None')
+        return "Stopped"
+    else:
+        d.join()
+        return "Stopped"
 
 
 # return status
-def getStatus():
+def get_status():
     global execute
     global d
 
