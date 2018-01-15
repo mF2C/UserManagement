@@ -128,7 +128,7 @@ python rest_api.py
 ### Usage Guide
 
 REST API can be accessed a in port 5001. For example:
-_https://localhost:5001/api/v1//api/v1/user-management_
+_https://localhost:5001/api/v1/user-management_
 
 
 
