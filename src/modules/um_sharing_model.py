@@ -28,7 +28,7 @@ def get_sharing_model_values(user_id):
         return {'error': False, 'message': 'Sharing model found', 'user_id': user_id,
                 'sharing_model': {}}
     except:
-        logs.error('Error (User-Management): Sharing model module: get_sharing_model_values: Exception')
+        logs.error('User-Management: Sharing model module: get_sharing_model_values: Exception')
         return Response(json.dumps({'error': True, 'message': 'Exception', 'user_id': '', 'sharing_model': {}}),
                         status=500, content_type='application/json')
 
@@ -39,7 +39,7 @@ def init_sharing_model(data):
         logs.info("User-Management: Sharing model module: Initializes sharing model: " + str(data))
 
         if 'user_id' not in data:
-            logs.error('Error (User-Management): Sharing model module: init_sharing_model: Exception - parameter not found: user_id')
+            logs.error('User-Management: Sharing model module: init_sharing_model: Exception - parameter not found: user_id')
             return Response(json.dumps({'error': True, 'message': 'parameter not found: user_id', 'profile': {}}),
                             status=406, content_type='application/json')
 
@@ -50,7 +50,7 @@ def init_sharing_model(data):
         return {'error': False, 'message': 'Sharing model initialized', 'user_id': data['user_id'],
                 'sharing_model': {}}
     except:
-        logs.error('Error (User-Management): Sharing model module: init_sharing_model: Exception')
+        logs.error('User-Management: Sharing model module: init_sharing_model: Exception')
         return Response(json.dumps({'error': True, 'message': 'Exception', 'user_id': '', 'sharing_model': {}}),
                         status=500, content_type='application/json')
 
@@ -61,7 +61,7 @@ def update_sharing_model_values(data):
         logs.info("User-Management: Sharing model module: Updates sharing model: " + str(data))
 
         if 'user_id' not in data:
-            logs.error('Error (User-Management): Sharing model module: init_sharing_model: Exception - parameter not found: user_id')
+            logs.error('User-Management: Sharing model module: init_sharing_model: Exception - parameter not found: user_id')
             return Response(json.dumps({'error': True, 'message': 'parameter not found: user_id', 'profile': {}}),
                             status=406, content_type='application/json')
 
@@ -72,7 +72,7 @@ def update_sharing_model_values(data):
         return {'error': False, 'message': 'Sharing model updated', 'user_id': data['user_id'],
                 'sharing_model': {}}
     except:
-        logs.error('Error (User-Management): Sharing model module: update_sharing_model_values: Exception')
+        logs.error('User-Management: Sharing model module: update_sharing_model_values: Exception')
         return Response(json.dumps({'error': True, 'message': 'Exception', 'user_id': '', 'sharing_model': {}}),
                         status=500, content_type='application/json')
 
@@ -83,7 +83,7 @@ def delete_sharing_model_values(data):
         logs.info("Sharing_model: deleteSharingModelValues: " + str(data))
 
         if 'user_id' not in data:
-            logs.error('Error (User-Management): Sharing model module: init_sharing_model: Exception - parameter not found: user_id')
+            logs.error('User-Management: Sharing model module: init_sharing_model: Exception - parameter not found: user_id')
             return Response(json.dumps({'error': True, 'message': 'parameter not found: user_id', 'profile': {}}),
                             status=406, content_type='application/json')
 
@@ -94,6 +94,6 @@ def delete_sharing_model_values(data):
         return {'error': False, 'message': 'Sharing model deleted', 'user_id': data['user_id'],
                 'sharing_model': {}}
     except:
-        logs.error('Error (User-Management): Sharing model module: delete_sharing_model_values: Exception')
+        logs.error('User-Management: Sharing model module: delete_sharing_model_values: Exception')
         return Response(json.dumps({'error': True, 'message': 'Exception', 'sharing_model': {}}),
                         status=500, content_type='application/json')
