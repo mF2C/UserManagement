@@ -34,7 +34,7 @@ This module is part of the Agent Controller component:
 
 ![Agent Controller](resources/ac.png)
 
-This module is composed of three components that will be described in the next subsections:
+This module is composed of three components:
 - Profiling
 - Sharing Model
 - User Management Assessment
