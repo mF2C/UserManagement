@@ -127,19 +127,31 @@ python rest_api.py
 
 ### Usage Guide
 
-1. Build application:
+1. Clone / download repository
+
+```bash
+git clone https://github.com/mF2C/UserManagement.git
+```
+
+2. Go to UserManagement folder
+
+```bash
+cd UserManagement
+```
+
+3. Build application:
 
 ```bash
 sudo docker build -t um-app .
 ```
 
-2. Run application:
+4. Run application:
 
 ```bash
 sudo docker run -p 5001:8083 um-app
 ```
 
-3. REST API can be accessed at port 5001:
+5. REST API can be accessed at port 5001:
 
      - List of services (json): _https://localhost:5001/api/v1/user-management_
 
