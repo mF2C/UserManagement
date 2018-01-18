@@ -16,6 +16,17 @@ from src.utils import logs
 from flask import Response, json
 
 
+fake_sharing_model_info = {
+    "max_apps": 1,
+    "GPS_allowed": False,
+    "max_CPU_usage": 50,
+    "max_memory_usage": 200,
+    "max_storage_usage": 1000,
+    "max_bandwidth_usage": 1000,
+    "battery_limit": 25
+}
+
+
 # Get shared resources
 def get_sharing_model_values(user_id):
     try:
@@ -25,8 +36,7 @@ def get_sharing_model_values(user_id):
         #...
 
         # TEST
-        return {'error': False, 'message': 'Sharing model found', 'user_id': user_id,
-                'sharing_model': {}}
+        return {'error': False, 'message': 'Sharing model found', 'user_id': user_id, 'sharing_model': fake_sharing_model_info}
     except:
         logs.error('User-Management: Sharing model module: get_sharing_model_values: Exception')
         return Response(json.dumps({'error': True, 'message': 'Exception', 'user_id': '', 'sharing_model': {}}),
@@ -48,7 +58,7 @@ def init_sharing_model(data):
 
         # TEST
         return {'error': False, 'message': 'Sharing model initialized', 'user_id': data['user_id'],
-                'sharing_model': {}}
+                'sharing_model': fake_sharing_model_info}
     except:
         logs.error('User-Management: Sharing model module: init_sharing_model: Exception')
         return Response(json.dumps({'error': True, 'message': 'Exception', 'user_id': '', 'sharing_model': {}}),
@@ -70,7 +80,7 @@ def update_sharing_model_values(data):
 
         # TEST
         return {'error': False, 'message': 'Sharing model updated', 'user_id': data['user_id'],
-                'sharing_model': {}}
+                'sharing_model': fake_sharing_model_info}
     except:
         logs.error('User-Management: Sharing model module: update_sharing_model_values: Exception')
         return Response(json.dumps({'error': True, 'message': 'Exception', 'user_id': '', 'sharing_model': {}}),
@@ -91,8 +101,7 @@ def delete_sharing_model_values(data):
         # ...
 
         # TEST
-        return {'error': False, 'message': 'Sharing model deleted', 'user_id': data['user_id'],
-                'sharing_model': {}}
+        return {'error': False, 'message': 'Sharing model deleted', 'user_id': data['user_id']}
     except:
         logs.error('User-Management: Sharing model module: delete_sharing_model_values: Exception')
         return Response(json.dumps({'error': True, 'message': 'Exception', 'sharing_model': {}}),

@@ -127,10 +127,23 @@ python rest_api.py
 
 ### Usage Guide
 
-REST API can be accessed at port 5001. For example:
-_https://localhost:5001/api/v1/user-management_
+1. Build application:
 
+```bash
+sudo docker build -t um-app .
+```
 
+2. Run application:
+
+```bash
+sudo docker run -p 5001:8083 um-app
+```
+
+3. REST API can be accessed at port 5001:
+
+     - List of services (json): _https://localhost:5001/api/v1/user-management_
+
+     - List of services (swagger ui): _https://localhost:8083/api/v1/user-management.html_
 
 -----------------------
 

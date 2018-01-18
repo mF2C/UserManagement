@@ -27,7 +27,7 @@ def daemon():
 
     while execute:
         # TODO
-        logs.debug('>> assessment daemon >> executing ...')
+        logs.debug('User-Management: >> assessment daemon >> executing ...')
 
         # 1. get profile
 
@@ -59,14 +59,13 @@ def start():
         d.setDaemon(True)
         d.start()
         return "started"
+    elif execute == False and d.isAlive() == False:
+        d.setDaemon(True)
+        d.start()
+        return "started"
     else:
-        if execute == False and d.isAlive() == False:
-            d.setDaemon(True)
-            d.start()
-            return "started"
-        else:
-            logs.warning('Assesment process: start() >> execute: ' + str(execute) + '; d.isAlive(): ' + str(d.isAlive()))
-            return "???"
+        logs.warning('User-Management: Assesment process: start() >> execute: ' + str(execute) + '; d.isAlive(): ' + str(d.isAlive()))
+        return "???"
 
 
 # stop process
@@ -76,7 +75,7 @@ def stop():
 
     execute = False
     if d is None:
-        logs.warning('Assesment process: stop() >> execute: ' + str(execute) + '; d.isAlive(): None')
+        logs.warning('User-Management: Assesment process: stop() >> execute: ' + str(execute) + '; d.isAlive(): None')
         return "Stopped"
     else:
         d.join()

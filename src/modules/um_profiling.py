@@ -63,7 +63,7 @@ def register_user(data):
             #...
 
             # TEST
-            return {'error': False, 'message': 'User saved', 'user_id': data['user_id'],
+            return {'error': False, 'message': 'User registered', 'user_id': data['user_id'],
                     'profile': {'email': data['email'], 'service_consumer': True, 'resource_contributor': True}}
     except:
         logs.error('User-Management: Profiling module: register_user: Exception')
