@@ -155,7 +155,7 @@ sudo docker run -p 5001:8083 um-app
 
      - List of services (json): _https://localhost:5001/api/v1/user-management_
 
-     - List of services (swagger ui): _https://localhost:8083/api/v1/user-management.html_
+     - List of services (swagger ui): _https://localhost:5001/api/v1/user-management.html_
 
 -----------------------
 
