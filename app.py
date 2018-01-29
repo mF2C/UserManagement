@@ -16,10 +16,9 @@ Created on 27 sept. 2017
 import src.modules.um_profiling as um_profiling
 import src.modules.um_sharing_model as um_sharing_model
 import src.modules.um_assesment as um_assesment
-import src.utils.logs as logs
 import src.utils.auth as auth
 import config
-
+from src.utils.logs import LOG
 from flask_cors import CORS
 from flask import Flask, request, Response, json
 from flask_restful import Resource, Api
@@ -27,12 +26,13 @@ from flask_restful_swagger import swagger
 
 
 try:
+    # TODO get vars from ENV
     # CONFIGURATION values
-    logs.info('[SERVER_PORT=' + str(config.dic['SERVER_PORT']) + ']')
-    logs.info('[API_DOC_URL=' + config.dic['API_DOC_URL'] + ']')
-    logs.info('[CERT_CRT=' + config.dic['CERT_CRT'] + ']')
-    logs.info('[CERT_KEY=' + config.dic['CERT_KEY'] + ']')
-    logs.info('[DEBUG=' + str(config.dic['DEBUG']) + ']')
+    LOG.info('[SERVER_PORT=' + str(config.dic['SERVER_PORT']) + ']')
+    LOG.info('[API_DOC_URL=' + config.dic['API_DOC_URL'] + ']')
+    LOG.info('[CERT_CRT=' + config.dic['CERT_CRT'] + ']')
+    LOG.info('[CERT_KEY=' + config.dic['CERT_KEY'] + ']')
+    LOG.info('[DEBUG=' + str(config.dic['DEBUG']) + ']')
 
     # CIMI URL
     CIMI_API_ENV_NAME = "CIMI_API"
@@ -52,7 +52,7 @@ try:
                        basePath='http://localhost:' + str(config.dic['SERVER_PORT']),
                        resourcePath='/')
 except ValueError:
-    logs.error('ERROR')
+    LOG.error('ERROR')
 
 
 ###############################################################################

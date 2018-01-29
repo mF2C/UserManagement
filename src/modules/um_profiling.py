@@ -13,7 +13,7 @@ Created on 27 sept. 2017
 
 
 import src.modules.um_sharing_model as um_sharing_model
-from src.utils import logs
+from src.utils.logs import LOG
 from flask import Response, json
 
 
@@ -29,7 +29,7 @@ from flask import Response, json
 # Get user profile
 def get_profiling(user_id):
     try:
-        logs.info("User-Management: Profiling module: Get user profile: " + user_id)
+        LOG.info("User-Management: Profiling module: Get user profile: " + user_id)
 
         # TODO Dataclay or CIMI
         # Get user profile:
@@ -40,7 +40,7 @@ def get_profiling(user_id):
         return {'error': False, 'message': 'User found', 'user_id': user_id,
                 'profile': {'email': 'TEST@EMAIL.COM', 'service_consumer': True, 'resource_contributor': True}}
     except:
-        logs.error('User-Management: Profiling module: get_profiling: Exception')
+        LOG.error('User-Management: Profiling module: get_profiling: Exception')
         return Response(json.dumps({'error': True, 'message': 'Exception', 'user_id': '', 'profile': {}}),
                         status=500, content_type='application/json')
 
@@ -49,10 +49,10 @@ def get_profiling(user_id):
 #   data: {'user_id':'', 'email':''}
 def register_user(data):
     try:
-        logs.info("User-Management: Profiling module: Register user: " + str(data))
+        LOG.info("User-Management: Profiling module: Register user: " + str(data))
 
         if 'user_id' not in data or 'email' not in data:
-            logs.error('User-Management: Profiling module: Register user: parameter not found: user_id / email')
+            LOG.error('User-Management: Profiling module: Register user: parameter not found: user_id / email')
             return Response(json.dumps({'error': True, 'message': 'parameter not found: user_id / email'}),
                             status=405, content_type='application/json')
         else:
@@ -66,7 +66,7 @@ def register_user(data):
             return {'error': False, 'message': 'User registered', 'user_id': data['user_id'],
                     'profile': {'email': data['email'], 'service_consumer': True, 'resource_contributor': True}}
     except:
-        logs.error('User-Management: Profiling module: register_user: Exception')
+        LOG.error('User-Management: Profiling module: register_user: Exception')
         return Response(json.dumps({'error': True, 'message': 'Exception', 'profile': {}}),
                         status=500, content_type='application/json')
 
@@ -75,10 +75,10 @@ def register_user(data):
 #   data: {'user_id':'', 'email':'', 'service_consumer': '', 'resource_contributor': ''}
 def update_profile(data):
     try:
-        logs.info("User-Management: Profiling module: Updates user's profile: " + str(data))
+        LOG.info("User-Management: Profiling module: Updates user's profile: " + str(data))
 
         if 'user_id' not in data:
-            logs.error('User-Management: Profiling module: Update profile: parameter not found: user_id')
+            LOG.error('User-Management: Profiling module: Update profile: parameter not found: user_id')
             return Response(json.dumps({'error': True, 'message': 'parameter not found: user_id'}),
                             status=405, content_type='application/json')
         else:
@@ -89,7 +89,7 @@ def update_profile(data):
             return {'error': False, 'message': 'Profile updated', 'user_id': data['user_id'],
                     'profile': {'email': 'TEST@EMAIL.COM', 'service_consumer': True, 'resource_contributor': True}}
     except:
-        logs.error('User-Management: Profiling module: update_profile: Exception')
+        LOG.error('User-Management: Profiling module: update_profile: Exception')
         return Response(json.dumps({'error': True, 'message': 'Exception', 'profile': {}}),
                         status=500, content_type='application/json')
 
@@ -98,10 +98,10 @@ def update_profile(data):
 #   data: {'user_id':''}
 def delete_profile(data):
     try:
-        logs.info("User-Management: Profiling module: Deletes users profile: " + str(data))
+        LOG.info("User-Management: Profiling module: Deletes users profile: " + str(data))
 
         if 'user_id' not in data:
-            logs.error('User-Management: Assessment module: operation: Exception - parameter not found: user_id')
+            LOG.error('User-Management: Assessment module: operation: Exception - parameter not found: user_id')
             return Response(json.dumps({'error': True, 'message': 'parameter not found: user_id', 'profile': {}}),
                             status=406, content_type='application/json')
 
@@ -113,6 +113,6 @@ def delete_profile(data):
 
         return {'error': False, 'message': 'Profile deleted', 'user_id': data['user_id']}
     except:
-        logs.error('User-Management: Profiling module: delete_profile: Exception')
+        LOG.error('User-Management: Profiling module: delete_profile: Exception')
         return Response(json.dumps({'error': True, 'message': 'Exception', 'profile': {}}),
                         status=500, content_type='application/json')

@@ -12,7 +12,7 @@ Created on 27 sept. 2017
 """
 
 
-from src.utils import logs
+from src.utils.logs import LOG
 from flask import Response, json
 
 
@@ -30,7 +30,7 @@ fake_sharing_model_info = {
 # Get shared resources
 def get_sharing_model_values(user_id):
     try:
-        logs.info("User-Management: Sharing model module: Get sharing model: " + user_id)
+        LOG.info("User-Management: Sharing model module: Get sharing model: " + user_id)
 
         # TODO Dataclay or CIMI
         #...
@@ -38,7 +38,7 @@ def get_sharing_model_values(user_id):
         # TEST
         return {'error': False, 'message': 'Sharing model found', 'user_id': user_id, 'sharing_model': fake_sharing_model_info}
     except:
-        logs.error('User-Management: Sharing model module: get_sharing_model_values: Exception')
+        LOG.error('User-Management: Sharing model module: get_sharing_model_values: Exception')
         return Response(json.dumps({'error': True, 'message': 'Exception', 'user_id': '', 'sharing_model': {}}),
                         status=500, content_type='application/json')
 
@@ -46,10 +46,10 @@ def get_sharing_model_values(user_id):
 # Initializes shared resources values
 def init_sharing_model(data):
     try:
-        logs.info("User-Management: Sharing model module: Initializes sharing model: " + str(data))
+        LOG.info("User-Management: Sharing model module: Initializes sharing model: " + str(data))
 
         if 'user_id' not in data:
-            logs.error('User-Management: Sharing model module: init_sharing_model: Exception - parameter not found: user_id')
+            LOG.error('User-Management: Sharing model module: init_sharing_model: Exception - parameter not found: user_id')
             return Response(json.dumps({'error': True, 'message': 'parameter not found: user_id', 'profile': {}}),
                             status=406, content_type='application/json')
 
@@ -60,7 +60,7 @@ def init_sharing_model(data):
         return {'error': False, 'message': 'Sharing model initialized', 'user_id': data['user_id'],
                 'sharing_model': fake_sharing_model_info}
     except:
-        logs.error('User-Management: Sharing model module: init_sharing_model: Exception')
+        LOG.error('User-Management: Sharing model module: init_sharing_model: Exception')
         return Response(json.dumps({'error': True, 'message': 'Exception', 'user_id': '', 'sharing_model': {}}),
                         status=500, content_type='application/json')
 
@@ -68,10 +68,10 @@ def init_sharing_model(data):
 # Updates shared resources values
 def update_sharing_model_values(data):
     try:
-        logs.info("User-Management: Sharing model module: Updates sharing model: " + str(data))
+        LOG.info("User-Management: Sharing model module: Updates sharing model: " + str(data))
 
         if 'user_id' not in data:
-            logs.error('User-Management: Sharing model module: init_sharing_model: Exception - parameter not found: user_id')
+            LOG.error('User-Management: Sharing model module: init_sharing_model: Exception - parameter not found: user_id')
             return Response(json.dumps({'error': True, 'message': 'parameter not found: user_id', 'profile': {}}),
                             status=406, content_type='application/json')
 
@@ -82,7 +82,7 @@ def update_sharing_model_values(data):
         return {'error': False, 'message': 'Sharing model updated', 'user_id': data['user_id'],
                 'sharing_model': fake_sharing_model_info}
     except:
-        logs.error('User-Management: Sharing model module: update_sharing_model_values: Exception')
+        LOG.error('User-Management: Sharing model module: update_sharing_model_values: Exception')
         return Response(json.dumps({'error': True, 'message': 'Exception', 'user_id': '', 'sharing_model': {}}),
                         status=500, content_type='application/json')
 
@@ -90,10 +90,10 @@ def update_sharing_model_values(data):
 # Deletes  shared resources values
 def delete_sharing_model_values(data):
     try:
-        logs.info("Sharing_model: deleteSharingModelValues: " + str(data))
+        LOG.info("Sharing_model: deleteSharingModelValues: " + str(data))
 
         if 'user_id' not in data:
-            logs.error('User-Management: Sharing model module: init_sharing_model: Exception - parameter not found: user_id')
+            LOG.error('User-Management: Sharing model module: init_sharing_model: Exception - parameter not found: user_id')
             return Response(json.dumps({'error': True, 'message': 'parameter not found: user_id', 'profile': {}}),
                             status=406, content_type='application/json')
 
@@ -103,6 +103,6 @@ def delete_sharing_model_values(data):
         # TEST
         return {'error': False, 'message': 'Sharing model deleted', 'user_id': data['user_id']}
     except:
-        logs.error('User-Management: Sharing model module: delete_sharing_model_values: Exception')
+        LOG.error('User-Management: Sharing model module: delete_sharing_model_values: Exception')
         return Response(json.dumps({'error': True, 'message': 'Exception', 'sharing_model': {}}),
                         status=500, content_type='application/json')

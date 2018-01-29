@@ -18,7 +18,7 @@ import threading
 import requests
 import src.modules.um_profiling as um_profiling
 import src.modules.um_sharing_model as um_sharing_model
-from src.utils import logs
+from src.utils.logs import LOG
 
 
 execute = True
@@ -30,7 +30,7 @@ def daemon():
     global execute
 
     while execute:
-        logs.debug('User-Management: >> assessment daemon >> executing ...')
+        LOG.debug('User-Management: >> assessment daemon >> executing ...')
 
         # 1. get profile
         # TODO user_id?
@@ -46,9 +46,9 @@ def daemon():
         # TODO get services from PM Landscaper?
         r = requests.get(config.dic['URL_PM_LANDSCAPER'], verify=config.dic['VERIFY_SSL'])
         if r.status_code == 200:
-            logs.debug('User-Management: >> assessment daemon >> status_code=' + r.status_code + '; response: ' + r.text)
+            LOG.debug('User-Management: >> assessment daemon >> status_code=' + r.status_code + '; response: ' + r.text)
         else:
-            logs.error('User-Management: >> Error (1): status_code=' + r.status_code)
+            LOG.error('User-Management: >> Error (1): status_code=' + r.status_code)
 
         # 5. compare and send warning if needed
         # TODO
@@ -68,7 +68,7 @@ def daemon():
         #   }
         # TEST INTERACTION WITH OTHER COMPONENTS
         if config.dic['ENABLE_ASSESSMENT_TESTS']:
-            logs.debug('User-Management: >> assessment daemon >> sending warning to LIFECYCLE [' +
+            LOG.debug('User-Management: >> assessment daemon >> sending warning to LIFECYCLE [' +
                        config.dic['URL_PM_LIFECYCLE'] + '] ...')
             param = "id_service"
             body = {"type": "um_warning",
@@ -80,9 +80,9 @@ def daemon():
                         "warning_txt": "eeeeee"}}
             r = requests.post(config.dic['URL_PM_LIFECYCLE'] + param, json=body, verify=config.dic['VERIFY_SSL'])
             if r.status_code == 200:
-                logs.debug('User-Management: >> assessment daemon >> status_code=' + r.status_code + '; response: ' + r.text)
+                LOG.debug('User-Management: >> assessment daemon >> status_code=' + r.status_code + '; response: ' + r.text)
             else:
-                logs.error('User-Management: >> Error (2): status_code=' + r.status_code)
+                LOG.error('User-Management: >> Error (2): status_code=' + r.status_code)
             time.sleep(20)
         else:
             time.sleep(10)
@@ -104,7 +104,7 @@ def start():
         d.start()
         return "started"
     else:
-        logs.warning('User-Management: Assesment process: start() >> execute: ' + str(execute) + '; d.isAlive(): ' + str(d.isAlive()))
+        LOG.warning('User-Management: Assesment process: start() >> execute: ' + str(execute) + '; d.isAlive(): ' + str(d.isAlive()))
         return "???"
 
 
@@ -115,7 +115,7 @@ def stop():
 
     execute = False
     if d is None:
-        logs.warning('User-Management: Assesment process: stop() >> execute: ' + str(execute) + '; d.isAlive(): None')
+        LOG.warning('User-Management: Assesment process: stop() >> execute: ' + str(execute) + '; d.isAlive(): None')
         return "Stopped"
     else:
         d.join()
