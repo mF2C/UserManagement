@@ -12,12 +12,10 @@ Created on 27 sept. 2017
 """
 
 
-import config
 import time
 import threading
-import requests
-import src.modules.um_profiling as um_profiling
-import src.modules.um_sharing_model as um_sharing_model
+import src.modules.dependencies as dependencies
+import src.modules.data as datamgmt
 from src.utils.logs import LOG
 
 
@@ -25,67 +23,55 @@ execute = True
 d = None
 
 
+# checks if the resources used by mF2C apps, match the user's profiling and sharing model properties
+# TODO
+def check_resources_used(list_resources_used, profile, shared_model):
+    try:
+        for item in list_resources_used:
+            LOG.debug('User-Management: >> check_resources_used: ' + item)
+        return True
+    except:
+        LOG.error('User-Management >> check_resources_used >> Exception')
+    return True
+
+
 # daemon process
 def daemon():
     global execute
+    try:
+        while execute:
+            LOG.debug('User-Management: >> assessment daemon >> executing ...')
 
-    while execute:
-        LOG.debug('User-Management: >> assessment daemon >> executing ...')
+            # 0. get user_id & device_id # TODO
+            user_id = "user_id" # TODO user_id?
+            device_id = "device_id" # TODO device_id?
 
-        # 1. get profile
-        # TODO user_id?
-        profile = um_profiling.get_profiling('user_id')
+            # 1. get profile
+            profile = datamgmt.get_profiling(user_id)
 
-        # 2. get shared resources
-        shared_model = um_sharing_model.get_sharing_model_values('user_id')
+            # 2. get shared resources
+            shared_model = datamgmt.get_sharing_model_values(user_id) # TODO
 
-        # 3. get services running in device
-        # TODO
+            # 3. get services running in device or get all allowed services
+            allowed_services = datamgmt.get_services(user_id)
 
-        # 4. get resources used by apps ==> landscaper.GetSubgraph(serviceID)
-        # TODO get services from PM Landscaper?
-        r = requests.get(config.dic['URL_PM_LANDSCAPER'], verify=config.dic['VERIFY_SSL'])
-        if r.status_code == 200:
-            LOG.debug('User-Management: >> assessment daemon >> status_code=' + r.status_code + '; response: ' + r.text)
-        else:
-            LOG.error('User-Management: >> Error (1): status_code=' + r.status_code)
-
-        # 5. compare and send warning if needed
-        # TODO
-
-        # 6. Send warning to Lifecycle
-        # Warnings Handler: handle warnings coming from User Management Assessment:
-        #   {
-        #       "type": "um_warning",
-        #       "data"
-        #           {
-        #               "user_id": "",
-        #               "device_id": "",
-        #               "service_id": "",
-        #               "warning_id": "",
-        #               "warning_txt": ""
-        #           }
-        #   }
-        # TEST INTERACTION WITH OTHER COMPONENTS
-        if config.dic['ENABLE_ASSESSMENT_TESTS']:
-            LOG.debug('User-Management: >> assessment daemon >> sending warning to LIFECYCLE [' +
-                       config.dic['URL_PM_LIFECYCLE'] + '] ...')
-            param = "id_service"
-            body = {"type": "um_warning",
-                    "data": {
-                        "user_id": "aaaaaa",
-                        "device_id": "bbbbbb",
-                        "service_id": "cccccc",
-                        "warning_id": "dddddd",
-                        "warning_txt": "eeeeee"}}
-            r = requests.post(config.dic['URL_PM_LIFECYCLE'] + param, json=body, verify=config.dic['VERIFY_SSL'])
-            if r.status_code == 200:
-                LOG.debug('User-Management: >> assessment daemon >> status_code=' + r.status_code + '; response: ' + r.text)
+            # 4. get resources used by apps ==> landscaper.GetSubgraph(serviceID)
+            if not allowed_services:
+                LOG.debug('User-Management: >> No services found / services list is empty')
             else:
-                LOG.error('User-Management: >> Error (2): status_code=' + r.status_code)
-            time.sleep(20)
-        else:
-            time.sleep(10)
+                list_resources_used = []
+                for serviceID in allowed_services:
+                    resources_used = dependencies.get_resources_used_by_service(serviceID) # TODO
+                    list_resources_used.append(resources_used)
+
+                # 5. check information and send warning to Lifecycle if needed
+                if not check_resources_used(list_resources_used, profile, shared_model): # TODO
+                    dependencies.send_warning(user_id, device_id, list_resources_used, profile, shared_model)
+
+            # wait 30 seconds
+            time.sleep(30)
+    except:
+        LOG.error('User-Management >> assessment daemon >> Exception')
 
 
 # start process

@@ -14,7 +14,7 @@ Created on 27 sept. 2017
 
 import src.modules.assessment_process as process
 from src.utils.logs import LOG
-from flask import Response, json
+import src.utils.common as common
 
 
 # start process
@@ -22,12 +22,10 @@ def __start():
     LOG.info("User-Management: Assessment module: start process")
     try:
         p_status = process.start()
-        return {'error': False, 'message': 'Assessment process started', 'status': p_status}
+        return common.gen_response_ok('Assessment process started', 'status', p_status)
     except:
         LOG.error('User-Management: Assessment module: start: Exception')
-        return Response(json.dumps({'error': True, 'message': 'Exception when starting the assessment process',
-                                    'status': ''}),
-                        status=500, content_type='application/json')
+        return common.gen_response(500, 'Exception when starting the assessment process', 'status', '')
 
 
 # stop process
@@ -35,12 +33,10 @@ def __stop():
     LOG.info("User-Management: Assessment module: stop process")
     try:
         p_status = process.stop()
-        return {'error': False, 'message': 'Assessment process stopped', 'status': p_status}
+        return common.gen_response_ok('Assessment process stopped', 'status', p_status)
     except:
         LOG.error('User-Management: Assessment module: stop: Exception')
-        return Response(json.dumps({'error': True, 'message': 'Exception when stopping the assessment process',
-                                    'status': ''}),
-                        status=500, content_type='application/json')
+        return common.gen_response(500, 'Exception when stopping the assessment process', 'status', '')
 
 
 # operation
@@ -49,18 +45,15 @@ def operation(data):
 
     if 'operation' not in data:
         LOG.error('User-Management: Assessment module: operation: Exception - parameter not found')
-        return Response(json.dumps({'error': True, 'message': 'parameter not found: operation', 'status': ''}),
-                        status=406, content_type='application/json')
+        return common.gen_response(406, 'parameter not found: operation', 'data', str(data))
 
     if data['operation'] == 'start':
         return __start()
     elif data['operation'] == 'stop':
         return __stop()
     else:
-        LOG.error('User-Management: Assessment module: operation: Operation ' + data['operation'] +
-                   ' not defined / implemented')
-        return Response(json.dumps({'error': 'operation ' + data['operation'] + ' not defined / implemented'}),
-                        status=501, content_type='application/json')
+        LOG.error('User-Management: Assessment module: operation: Operation ' + data['operation'] + ' not defined / implemented')
+        return common.gen_response(500, 'operation not defined / implemented', 'operation', data['operation'])
 
 
 # get process status
@@ -68,9 +61,7 @@ def status():
     LOG.info("User-Management: Assessment module: get process status")
     try:
         p_status = process.get_status()
-        return {'error': False, 'message': 'Assessment process status', 'status': p_status}
+        return common.gen_response_ok('Assessment process status', 'status', p_status)
     except:
         LOG.error('User-Management: Assessment module: status: Exception')
-        return Response(json.dumps({'error': True, 'message': 'Exception when getting assessment process status',
-                                    'status': ''}),
-                        status=500, content_type='application/json')
+        return common.gen_response(500, 'Exception getting the assessment process status', 'status', '')

@@ -3,5 +3,5 @@ FROM python:2.7.14-jessie
 ADD . /code
 WORKDIR /code
 RUN pip install -r requirements.txt
-EXPOSE 8083
+EXPOSE 46300
 CMD ["python", "app.py"]

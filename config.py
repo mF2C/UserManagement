@@ -13,7 +13,7 @@ Created on 27 sept. 2017
 
 #!/usr/bin/python
 
-dic = { "SERVER_PORT":                  8083,
+dic = { "SERVER_PORT":                  46300,
         "API_DOC_URL":                  "/api/v1/user-management",
         "CERT_CRT":                     "cert/ia.crt",
         "CERT_KEY":                     "cert/ia.key",
@@ -24,6 +24,6 @@ dic = { "SERVER_PORT":                  8083,
         "VERIFY_SSL":                   False,
         # URLs from other mF2C components:
         #       PM-Lifecycle: /api/v1/lifecycle/<string:service_id>
-        "URL_PM_LIFECYCLE":             "https://localhost:5002/api/v1/lifecycle/",
+        "URL_PM_LIFECYCLE":             "https://localhost:46000/api/v1/lifecycle/",
         #       PM-Landscaper: api/v1/landscape/...
-        "URL_PM_LANDSCAPER":             "https://localhost:5003/api/v1/landscape/...."}
+        "URL_PM_LANDSCAPER":             "https://localhost:46010/api/v1/landscape/...."}

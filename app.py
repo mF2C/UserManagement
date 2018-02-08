@@ -169,8 +169,31 @@ class Profiling(Resource):
         return um_profiling.delete_profile( request.get_json() )
 
 
+class Services(Resource):
+    # Get Profile properties from user
+    @swagger.operation(
+        summary="Returns the user's allowed services",
+        notes="Returns the user's allowed services",
+        produces=["application/json"],
+        authorizations=[],
+        parameters=[{
+                "name": "user_id",
+                "description": "User ID",
+                "required": True,
+                "paramType": "path",
+                "type": "string"
+            }],
+        responseMessages=[{
+                "code": 500,
+                "message": "Exception processing request"
+            }])
+    def get(self, user_id):
+        return um_profiling.get_services(user_id)
+
+
 api.add_resource(Profiling, '/api/v1/user-management/profiling/')
 api.add_resource(GetProfiling, '/api/v1/user-management/profiling/<string:user_id>')
+api.add_resource(Services, '/api/v1/user-management/profiling/services/<string:user_id>')
 
 
 ###############################################################################
