@@ -136,7 +136,7 @@ def get_user_sharing_model(user_id):
             return resp.json['sharingmodels'][0]  # dict
         else:
             LOG.warning("User's sharing model not found [user_id=" + user_id + "]")
-            return None
+            return -1
     except:
         traceback.print_exc(file=sys.stdout)
         LOG.error('Exception')

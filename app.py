@@ -106,7 +106,8 @@ class Profiling(Resource):
         parameters=[{
                 "name": "body",
                 "description": "Parameters in JSON format.<br/>Example: <br/>{\"user_id\":\"user/testuser2\", "
-                               "\"email\":\"email1@gmail.com\", \"service_consumer\":true, \"resource_contributor\":false}",
+                               "\"email\":\"email1@gmail.com\", \"service_consumer\":true, \"resource_contributor\":false,"
+                               "\"id_key\":\"0fac123e3f90\"}",
                 "required": True,
                 "paramType": "body",
                 "type": "string"
@@ -257,7 +258,7 @@ class GetSharingModel(Resource):
         authorizations=[],
         parameters=[{
                 "name": "user_id",
-                "description": "User ID",
+                "description": "User ID. Example: 'testuser2'",
                 "required": True,
                 "paramType": "path",
                 "type": "string"
@@ -267,7 +268,7 @@ class GetSharingModel(Resource):
                 "message": "Exception processing request"
             }])
     def get(self, user_id):
-        return um_sharing_model.get_sharing_model(user_id)
+        return um_sharing_model.get_sharing_model("user/" + user_id)    # TODO solve 'slash' problem
 
 
 class SharingModel(Resource):
@@ -280,14 +281,14 @@ class SharingModel(Resource):
         parameters=[{
                 "name": "body",
                 "description": "Parameters in JSON format.<br/>Example: <br/>"
-                               "{\"user_id\":\"123asdf123\", "
-                               "\"max_apps\": \"integer\", "
-                               "\"GPS_allowed\": \"boolean\", "
-                               "\"max_CPU_usage\": \"integer\", "
-                               "\"max_memory_usage\": \"integer\", "
-                               "\"max_storage_usage\": \"integer\", "
-                               "\"max_bandwidth_usage\": \"integer\", "
-                               "\"battery_limit\": \"integer\" }",
+                               "{\"user_id\":\"user/testuser2\", "
+                               "\"max_apps\": 2, "
+                               "\"gps_allowed\": false, "
+                               "\"max_cpu_usage\": 3, "
+                               "\"max_memory_usage\": 3, "
+                               "\"max_storage_usage\": 3, "
+                               "\"max_bandwidth_usage\": 3, "
+                               "\"battery_limit\": 3 }",
                 "required": True,
                 "paramType": "body",
                 "type": "string"
@@ -311,14 +312,14 @@ class SharingModel(Resource):
         parameters=[{
                 "name": "body",
                 "description": "Parameters in JSON format.<br/>Example: <br/>"
-                               "{\"user_id\":\"123asdf123\", "
-                               "\"max_apps\": \"integer\", "
-                               "\"GPS_allowed\": \"boolean\", "
-                               "\"max_CPU_usage\": \"integer\", "
-                               "\"max_memory_usage\": \"integer\", "
-                               "\"max_storage_usage\": \"integer\", "
-                               "\"max_bandwidth_usage\": \"integer\", "
-                               "\"battery_limit\": \"integer\" }",
+                               "{\"user_id\":\"user/testuser2\", "
+                               "\"max_apps\": 2, "
+                               "\"GPS_allowed\": false, "
+                               "\"max_CPU_usage\": 3, "
+                               "\"max_memory_usage\": 3, "
+                               "\"max_storage_usage\": 3, "
+                               "\"max_bandwidth_usage\": 3, "
+                               "\"battery_limit\": 3 }",
                 "required": True,
                 "paramType": "body",
                 "type": "string"
@@ -341,7 +342,7 @@ class SharingModel(Resource):
         authorizations=[],
         parameters=[{
                 "name": "body",
-                "description": "Parameters in JSON format.<br/>Example: <br/>{\"user_id\":\"123asdf123\"}",
+                "description": "Parameters in JSON format.<br/>Example: <br/>{\"user_id\":\"user/testuser2\"}",
                 "required": True,
                 "paramType": "body",
                 "type": "string"
@@ -364,9 +365,6 @@ api.add_resource(GetSharingModel, '/api/v1/user-management/sharingmodel/<string:
 ###############################################################################
 
 def main():
-    # get CIMI_API_ENV_VALUE from env
-    # CIMI_API_ENV_VALUE = os.environ.get(CIMI_API_ENV_NAME, '...')
-    # logs.info('[CIMI_API_ENV_VALUE=' + CIMI_API_ENV_VALUE + ']')
     # START SERVER
     context = (config.dic['CERT_CRT'], config.dic['CERT_KEY'])
     app.run(host='0.0.0.0', port=config.dic['SERVER_PORT'], ssl_context=context, threaded=True, debug=config.dic['DEBUG'])

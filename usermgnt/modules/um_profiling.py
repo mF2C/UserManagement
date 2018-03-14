@@ -14,7 +14,6 @@ Created on 27 sept. 2017
 
 import usermgnt.mF2C.data as datamgmt
 import usermgnt.utils.common as common
-from flask import json
 from usermgnt.utils.logs import LOG
 
 
@@ -62,12 +61,17 @@ def register_user(data):
         LOG.warning('User-Management: Profiling module: register_user: parameter not found: user_id / email')
         return common.gen_response(405, 'parameter not found: user_id / email', 'data', str(data))
 
-    # register user
-    user_profile = datamgmt.register_user(data)
-    if user_profile is None:
-        return common.gen_response(500, 'Error', 'profile', {})
+    # check if profile exists
+    user_profile = datamgmt.get_profiling(data['user_id'])
+    if user_profile == -1 or user_profile is None:
+        # register user/profile
+        user_profile = datamgmt.register_user(data)
+        if user_profile is None:
+            return common.gen_response(500, 'Error', 'profile', {})
+        else:
+            return common.gen_response_ok('User registered', 'user_id', data['user_id'], 'profile', user_profile.json)
     else:
-        return common.gen_response_ok('User registered', 'user_id', data['user_id'], 'profile', user_profile.json)
+        return common.gen_response_ko('Warning: User profile already exists', 'user_id', data['user_id'], 'profile', user_profile)
 
 
 # Updates users profile

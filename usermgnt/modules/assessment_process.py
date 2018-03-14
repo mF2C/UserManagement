@@ -42,18 +42,18 @@ def daemon():
         while execute:
             LOG.debug('User-Management: >> assessment daemon >> executing ...')
 
-            # 0. get user_id & device_id # TODO
-            user_id = "user_id" # TODO user_id?
-            device_id = "device_id" # TODO device_id?
+            # 0. get user_id & device_id    # TODO
+            user_id = "user/testuser2"      # TODO user_id?
+            device_id = "device_id"         # TODO device_id?
 
             # 1. get profile
             profile = datamgmt.get_profiling(user_id)
 
             # 2. get shared resources
-            shared_model = datamgmt.get_sharing_model_values(user_id) # TODO
+            shared_model = datamgmt.get_sharing_model(user_id)
 
             # 3. get services running in device or get all allowed services
-            allowed_services = datamgmt.get_services(user_id)
+            allowed_services = datamgmt.get_services(user_id) # TODO
 
             # 4. get resources used by apps ==> landscaper.GetSubgraph(serviceID)
             if not allowed_services:
@@ -115,7 +115,7 @@ def get_status():
 
     if d is None:
         return "Not initialized"
-    elif execute == True and d.isAlive() == True:
+    elif execute and d.isAlive() == True:
         return "Running"
     else:
         return "Stopped"
