@@ -24,7 +24,7 @@ dic = { "SERVER_PORT":                  46300,
         "VERIFY_SSL":                   False,
         # URLs from other mF2C components:
         # CIMI
-        "CIMI_URL":                     "https://192.168.252.41",
+        "CIMI_URL":                     "",
         "CIMI_COOKIES_PATH":            "C://TMP/cookies",
         "CIMI_USER":                    "testuser2",
         "CIMI_PASSWORD":                "testpassword",
