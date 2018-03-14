@@ -13,12 +13,12 @@ Created on 27 sept. 2017
 
 #!/usr/bin/python
 
-import src.modules.um_profiling as um_profiling
-import src.modules.um_sharing_model as um_sharing_model
-import src.modules.um_assesment as um_assesment
-import src.utils.auth as auth
-import config
-from src.utils.logs import LOG
+import usermgnt.modules.um_profiling as um_profiling
+import usermgnt.modules.um_sharing_model as um_sharing_model
+import usermgnt.modules.um_assesment as um_assesment
+import usermgnt.utils.auth as auth
+from usermgnt import config
+from usermgnt.utils.logs import LOG
 from flask_cors import CORS
 from flask import Flask, request, Response, json
 from flask_restful import Resource, Api
@@ -83,7 +83,7 @@ class GetProfiling(Resource):
         authorizations=[],
         parameters=[{
                 "name": "user_id",
-                "description": "User ID",
+                "description": "User ID. Example: 'testuser2'",
                 "required": True,
                 "paramType": "path",
                 "type": "string"
@@ -93,7 +93,7 @@ class GetProfiling(Resource):
                 "message": "Exception processing request"
             }])
     def get(self, user_id):
-        return um_profiling.get_profiling(user_id)
+        return um_profiling.get_profiling("user/" + user_id)    # TODO solve 'slash' problem
 
 
 class Profiling(Resource):
@@ -105,8 +105,8 @@ class Profiling(Resource):
         authorizations=[],
         parameters=[{
                 "name": "body",
-                "description": "Parameters in JSON format.<br/>Example: <br/>{\"user_id\":\"123asdf123\", "
-                               "\"email\":\"...\", \"name\":\"...\"}",
+                "description": "Parameters in JSON format.<br/>Example: <br/>{\"user_id\":\"user/testuser2\", "
+                               "\"email\":\"email1@gmail.com\", \"service_consumer\":true, \"resource_contributor\":false}",
                 "required": True,
                 "paramType": "body",
                 "type": "string"
@@ -129,8 +129,8 @@ class Profiling(Resource):
         authorizations=[],
         parameters=[{
                 "name": "body",
-                "description": "Parameters in JSON format.<br/>Example: <br/>{\"user_id\":\"123asdf123\", "
-                               "\"email\":\"...\", \"service_consumer\":\"...\" ...}",
+                "description": "Parameters in JSON format.<br/>Example: <br/>{\"user_id\":\"user/testuser2\", "
+                               "\"email\":\"emailasd@gmail.com\", \"service_consumer\":false}",
                 "required": True,
                 "paramType": "body",
                 "type": "string"
@@ -153,7 +153,7 @@ class Profiling(Resource):
         authorizations=[],
         parameters=[{
                 "name": "body",
-                "description": "Parameters in JSON format.<br/>Example: <br/>{\"user_id\":\"123asdf123\"}",
+                "description": "Parameters in JSON format.<br/>Example: <br/>{\"user_id\":\"user/testuser2\"}",
                 "required": True,
                 "paramType": "body",
                 "type": "string"
@@ -267,7 +267,7 @@ class GetSharingModel(Resource):
                 "message": "Exception processing request"
             }])
     def get(self, user_id):
-        return um_sharing_model.get_sharing_model_values(user_id)
+        return um_sharing_model.get_sharing_model(user_id)
 
 
 class SharingModel(Resource):
@@ -331,7 +331,7 @@ class SharingModel(Resource):
                 "message": "Exception processing request"
             }])
     def put(self):
-        return um_sharing_model.update_sharing_model_values( request.get_json() )
+        return um_sharing_model.update_sharing_model( request.get_json() )
 
     # Deletes the shared resources values from a user
     @swagger.operation(

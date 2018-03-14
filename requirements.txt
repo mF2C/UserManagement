@@ -3,3 +3,4 @@ flask_restful
 requests
 flask_cors
 flask_restful_swagger
+slipstream-api
