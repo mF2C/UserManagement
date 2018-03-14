@@ -17,6 +17,7 @@ import usermgnt.modules.um_profiling as um_profiling
 import usermgnt.modules.um_sharing_model as um_sharing_model
 import usermgnt.modules.um_assesment as um_assesment
 import usermgnt.utils.auth as auth
+import usermgnt.mF2C.cimi as cimi
 from usermgnt import config
 from usermgnt.utils.logs import LOG
 from flask_cors import CORS
@@ -66,6 +67,19 @@ def default_route():
         'status': 'Running',
         'api_doc_json': 'https://localhost:' + str(config.dic['SERVER_PORT']) + config.dic['API_DOC_URL'],
         'api_doc_html': 'https://localhost:' + str(config.dic['SERVER_PORT']) + config.dic['API_DOC_URL'] + '.html#!/spec'
+    }
+    resp = Response(json.dumps(data), status=200, mimetype='application/json')
+    return resp
+
+
+###############################################################################
+## Initialization
+###############################################################################
+@app.route('/api/v1/user-management/initialize', methods=['POST'])
+def initialize():
+    data = {
+        'message': '[User Management Module - CIMI] Initialization',
+        'result': cimi.connect_to_cimi()
     }
     resp = Response(json.dumps(data), status=200, mimetype='application/json')
     return resp

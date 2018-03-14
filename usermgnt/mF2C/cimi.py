@@ -20,39 +20,48 @@ from slipstream.api import Api
 
 
 # CIMI initialization
-try:
-    # API
-    LOG.info('Connecting UM to ' + config.dic['CIMI_URL'] + " ...")
+# API
+api = None
 
-    api = Api(config.dic['CIMI_URL'],
-              insecure=True,
-              cookie_file=config.dic['CIMI_COOKIES_PATH'],
-              login_creds={'username': config.dic['CIMI_USER'],
-                           'password': config.dic['CIMI_PASSWORD']})
+# ACL
+acl = {"owner":
+           {"principal": "ADMIN",
+            "type": "ROLE"},
+       "rules": [{"principal": "ADMIN",
+                  "type": "ROLE",
+                  "right": "ALL"},
+                 {"principal": "ANON",
+                  "type": "ROLE",
+                  "right": "ALL"}
+                 ]}
 
-    # Login with username & password
-    api.login({"href": "session-template/internal",
-               "username": config.dic['CIMI_USER'],
-               "password": config.dic['CIMI_PASSWORD']})
 
-    # test api
-    resp = api.cimi_search('users')
-    LOG.info('UM connected to ' + config.dic['CIMI_URL'] + ": total users: " + str(resp.count))
+# CIMI initialization
+def connect_to_cimi():
+    try:
+        # API
+        LOG.info('Connecting UM to ' + config.dic['CIMI_URL'] + " ...")
 
-    # ACL
-    acl = {"owner":
-               {"principal": "ADMIN",
-                "type": "ROLE"},
-           "rules": [{"principal": "ADMIN",
-                      "type": "ROLE",
-                      "right": "ALL"},
-                     {"principal": "ANON",
-                      "type": "ROLE",
-                      "right": "ALL"}
-                     ]}
-except ValueError:
-    traceback.print_exc(file=sys.stdout)
-    LOG.error('ERROR')
+        api = Api(config.dic['CIMI_URL'],
+                  insecure=True,
+                  cookie_file=config.dic['CIMI_COOKIES_PATH'],
+                  login_creds={'username': config.dic['CIMI_USER'],
+                               'password': config.dic['CIMI_PASSWORD']})
+
+        # Login with username & password
+        api.login({"href": "session-template/internal",
+                   "username": config.dic['CIMI_USER'],
+                   "password": config.dic['CIMI_PASSWORD']})
+
+        # test api
+        resp = api.cimi_search('users')
+        LOG.info('UM connected to ' + config.dic['CIMI_URL'] + ": total users: " + str(resp.count))
+        return str(resp.count)
+
+    except ValueError:
+        traceback.print_exc(file=sys.stdout)
+        LOG.error('ERROR')
+        return -1
 
 
 # common_map_fields: generates a map with time and acl values
@@ -153,8 +162,8 @@ def add_resource(resource_name, content):
         content.update(common_map_fields())
 
         resp = api.cimi_add(resource_name, content)
-        LOG.debug("resp:        " + str(resp.message))
-        LOG.debug("resource-id: " + str(resp.json['resource-id']))
+        LOG.debug("cimi_add/resp:        " + str(resp.message))
+        LOG.debug("cimi_add/json/resource-id: " + str(resp.json['resource-id']))
 
         return get_resource_by_id(resp.json['resource-id'])
     except:
@@ -172,8 +181,8 @@ def update_resource(resource_id, content):
         content.update(common_map_fields())
 
         resp = api.cimi_edit(resource_id, content)
-        LOG.debug("resp: " + str(resp))
-        LOG.debug("id: " + str(resp.id))
+        LOG.debug("cimi_edit/resp: " + str(resp))
+        LOG.debug("cimi_edit/resp/id: " + str(resp.id))
 
         return get_resource_by_id(resp.id)
     except:

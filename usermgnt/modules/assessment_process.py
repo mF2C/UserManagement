@@ -14,7 +14,7 @@ Created on 27 sept. 2017
 
 import time
 import threading
-import usermgnt.mF2C.dependencies as dependencies
+import usermgnt.mF2C.mf2c as mf2c
 import usermgnt.mF2C.data as datamgmt
 from usermgnt.utils.logs import LOG
 
@@ -61,12 +61,12 @@ def daemon():
             else:
                 list_resources_used = []
                 for serviceID in allowed_services:
-                    resources_used = dependencies.get_resources_used_by_service(serviceID) # TODO
+                    resources_used = mf2c.get_resources_used_by_service(serviceID) # TODO
                     list_resources_used.append(resources_used)
 
                 # 5. check information and send warning to Lifecycle if needed
                 if not check_resources_used(list_resources_used, profile, shared_model): # TODO
-                    dependencies.send_warning(user_id, device_id, list_resources_used, profile, shared_model)
+                    mf2c.send_warning(user_id, device_id, list_resources_used, profile, shared_model)
 
             # wait 30 seconds
             time.sleep(30)
