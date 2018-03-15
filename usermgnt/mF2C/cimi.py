@@ -13,7 +13,6 @@ Created on 27 sept. 2017
 
 
 import sys, traceback
-import requests
 from usermgnt import config
 from usermgnt.utils.logs import LOG
 from slipstream.api import Api
@@ -38,6 +37,7 @@ acl = {"owner":
 
 # CIMI initialization
 def connect_to_cimi():
+    global api
     try:
         # API
         LOG.info('Connecting UM to ' + config.dic['CIMI_URL'] + " ...")
@@ -48,10 +48,12 @@ def connect_to_cimi():
                   login_creds={'username': config.dic['CIMI_USER'],
                                'password': config.dic['CIMI_PASSWORD']})
 
+        LOG.info(str(api))
+
         # Login with username & password
-        api.login({"href": "session-template/internal",
-                   "username": config.dic['CIMI_USER'],
-                   "password": config.dic['CIMI_PASSWORD']})
+        LOG.info(str(api.login({"href": "session-template/internal",
+                                "username": config.dic['CIMI_USER'],
+                                "password": config.dic['CIMI_PASSWORD']})))
 
         # test api
         resp = api.cimi_search('users')
@@ -74,13 +76,20 @@ def common_map_fields():
     return default_map
 
 
+# check if api object is initialized
+def get_api():
+    if api is None:
+        connect_to_cimi()
+    return api
+
+
 ###############################################################################
 
 
 # get_user_by_id: get user by id
 def get_user_by_id(user_id):
     try:
-        resp = api.cimi_search("users", filter="id='" + user_id + "'")
+        resp = get_api().cimi_search("users", filter="id='" + user_id + "'")
         if resp.count == 1:
             return resp.json['users'][0] # dict
         else:
@@ -95,7 +104,7 @@ def get_user_by_id(user_id):
 # get_all: get all resources
 def get_all(resource_type):
     try:
-        return api.cimi_search(resource_type)
+        return get_api().cimi_search(resource_type)
     except:
         traceback.print_exc(file=sys.stdout)
         LOG.error('Exception')
@@ -105,7 +114,7 @@ def get_all(resource_type):
 # get_resource_by_id: get resource by id
 def get_resource_by_id(resource_id):
     try:
-        return api.cimi_get(resource_id)
+        return get_api().cimi_get(resource_id)
     except:
         traceback.print_exc(file=sys.stdout)
         LOG.error('Exception')
@@ -115,7 +124,7 @@ def get_resource_by_id(resource_id):
 # delete_resource: delete resource by id
 def delete_resource(resource_id):
     try:
-        return api.cimi_delete(resource_id)
+        return get_api().cimi_delete(resource_id)
     except:
         traceback.print_exc(file=sys.stdout)
         LOG.error('Exception')
@@ -125,7 +134,7 @@ def delete_resource(resource_id):
 # get_user_profile: get profile from user
 def get_user_profile(user_id):
     try:
-        resp = api.cimi_search("profiles", filter="user_id='" + user_id + "'")
+        resp = get_api().cimi_search("profiles", filter="user_id='" + user_id + "'")
         if resp.count == 1:
             return resp.json['profiles'][0] # dict
         else:
@@ -140,7 +149,7 @@ def get_user_profile(user_id):
 # get_user_sharing_model: get sharing model from user
 def get_user_sharing_model(user_id):
     try:
-        resp = api.cimi_search("sharingmodels", filter="user_id='" + user_id + "'")
+        resp = get_api().cimi_search("sharingmodels", filter="user_id='" + user_id + "'")
         if resp.count == 1:
             return resp.json['sharingmodels'][0]  # dict
         else:
@@ -161,7 +170,7 @@ def add_resource(resource_name, content):
         # complete map and update resource
         content.update(common_map_fields())
 
-        resp = api.cimi_add(resource_name, content)
+        resp = get_api().cimi_add(resource_name, content)
         LOG.debug("cimi_add/resp:        " + str(resp.message))
         LOG.debug("cimi_add/json/resource-id: " + str(resp.json['resource-id']))
 
@@ -180,7 +189,7 @@ def update_resource(resource_id, content):
         # complete map and update resource
         content.update(common_map_fields())
 
-        resp = api.cimi_edit(resource_id, content)
+        resp = get_api().cimi_edit(resource_id, content)
         LOG.debug("cimi_edit/resp: " + str(resp))
         LOG.debug("cimi_edit/resp/id: " + str(resp.id))
 
@@ -189,105 +198,3 @@ def update_resource(resource_id, content):
         traceback.print_exc(file=sys.stdout)
         LOG.error('Exception')
         return None
-
-
-###############################################################################
-# TESTS
-
-# create_user: create a user in cimi
-def create_admin_user_test():
-    try:
-        body = {
-                "userTemplate": {
-                    "href": "user-template/auto",
-                    "password": "E9E633097AB9CEB3E48EC3F70EE2BEBA41D05D5420EFEE5DA85F97D97005727587FDA33EF4FF2322088F4C79E8133CC9CD9F3512F4D3A303CBDB5BC585415A00",
-                    "emailAddress": "mf2c-developers@lists.atosresearch.eu",
-                    "roles": "ADMIN",
-                    "username": "testuser",
-                    "firstName": "Test",
-                    "state": "ACTIVE",
-                    "organization": "mF2C",
-                    "lastName": "User",
-                    "resourceURI": "http://sixsq.com/slipstream/1/User",
-                    "isSuperUser": False
-                }
-            }
-
-        r = requests.post('https://192.168.252.41/api/user',
-                          verify=False,
-                          headers={'Content-Type': 'application/json',
-                                  'Accept': 'application/json'},
-                          json=body)
-        LOG.debug(str(r))
-        LOG.debug(r.content)
-        LOG.debug(r.status_code)
-        LOG.debug(r.ok)
-        if r.status_code == 201:
-            LOG.info('OK')
-        else:
-            LOG.error('ERROR')
-    except:
-        LOG.error('Exception')
-
-
-def create_anon_user_test():
-    try:
-        body = {
-                "userTemplate": {
-                    "href": "user-template/auto",
-                    "password": "E9E633097AB9CEB3E48EC3F70EE2BEBA41D05D5420EFEE5DA85F97D97005727587FDA33EF4FF2322088F4C79E8133CC9CD9F3512F4D3A303CBDB5BC585415A00",
-                    "emailAddress": "mf2c-developers2@lists.atosresearch.eu",
-                    "roles": "ANON",
-                    "username": "testuser2",
-                    "firstName": "Test2",
-                    "state": "ACTIVE",
-                    "organization": "mF2C",
-                    "lastName": "User",
-                    "resourceURI": "http://sixsq.com/slipstream/1/User",
-                    "isSuperUser": False
-                }
-            }
-
-        r = requests.post('https://192.168.252.41/api/user',
-                          verify=False,
-                          headers={'Content-Type': 'application/json',
-                                  'Accept': 'application/json'},
-                          json=body)
-        LOG.debug(str(r))
-        LOG.debug(r.content)
-        LOG.debug(r.status_code)
-        LOG.debug(r.ok)
-        if r.status_code == 201:
-            LOG.info('OK')
-        else:
-            LOG.error('ERROR')
-    except:
-        LOG.error('Exception')
-
-
-# add_profile_test
-def add_profile_test():
-    profile = {
-        "user_id": "user/testuser",
-        "id": "https://192.168.252.41/api/profile/ProfileResource/asdasdasdasd2f81",
-        "resourceURI": "https://192.168.252.41/api/profile/ProfileResource/asdasdasdasd2f81",
-        "id_key": "asdasdasdasd2f81",
-        "email": "email1@gmail.com",
-        "service_consumer": True,
-        "resource_contributor": False
-    }
-    resp = add_resource("profiles", profile)
-    return resp
-
-
-# edit_profile_test
-def edit_profile_test():
-    resp = get_user_profile("user/testuser")
-    if resp:
-        profile2 = {
-            "service_consumer": False
-        }
-
-        resp = update_resource(resp['id'], profile2)
-        return resp
-    return None

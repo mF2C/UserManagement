@@ -95,6 +95,7 @@ sudo docker build -t um-app .
 
 ```bash
 sudo docker run -p 46300:46300 um-app
+sudo docker run --env CIMI_URL=https://192.168.252.41 -p 46300:46300 um-app
 ```
 
 5. REST API can be accessed at port 46300:

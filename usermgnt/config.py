@@ -24,11 +24,11 @@ dic = { "SERVER_PORT":                  46300,
         "VERIFY_SSL":                   False,
         # URLs from other mF2C components:
         # CIMI
-        "CIMI_URL":                     "",
-        "CIMI_COOKIES_PATH":            "C://TMP/cookies",
+        "CIMI_URL":                     "https://192.192.192.192",
+        "CIMI_COOKIES_PATH":            "~./cookies",           # "C://TMP/cookies",
         "CIMI_USER":                    "testuser2",
         "CIMI_PASSWORD":                "testpassword",
-        #       PM-Lifecycle: /api/v1/lifecycle/<string:service_id>
-        "URL_PM_LIFECYCLE":             "https://localhost:46000/api/v1/lifecycle/",
-        #       PM-Landscaper: api/v1/landscape/...
-        "URL_PM_LANDSCAPER":             "https://localhost:46010/api/v1/landscape/...."}
+        # PM-Lifecycle: /api/v1/lifecycle/<string:service_id>
+        "URL_PM_LIFECYCLE":             "https://192.192.192.192:46000/api/v1/lifecycle/",
+        # PM-Landscaper: api/v1/landscape/...
+        "URL_PM_LANDSCAPER":            "https://192.192.192.192:46010/api/v1/landscaper/"}

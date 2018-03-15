@@ -17,7 +17,7 @@ import usermgnt.modules.um_profiling as um_profiling
 import usermgnt.modules.um_sharing_model as um_sharing_model
 import usermgnt.modules.um_assesment as um_assesment
 import usermgnt.utils.auth as auth
-import usermgnt.mF2C.cimi as cimi
+import os
 from usermgnt import config
 from usermgnt.utils.logs import LOG
 from flask_cors import CORS
@@ -27,17 +27,50 @@ from flask_restful_swagger import swagger
 
 
 try:
-    # TODO get vars from ENV
     # CONFIGURATION values
+    LOG.info('Reading values from CONFIG FILE...')
+
     LOG.info('[SERVER_PORT=' + str(config.dic['SERVER_PORT']) + ']')
     LOG.info('[API_DOC_URL=' + config.dic['API_DOC_URL'] + ']')
     LOG.info('[CERT_CRT=' + config.dic['CERT_CRT'] + ']')
     LOG.info('[CERT_KEY=' + config.dic['CERT_KEY'] + ']')
     LOG.info('[DEBUG=' + str(config.dic['DEBUG']) + ']')
+    # CIMI
+    LOG.info('[CIMI_URL=' + config.dic['CIMI_URL'] + ']')
+    LOG.info('[CIMI_COOKIES_PATH=' + config.dic['CIMI_COOKIES_PATH'] + ']')
+    LOG.info('[CIMI_USER=' + config.dic['CIMI_USER'] + ']')
+    LOG.info('[CIMI_PASSWORD=' + config.dic['CIMI_PASSWORD'] + ']')
 
-    # CIMI URL
-    CIMI_API_ENV_NAME = "CIMI_API"
-    CIMI_API_ENV_VALUE = "http://...."
+    # get CIMI from environment values:
+    LOG.info('Reading values from ENVIRONMENT...')
+
+    env_cimi_url = os.getenv('CIMI_URL', default='not-defined')
+    LOG.info('[CIMI_URL=' + env_cimi_url + ']')
+    if env_cimi_url != 'not-defined':
+        config.dic['CIMI_URL'] = env_cimi_url
+
+    env_cimi_cookies_path = os.getenv('CIMI_COOKIES_PATH', default='not-defined')
+    LOG.info('[CIMI_COOKIES_PATH=' + env_cimi_cookies_path + ']')
+    if env_cimi_cookies_path != 'not-defined':
+        config.dic['CIMI_COOKIES_PATH'] = env_cimi_cookies_path
+
+    env_cimi_user = os.getenv('CIMI_USER', default='not-defined')
+    LOG.info('[CIMI_USER=' + env_cimi_user + ']')
+    if env_cimi_user != 'not-defined':
+        config.dic['CIMI_USER'] = env_cimi_user
+
+    env_cimi_password = os.getenv('CIMI_PASSWORD', default='not-defined')
+    LOG.info('[CIMI_PASSWORD=' + env_cimi_password + ']')
+    if env_cimi_password != 'not-defined':
+        config.dic['CIMI_PASSWORD'] = env_cimi_password
+
+    # CIMI
+    LOG.info('Checking CIMI configuration...')
+
+    LOG.info('[CIMI_URL=' + config.dic['CIMI_URL'] + ']')
+    LOG.info('[CIMI_COOKIES_PATH=' + config.dic['CIMI_COOKIES_PATH'] + ']')
+    LOG.info('[CIMI_USER=' + config.dic['CIMI_USER'] + ']')
+    LOG.info('[CIMI_PASSWORD=' + config.dic['CIMI_PASSWORD'] + ']')
 
     # APP
     app = Flask(__name__)
@@ -67,19 +100,6 @@ def default_route():
         'status': 'Running',
         'api_doc_json': 'https://localhost:' + str(config.dic['SERVER_PORT']) + config.dic['API_DOC_URL'],
         'api_doc_html': 'https://localhost:' + str(config.dic['SERVER_PORT']) + config.dic['API_DOC_URL'] + '.html#!/spec'
-    }
-    resp = Response(json.dumps(data), status=200, mimetype='application/json')
-    return resp
-
-
-###############################################################################
-## Initialization
-###############################################################################
-@app.route('/api/v1/user-management/initialize', methods=['POST'])
-def initialize():
-    data = {
-        'message': '[User Management Module - CIMI] Initialization',
-        'result': cimi.connect_to_cimi()
     }
     resp = Response(json.dumps(data), status=200, mimetype='application/json')
     return resp
