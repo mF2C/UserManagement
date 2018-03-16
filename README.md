@@ -15,7 +15,7 @@ The User Management module is a component of the European Project mF2C.
 
 [Installation Guide](#installation-guide)
 
-[Usage Guide](#usage-guide) (Test component)
+[Usage Guide](#usage-guide)
 
 [Relation to other mF2C components](#relation-to-other-mf2c-components)
 
@@ -32,7 +32,7 @@ It is also responsible for checking that the mF2C applications act according to 
 
 This module is part of the Agent Controller component:
 
-![Agent Controller](resources/ac.png)
+![Agent Controller](docresources/ac.png)
 
 This module is composed of three components:
 - Profiling
@@ -46,13 +46,12 @@ This module is composed of three components:
 #### 1. Requirements
 
 1. [Docker](https://docs.docker.com/install/)
-2. [Docker-Compose](https://docs.docker.com/compose/install/) (for integration with other components)
+2. [mF2C CIMI server](https://github.com/mF2C/cimi)
 
 Dockerfile content:
 
 ```
-FROM python:2.7.14-jessie
-#FROM python:3.4-alpine
+FROM python:3.4-alpine
 ADD . /code
 WORKDIR /code
 RUN pip install -r requirements.txt
@@ -60,120 +59,82 @@ EXPOSE 46300
 CMD ["python", "app.py"]
 ```
 
-About the python image used in the Dockerfile...
+#### 2. Install & Launch with Docker
 
-- *python:2.7.14-jessie*: this image should be used when working directly with Dataclay - Data Management module
-    - Dataclay needs python 2.7.9 - 2.7.14
-- *python:3.4-alpine*: when using only CIMI
-    - 3.* (not tested with CIMI)
+1. [Install and launch the CIMI server](https://github.com/mF2C/cimi/tree/master/_demo)
 
-#### 2. Install
-
-###### 2.1 Launch with Docker
-
-How to install the User Management module:
-
-1. Clone / download repository
+2. Clone / download repository
 
 ```bash
 git clone https://github.com/mF2C/UserManagement.git
 ```
 
-2. Go to UserManagement folder
+3. Go to UserManagement folder
 
 ```bash
 cd UserManagement
 ```
 
-3. Build application:
+4. Build application:
 
 ```bash
 sudo docker build -t um-app .
 ```
 
-4. Run application:
+5. Run application:
 
 ```bash
 sudo docker run -p 46300:46300 um-app
-sudo docker run --env CIMI_URL=https://192.168.252.41 -p 46300:46300 um-app
 ```
 
-5. REST API can be accessed at port 46300:
-
-     - List of services (json): _https://localhost:46300/api/v1/user-management_
-
-     - List of services (swagger ui): _https://localhost:46300/api/v1/user-management.html_
-
-###### 2.2. Launch with Docker-Compose
-
-How to install the User Management module and other components:
-
-_-not ready-_
-
-###### 2.3. Launch application and dataClay
-
-_-not ready-_
-
-
-#### 3. Working with Dataclay - Data Management module
-
-1. Download [Dataclay](https://github.com/mF2C/dataClay)
-
-2. Initialize the Dataclay services
+Or
 
 ```bash
-cd orchestration
-docker-compose rm  # to clean the previous containers, if exist
-docker-compose up
+sudo docker run --env CIMI_URL=https://192.192.192.192 -p 46300:46300 um-app
 ```
 
-###### 3.1. User Mgmt module
+6. REST API can be accessed at port 46300:
 
-1. register
+     - List of services (json): _https://192.192.192.192:46300/api/v1/user-management_
 
-```bash
-sudo bash register.sh
-```
-
-2. launch python virtualenv
-
-```bash
-virtualenv env
-source env/bin/activate
-```
-
-```bash
-deactivate
-```
-
-3. Edit _client.properties_ file
-
-```bash
-HOST=192.168.252.42
-TCPPORT=11034
-```
-
-4. launch application
-
-(/usr/bin/python2.7)
-
-```bash
-python rest_api.py
-```
+     - List of services (swagger ui): _https://192.192.192.192:46300/api/v1/user-management.html_
 
 -----------------------
 
 ### Usage Guide
 
+Create one or more users by executing `create_user.py`
+    - Edit the URLs of this file before executing it:
+
+```python
+r = requests.post('https://192.192.192.192/api/user',
+                  verify=False,
+                  headers={'Content-Type': 'application/json',
+                          'Accept': 'application/json'},
+                  json=body)
+```
+
+Launch the User Management module...
+
+```bash
+sudo docker run --env CIMI_URL=https://192.192.192.192 -p 46300:46300 um-app
+```
+
+Other environment variables that can be defined when launching the service:
+
+- CIMI_USER
+- CIMI_PASSWORD
+- CIMI_COOKIES_PATH
+
+```bash
+sudo docker run --env CIMI_URL=https://192.192.192.192 --env CIMI_USER="testuser" --env CIMI_PASSWORD="testuserpassword"  --env CIMI_COOKIES_PATH="~./cookies" -p 46300:46300 um-app
+```
+
 After installing the User Management module, the REST API services can be accessed at port 46300:
 
-     - List of services (json): _https://localhost:46300/api/v1/user-management_
+     - List of services (json): _https://192.192.192.192:46300/api/v1/user-management_
 
-     - List of services (swagger ui): _https://localhost:46300/api/v1/user-management.html_
-
-#### Test component
-
-_-not ready-_
+     - List of services (swagger ui): _https://192.192.192.192:46300/api/v1/user-management.html_
 
 -----------------------
 
@@ -183,8 +144,7 @@ The User Management module is connected with the following mF2C components:
 
 - Is called by the following modules / components:
     - Lifecycle Management: it needs information about the profiling and sharing model before 'launching' a service
-    - ...
+
 - Makes calls to the following modules / components:
-    - Landscaper:
-    - Lifecycle Management:
-    - ...
+    - Landscaper: ??
+    - Lifecycle Management: it sends the Lifecycle warnings when mF2C uses more resources than defined by the user
