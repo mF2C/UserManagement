@@ -14,15 +14,16 @@ Created on 27 sept. 2017
 from usermgnt import config
 import requests
 from usermgnt.utils.logs import LOG
-from slipstream.api import Api
 
 
-# TODO
 # CALL TO ?????
 # get allowed services ==> ??
+# TODO
 def get_allowed_services():
     try:
         LOG.info("User-Management: Dependencies: get_allowed_services")
+
+        LOG.warning("User-Management: Dependencies: get_allowed_services not implemented")
 
         allowed_services = ['serv1', 'serv2', 'serv3']
         return allowed_services
@@ -33,9 +34,12 @@ def get_allowed_services():
 
 # CALL TO LANDSCAPER
 # get resources used by apps ==> landscaper.GetSubgraph(serviceID)
+# TODO
 def get_resources_used_by_service(serviceID):
     try:
         LOG.info("User-Management: Dependencies: get_resources_used_by_service: " + str(serviceID))
+
+        LOG.warning("User-Management: Dependencies: get_resources_used_by_service not implemented")
 
         r = requests.get(config.dic['URL_PM_LANDSCAPER'], verify=config.dic['VERIFY_SSL'])
         if r.status_code == 200:
@@ -62,6 +66,7 @@ def get_resources_used_by_service(serviceID):
 #               "warning_txt": ""
 #           }
 #   }
+# TODO
 def send_warning(user_id, device_id, list_resources_used, profile, shared_model):
     try:
         LOG.info("User-Management: Dependencies: send_warning: " + user_id + "/" + device_id)

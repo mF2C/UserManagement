@@ -22,7 +22,7 @@ def create_admin_user():
                 }
             }
 
-        r = requests.post('https://192.192.192.192/api/user',
+        r = requests.post('https://192.168.252.41/api/user',
                           verify=False,
                           headers={'Content-Type': 'application/json',
                                   'Accept': 'application/json'},
@@ -57,7 +57,7 @@ def create_anon_user():
                 }
             }
 
-        r = requests.post('https://192.192.192.192/api/user',
+        r = requests.post('https://192.168.252.41/api/user',
                           verify=False,
                           headers={'Content-Type': 'application/json',
                                   'Accept': 'application/json'},

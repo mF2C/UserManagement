@@ -12,6 +12,7 @@ Created on 27 sept. 2017
 """
 
 
+import datetime
 import sys, traceback
 from usermgnt import config
 from usermgnt.utils.logs import LOG
@@ -24,9 +25,9 @@ api = None
 
 # ACL
 acl = {"owner":
-           {"principal": "ADMIN",
+           {"principal": config.dic['CIMI_USER'], #"ADMIN",
             "type": "ROLE"},
-       "rules": [{"principal": "ADMIN",
+       "rules": [{"principal": config.dic['CIMI_USER'], #"ADMIN",
                   "type": "ROLE",
                   "right": "ALL"},
                  {"principal": "ANON",
@@ -35,7 +36,7 @@ acl = {"owner":
                  ]}
 
 
-# CIMI initialization
+# connect_to_cimi: CIMI initialization / api creation
 def connect_to_cimi():
     global api
     try:
@@ -56,7 +57,7 @@ def connect_to_cimi():
                                 "password": config.dic['CIMI_PASSWORD']})))
 
         # test api
-        resp = api.cimi_search('users')
+        resp = api.cimi_search(config.dic['CIMI_USERS'])
         LOG.info('UM connected to ' + config.dic['CIMI_URL'] + ": total users: " + str(resp.count))
         return str(resp.count)
 
@@ -66,11 +67,22 @@ def connect_to_cimi():
         return -1
 
 
-# common_map_fields: generates a map with time and acl values
-def common_map_fields():
+# common_new_map_fields: generates a map with time and acl values
+def common_new_map_fields():
+    now = datetime.datetime.now()
     default_map = {
-        "created": "1964-08-25T10:00:00.0Z",
-        "updated": "1964-08-25T10:00:00.0Z",
+        "created": now.strftime('%Y-%m-%dT%H:%M:%S.%fZ'),
+        "updated": now.strftime('%Y-%m-%dT%H:%M:%S.%fZ'),
+        "acl": acl
+    }
+    return default_map
+
+
+# common_update_map_fields: generates a map with time and acl values
+def common_update_map_fields():
+    now = datetime.datetime.now()
+    default_map = {
+        "updated": now.strftime('%Y-%m-%dT%H:%M:%S.%fZ'),
         "acl": acl
     }
     return default_map
@@ -87,9 +99,10 @@ def get_api():
 
 
 # get_user_by_id: get user by id
+# curl -XGET cimi/api/sharing-model?$filter=acl/owner/principal="user"
 def get_user_by_id(user_id):
     try:
-        resp = get_api().cimi_search("users", filter="id='" + user_id + "'")
+        resp = get_api().cimi_search(config.dic['CIMI_USERS'], filter="acl/owner/principal='" + user_id + "'")
         if resp.count == 1:
             return resp.json['users'][0] # dict
         else:
@@ -132,11 +145,12 @@ def delete_resource(resource_id):
 
 
 # get_user_profile: get profile from user
+# curl -XGET cimi/api/sharing-model?$filter=acl/owner/principal="user"
 def get_user_profile(user_id):
     try:
-        resp = get_api().cimi_search("profiles", filter="user_id='" + user_id + "'")
+        resp = get_api().cimi_search(config.dic['CIMI_PROFILES'], filter="acl/owner/principal='" + user_id + "'")
         if resp.count == 1:
-            return resp.json['profiles'][0] # dict
+            return resp.json[config.dic['CIMI_PROFILES']][0] # dict
         else:
             LOG.warning("User's profile not found [user_id=" + user_id + "]")
             return -1
@@ -147,11 +161,12 @@ def get_user_profile(user_id):
 
 
 # get_user_sharing_model: get sharing model from user
+# curl -XGET cimi/api/sharing-model?$filter=acl/owner/principal="user"
 def get_user_sharing_model(user_id):
     try:
-        resp = get_api().cimi_search("sharingmodels", filter="user_id='" + user_id + "'")
+        resp = get_api().cimi_search(config.dic['CIMI_SHARING_MODELS'], filter="acl/owner/principal='" + user_id + "'")
         if resp.count == 1:
-            return resp.json['sharingmodels'][0]  # dict
+            return resp.json[config.dic['CIMI_SHARING_MODELS']][0]  # dict
         else:
             LOG.warning("User's sharing model not found [user_id=" + user_id + "]")
             return -1
@@ -168,8 +183,9 @@ def add_resource(resource_name, content):
         LOG.debug("Adding new resource to [" + resource_name + "] ... ")
 
         # complete map and update resource
-        content.update(common_map_fields())
+        content.update(common_new_map_fields())
 
+        content.pop("user_id", None)
         resp = get_api().cimi_add(resource_name, content)
         LOG.debug("cimi_add/resp:        " + str(resp.message))
         LOG.debug("cimi_add/json/resource-id: " + str(resp.json['resource-id']))
@@ -187,8 +203,9 @@ def update_resource(resource_id, content):
         LOG.debug("Adding new resource to [" + resource_id + "] ... ")
 
         # complete map and update resource
-        content.update(common_map_fields())
+        content.update(common_update_map_fields())
 
+        content.pop("user_id", None)
         resp = get_api().cimi_edit(resource_id, content)
         LOG.debug("cimi_edit/resp: " + str(resp))
         LOG.debug("cimi_edit/resp/id: " + str(resp.id))

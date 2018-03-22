@@ -22,13 +22,19 @@ dic = { "SERVER_PORT":                  46300,
         "ENABLE_ASSESSMENT_TESTS":      True,
         # VERIFY_SSL controls whether we verify the server's TLS certificate or not
         "VERIFY_SSL":                   False,
+        # CIMI RESOURCES
+        "CIMI_USERS":                   "users",
+        "CIMI_PROFILES":                "userProfiles",
+        "CIMI_PROFILE":                 "user-profile",
+        "CIMI_SHARING_MODELS":          "sharingModels",
+        "CIMI_SHARING_MODEL":           "sharing-model",
         # URLs from other mF2C components:
         # CIMI
-        "CIMI_URL":                     "https://192.192.192.192",
+        "CIMI_URL":                     "https://192.168.252.41",
         "CIMI_COOKIES_PATH":            "~./cookies",           # "C://TMP/cookies",
-        "CIMI_USER":                    "testuser2",
+        "CIMI_USER":                    "testuser",
         "CIMI_PASSWORD":                "testpassword",
         # PM-Lifecycle: /api/v1/lifecycle/<string:service_id>
-        "URL_PM_LIFECYCLE":             "https://192.192.192.192:46000/api/v1/lifecycle/",
+        "URL_PM_LIFECYCLE":             "https://192.168.252.41:46000/api/v1/lifecycle/",
         # PM-Landscaper: api/v1/landscape/...
-        "URL_PM_LANDSCAPER":            "https://192.192.192.192:46010/api/v1/landscaper/"}
+        "URL_PM_LANDSCAPER":            "https://192.168.252.41:46010/api/v1/landscaper/"}

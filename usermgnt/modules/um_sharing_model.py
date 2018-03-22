@@ -19,7 +19,7 @@ from usermgnt.utils.logs import LOG
 
 # Sharing model content:
 # {
-#       "user_id": "user/1230958abdef",
+#       ----------------"user_id": "user/1230958abdef",
 # 	    "max_apps": integer,
 # 	    "gps_allowed": boolean,
 # 	    "max_cpu_usage": integer,
@@ -52,7 +52,8 @@ def init_sharing_model(data):
         return common.gen_response(406, 'parameter not found: user_id', 'data', str(data))
 
     # check if sharing_model exists
-    sharing_model = datamgmt.get_sharing_model(data['user_id'])
+    user_id = data['user_id']
+    sharing_model = datamgmt.get_sharing_model(user_id)
     if sharing_model == -1 or sharing_model is None:
         # initializes sharing_model
         sharing_model = datamgmt.init_sharing_model(data)
@@ -61,7 +62,7 @@ def init_sharing_model(data):
         else:
             return common.gen_response_ok('Sharing model initialized', 'data', str(data), 'sharing_model', sharing_model.json)
     else:
-        return common.gen_response_ko('Warning: Sharing model already exists', 'user_id', data['user_id'], 'sharing_model', sharing_model)
+        return common.gen_response_ko('Warning: Sharing model already exists', 'user_id', user_id, 'sharing_model', sharing_model)
 
 
 # Updates shared resources values
@@ -72,11 +73,12 @@ def update_sharing_model(data):
         return common.gen_response(406, 'parameter not found: user_id', 'data', str(data))
 
     # updates sharing_model
+    user_id = data['user_id']
     sharing_model = datamgmt.update_sharing_model(data)
     if sharing_model is None:
         return common.gen_response(500, 'Exception', 'data', str(data), 'sharing_model', {})
     elif sharing_model == -1:
-        return common.gen_response_ko('Warning: Sharing model not found', 'user_id', data['user_id'], 'profile', {})
+        return common.gen_response_ko('Warning: Sharing model not found', 'user_id', user_id, 'profile', {})
     else:
         return common.gen_response_ok('Sharing model updated', 'data', str(data), 'sharing_model', sharing_model.json)
 
@@ -89,9 +91,13 @@ def delete_sharing_model_values(data):
         return common.gen_response(406, 'parameter not found: user_id', 'data', str(data))
 
     # deletes sharing_model
-    if datamgmt.delete_sharing_model(data['user_id']) is None:
-        return common.gen_response(500, 'Exception', 'user_id', data['user_id'])
+    user_id = data['user_id']
+    res = datamgmt.delete_sharing_model(user_id)
+    if res is None:
+        return common.gen_response(500, 'Exception', 'user_id', user_id)
+    elif res == -1:
+        return common.gen_response_ko('Warning: Sharing model not found', 'user_id', user_id, 'profile', {})
     else:
-        return common.gen_response_ok('Sharing model deleted', 'user_id', data['user_id'])
+        return common.gen_response_ok('Sharing model deleted', 'user_id', user_id)
 
 

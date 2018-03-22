@@ -19,7 +19,7 @@ from usermgnt.utils.logs import LOG
 
 # Profile content:
 #  {
-#       "user_id": "user/1230958abdef",
+#       ----------------"user_id": "user/1230958abdef",
 #  	    "id_key": string,
 #  	    "email": string,
 #  	    "service_consumer": boolean,
@@ -57,21 +57,23 @@ def get_services(user_id):
 #   data: {'user_id':'', 'email':''}
 def register_user(data):
     LOG.info("User-Management: Profiling module: register_user: " + str(data))
-    if 'user_id' not in data or 'email' not in data:
-        LOG.warning('User-Management: Profiling module: register_user: parameter not found: user_id / email')
-        return common.gen_response(405, 'parameter not found: user_id / email', 'data', str(data))
+    if 'user_id' not in data or 'service_consumer' not in data or 'resource_contributor' not in data:
+        LOG.warning('User-Management: Profiling module: register_user: parameter not found: user_id / service_consumer'
+                    ' / resource_contributor')
+        return common.gen_response(405, 'parameter not found: user_id / service_consumer / resource_contributor', 'data', str(data))
 
     # check if profile exists
-    user_profile = datamgmt.get_profiling(data['user_id'])
+    user_id = data['user_id']
+    user_profile = datamgmt.get_profiling(user_id)
     if user_profile == -1 or user_profile is None:
         # register user/profile
         user_profile = datamgmt.register_user(data)
         if user_profile is None:
             return common.gen_response(500, 'Error', 'profile', {})
         else:
-            return common.gen_response_ok('User registered', 'user_id', data['user_id'], 'profile', user_profile.json)
+            return common.gen_response_ok('User registered', 'user_id', user_id, 'profile', user_profile.json)
     else:
-        return common.gen_response_ko('Warning: User profile already exists', 'user_id', data['user_id'], 'profile', user_profile)
+        return common.gen_response_ko('Warning: User profile already exists', 'user_id', user_id, 'profile', user_profile)
 
 
 # Updates users profile
@@ -83,13 +85,14 @@ def update_profile(data):
         return common.gen_response(405, 'parameter not found: user_id', 'data', str(data))
 
     # update user
+    user_id = data['user_id']
     user_profile = datamgmt.update_profile(data)
     if user_profile is None:
         return common.gen_response(500, 'Error', 'profile', {})
     elif user_profile == -1:
-        return common.gen_response_ko('Warning: User profile not found', 'user_id', data['user_id'], 'profile', {})
+        return common.gen_response_ko('Warning: User profile not found', 'user_id', user_id, 'profile', {})
     else:
-        return common.gen_response_ok('User updated', 'user_id', data['user_id'], 'profile', user_profile.json)
+        return common.gen_response_ok('User updated', 'user_id', user_id, 'profile', user_profile.json)
 
 
 # Deletes users profile

@@ -87,8 +87,6 @@ sudo docker build -t um-app .
 sudo docker run -p 46300:46300 um-app
 ```
 
-Or
-
 ```bash
 sudo docker run --env CIMI_URL=https://192.192.192.192 -p 46300:46300 um-app
 ```

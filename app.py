@@ -117,7 +117,7 @@ class GetProfiling(Resource):
         authorizations=[],
         parameters=[{
                 "name": "user_id",
-                "description": "User ID. Example: 'testuser2'",
+                "description": "User ID. Example: 'testuser'",
                 "required": True,
                 "paramType": "path",
                 "type": "string"
@@ -127,7 +127,7 @@ class GetProfiling(Resource):
                 "message": "Exception processing request"
             }])
     def get(self, user_id):
-        return um_profiling.get_profiling("user/" + user_id)    # TODO solve 'slash' problem
+        return um_profiling.get_profiling(user_id)    # TODO solve 'slash' problem
 
 
 class Profiling(Resource):
@@ -139,16 +139,15 @@ class Profiling(Resource):
         authorizations=[],
         parameters=[{
                 "name": "body",
-                "description": "Parameters in JSON format.<br/>Example: <br/>{\"user_id\":\"user/testuser2\", "
-                               "\"email\":\"email1@gmail.com\", \"service_consumer\":true, \"resource_contributor\":false,"
-                               "\"id_key\":\"0fac123e3f90\"}",
+                "description": "Parameters in JSON format.<br/>Example: <br/>{\"user_id\":\"testuser\", "
+                               "\"service_consumer\":true, \"resource_contributor\":false}",
                 "required": True,
                 "paramType": "body",
                 "type": "string"
             }],
         responseMessages=[{
                 "code": 405,
-                "message": "Parameter not found: user_id / email"
+                "message": "Parameter not found: user_id / service_consumer / resource_contributor"
             },{
                 "code": 500,
                 "message": "Exception processing request"
@@ -164,8 +163,8 @@ class Profiling(Resource):
         authorizations=[],
         parameters=[{
                 "name": "body",
-                "description": "Parameters in JSON format.<br/>Example: <br/>{\"user_id\":\"user/testuser2\", "
-                               "\"email\":\"emailasd@gmail.com\", \"service_consumer\":false}",
+                "description": "Parameters in JSON format.<br/>Example: <br/>{\"user_id\":\"testuser\", "
+                               "\"resource_contributor\":false, \"service_consumer\":false}",
                 "required": True,
                 "paramType": "body",
                 "type": "string"
@@ -188,7 +187,7 @@ class Profiling(Resource):
         authorizations=[],
         parameters=[{
                 "name": "body",
-                "description": "Parameters in JSON format.<br/>Example: <br/>{\"user_id\":\"user/testuser2\"}",
+                "description": "Parameters in JSON format.<br/>Example: <br/>{\"user_id\":\"testuser\"}",
                 "required": True,
                 "paramType": "body",
                 "type": "string"
@@ -292,7 +291,7 @@ class GetSharingModel(Resource):
         authorizations=[],
         parameters=[{
                 "name": "user_id",
-                "description": "User ID. Example: 'testuser2'",
+                "description": "User ID. Example: 'testuser'",
                 "required": True,
                 "paramType": "path",
                 "type": "string"
@@ -302,7 +301,7 @@ class GetSharingModel(Resource):
                 "message": "Exception processing request"
             }])
     def get(self, user_id):
-        return um_sharing_model.get_sharing_model("user/" + user_id)    # TODO solve 'slash' problem
+        return um_sharing_model.get_sharing_model(user_id)    # TODO solve 'slash' problem
 
 
 class SharingModel(Resource):
@@ -315,7 +314,7 @@ class SharingModel(Resource):
         parameters=[{
                 "name": "body",
                 "description": "Parameters in JSON format.<br/>Example: <br/>"
-                               "{\"user_id\":\"user/testuser2\", "
+                               "{\"user_id\":\"testuser\", "
                                "\"max_apps\": 2, "
                                "\"gps_allowed\": false, "
                                "\"max_cpu_usage\": 3, "
@@ -346,10 +345,10 @@ class SharingModel(Resource):
         parameters=[{
                 "name": "body",
                 "description": "Parameters in JSON format.<br/>Example: <br/>"
-                               "{\"user_id\":\"user/testuser2\", "
+                               "{\"user_id\":\"testuser\", "
                                "\"max_apps\": 2, "
-                               "\"GPS_allowed\": false, "
-                               "\"max_CPU_usage\": 3, "
+                               "\"gps_allowed\": false, "
+                               "\"max_cpu_usage\": 3, "
                                "\"max_memory_usage\": 3, "
                                "\"max_storage_usage\": 3, "
                                "\"max_bandwidth_usage\": 3, "
@@ -376,7 +375,7 @@ class SharingModel(Resource):
         authorizations=[],
         parameters=[{
                 "name": "body",
-                "description": "Parameters in JSON format.<br/>Example: <br/>{\"user_id\":\"user/testuser2\"}",
+                "description": "Parameters in JSON format.<br/>Example: <br/>{\"user_id\":\"testuser\"}",
                 "required": True,
                 "paramType": "body",
                 "type": "string"

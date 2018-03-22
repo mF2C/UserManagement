@@ -13,6 +13,7 @@ Created on 27 sept. 2017
 
 import usermgnt.mF2C.cimi as cimi
 from usermgnt.utils.logs import LOG
+from usermgnt import config
 
 
 ###############################################################################
@@ -28,10 +29,10 @@ def get_user_by_id(user_id):
 # SHARING MODEL
 #
 # {
-#       "user_id": "user/1230958abdef",
+#       ----------------"user_id": "user/1230958abdef",
 # 	    "max_apps": integer,
-# 	    "GPS_allowed": boolean,
-# 	    "max_CPU_usage": integer,
+# 	    "gps_allowed": boolean,
+# 	    "max_cpu_usage": integer,
 # 	    "max_memory_usage": integer,
 # 	    "max_storage_usage": integer,
 # 	    "max_bandwidth_usage": integer,
@@ -47,14 +48,16 @@ def get_sharing_model(user_id):
 # Initializes shared resources values
 def init_sharing_model(data):
     LOG.info("User-Management: Data: init_sharing_model: " + str(data))
-    return cimi.add_resource("sharingmodels", data)
+    return cimi.add_resource(config.dic['CIMI_SHARING_MODELS'], data)
 
 
 # Updates shared resources values
 def update_sharing_model(data):
     LOG.info("User-Management: Data: update_sharing_model_values: " + str(data))
     resp = cimi.get_user_sharing_model(data['user_id'])
-    if resp:
+    if resp and resp == -1:
+        return -1
+    elif resp:
         resp = cimi.update_resource(resp['id'], data)
         return resp
     return None
@@ -64,7 +67,9 @@ def update_sharing_model(data):
 def delete_sharing_model(user_id):
     LOG.info("User-Management: Data: delete_sharing_model_values: " + user_id)
     resp = cimi.get_user_sharing_model(user_id)
-    if resp:
+    if resp and resp == -1:
+        return -1
+    elif resp:
         resp = cimi.delete_resource(resp['id'])
         return resp
     return None
@@ -74,7 +79,7 @@ def delete_sharing_model(user_id):
 # PROFILING
 #
 #  {
-#       "user_id": "user/1230958abdef",
+#       ----------------"user_id": "user/1230958abdef",
 #  	    "id_key": string,
 #  	    "email": string,
 #  	    "service_consumer": boolean,
@@ -101,7 +106,7 @@ def get_services(user_id):
 #   data: {'user_id':'', 'email':'', 'name':''}
 def register_user(data):
     LOG.info("User-Management: Data: register_user: " + str(data))
-    return cimi.add_resource("profiles", data)
+    return cimi.add_resource(config.dic['CIMI_PROFILES'], data)
 
 
 # Updates users profile
@@ -109,7 +114,7 @@ def register_user(data):
 def update_profile(data):
     LOG.info("User-Management: Data: update_profile: " + str(data))
     resp = cimi.get_user_profile(data['user_id'])
-    if resp == -1:
+    if resp and resp == -1:
         return -1
     elif resp:
         resp = cimi.update_resource(resp['id'], data)
@@ -121,7 +126,7 @@ def update_profile(data):
 def delete_profile(user_id):
     LOG.info("User-Management: Data: delete_profile: " + user_id)
     resp = cimi.get_user_profile(user_id)
-    if resp == -1:
+    if resp and resp == -1:
         return None
     elif resp:
         resp = cimi.delete_resource(resp['id'])
