@@ -71,7 +71,7 @@ def register_user(data):
         if user_profile is None:
             return common.gen_response(500, 'Error', 'profile', {})
         else:
-            return common.gen_response_ok('User registered', 'user_id', user_id, 'profile', user_profile.json)
+            return common.gen_response_ok('User registered', 'user_id', user_id, 'profile', user_profile)
     else:
         return common.gen_response_ko('Warning: User profile already exists', 'user_id', user_id, 'profile', user_profile)
 
@@ -92,7 +92,7 @@ def update_profile(data):
     elif user_profile == -1:
         return common.gen_response_ko('Warning: User profile not found', 'user_id', user_id, 'profile', {})
     else:
-        return common.gen_response_ok('User updated', 'user_id', user_id, 'profile', user_profile.json)
+        return common.gen_response_ok('User updated', 'user_id', user_id, 'profile', user_profile)
 
 
 # Deletes users profile

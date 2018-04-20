@@ -60,7 +60,7 @@ def init_sharing_model(data):
         if sharing_model is None:
             return common.gen_response(500, 'Exception', 'data', str(data), 'sharing_model', {})
         else:
-            return common.gen_response_ok('Sharing model initialized', 'data', str(data), 'sharing_model', sharing_model.json)
+            return common.gen_response_ok('Sharing model initialized', 'data', str(data), 'sharing_model', sharing_model)
     else:
         return common.gen_response_ko('Warning: Sharing model already exists', 'user_id', user_id, 'sharing_model', sharing_model)
 
@@ -80,7 +80,7 @@ def update_sharing_model(data):
     elif sharing_model == -1:
         return common.gen_response_ko('Warning: Sharing model not found', 'user_id', user_id, 'profile', {})
     else:
-        return common.gen_response_ok('Sharing model updated', 'data', str(data), 'sharing_model', sharing_model.json)
+        return common.gen_response_ok('Sharing model updated', 'data', str(data), 'sharing_model', sharing_model)
 
 
 # Deletes  shared resources values

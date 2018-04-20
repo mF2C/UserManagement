@@ -227,7 +227,8 @@ class Services(Resource):
 
 api.add_resource(Profiling, '/api/v1/user-management/profiling/')
 api.add_resource(GetProfiling, '/api/v1/user-management/profiling/<string:user_id>')
-api.add_resource(Services, '/api/v1/user-management/profiling/services/<string:user_id>')
+# TODO IT-2:
+#api.add_resource(Services, '/api/v1/user-management/profiling/services/<string:user_id>')
 
 
 ###############################################################################

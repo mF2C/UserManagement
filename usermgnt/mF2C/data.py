@@ -17,15 +17,6 @@ from usermgnt import config
 
 
 ###############################################################################
-# USER
-
-# Get user
-def get_user_by_id(user_id):
-    LOG.info("User-Management: Data: get_user: " + str(user_id))
-    return cimi.get_user_by_id(user_id)
-
-
-###############################################################################
 # SHARING MODEL
 #
 # {

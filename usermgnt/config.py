@@ -24,17 +24,17 @@ dic = { "SERVER_PORT":                  46300,
         "VERIFY_SSL":                   False,
         # CIMI RESOURCES
         "CIMI_USERS":                   "users",
-        "CIMI_PROFILES":                "userProfiles",
+        "CIMI_PROFILES":                "user-profile", #"userProfiles",
         "CIMI_PROFILE":                 "user-profile",
-        "CIMI_SHARING_MODELS":          "sharingModels",
+        "CIMI_SHARING_MODELS":          "sharing-model", #"sharingModels",
         "CIMI_SHARING_MODEL":           "sharing-model",
         # URLs from other mF2C components:
         # CIMI
-        "CIMI_URL":                     "https://192.168.252.41",
-        "CIMI_COOKIES_PATH":            "~./cookies",           # "C://TMP/cookies",
-        "CIMI_USER":                    "testuser",
-        "CIMI_PASSWORD":                "testpassword",
+        "CIMI_URL":                     "https://dashboard.mf2c-project.eu/api",        # (env value) => https://proxy
+        "CIMI_COOKIES_PATH":            "~./cookies",
+        "CIMI_USER":                    "rsucasas",                                     # (env value)
+        "CIMI_PASSWORD":                "password",                                     # (env value)
         # PM-Lifecycle: /api/v1/lifecycle/<string:service_id>
-        "URL_PM_LIFECYCLE":             "https://192.168.252.41:46000/api/v1/lifecycle/",
+        "URL_PM_LIFECYCLE":             "https://127.0.0.1:46000/api/v1/lifecycle/",
         # PM-Landscaper: api/v1/landscape/...
-        "URL_PM_LANDSCAPER":            "https://192.168.252.41:46010/api/v1/landscaper/"}
+        "URL_PM_LANDSCAPER":            "https://127.0.0.1:46010/api/v1/landscaper/"}
