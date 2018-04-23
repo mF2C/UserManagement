@@ -30,10 +30,10 @@ dic = { "SERVER_PORT":                  46300,
         "CIMI_SHARING_MODEL":           "sharing-model",
         # URLs from other mF2C components:
         # CIMI
-        "CIMI_URL":                     "https://dashboard.mf2c-project.eu/api",        # (env value) => https://proxy
-        "CIMI_COOKIES_PATH":            "~./cookies",
-        "CIMI_USER":                    "rsucasas",                                     # (env value)
-        "CIMI_PASSWORD":                "password",                                     # (env value)
+        "CIMI_URL":                     "",         # (env value) => https://proxy
+        "CIMI_COOKIES_PATH":            "",         # (env value)
+        "CIMI_USER":                    "",         # (env value)
+        "CIMI_PASSWORD":                "",         # (env value)
         # PM-Lifecycle: /api/v1/lifecycle/<string:service_id>
         "URL_PM_LIFECYCLE":             "https://127.0.0.1:46000/api/v1/lifecycle/",
         # PM-Landscaper: api/v1/landscape/...

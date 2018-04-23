@@ -17,7 +17,7 @@ import usermgnt.modules.um_profiling as um_profiling
 import usermgnt.modules.um_sharing_model as um_sharing_model
 import usermgnt.modules.um_assesment as um_assesment
 import usermgnt.utils.auth as auth
-import os
+import usermgnt.utils.common as common
 from usermgnt import config
 from usermgnt.utils.logs import LOG
 from flask_cors import CORS
@@ -43,26 +43,10 @@ try:
 
     # get CIMI from environment values:
     LOG.info('Reading values from ENVIRONMENT...')
-
-    env_cimi_url = os.getenv('CIMI_URL', default='not-defined')
-    LOG.info('[CIMI_URL=' + env_cimi_url + ']')
-    if env_cimi_url != 'not-defined':
-        config.dic['CIMI_URL'] = env_cimi_url
-
-    env_cimi_cookies_path = os.getenv('CIMI_COOKIES_PATH', default='not-defined')
-    LOG.info('[CIMI_COOKIES_PATH=' + env_cimi_cookies_path + ']')
-    if env_cimi_cookies_path != 'not-defined':
-        config.dic['CIMI_COOKIES_PATH'] = env_cimi_cookies_path
-
-    env_cimi_user = os.getenv('CIMI_USER', default='not-defined')
-    LOG.info('[CIMI_USER=' + env_cimi_user + ']')
-    if env_cimi_user != 'not-defined':
-        config.dic['CIMI_USER'] = env_cimi_user
-
-    env_cimi_password = os.getenv('CIMI_PASSWORD', default='not-defined')
-    LOG.info('[CIMI_PASSWORD=' + env_cimi_password + ']')
-    if env_cimi_password != 'not-defined':
-        config.dic['CIMI_PASSWORD'] = env_cimi_password
+    common.set_value_env('CIMI_URL')
+    common.set_value_env('CIMI_COOKIES_PATH')
+    common.set_value_env('CIMI_USER')
+    common.set_value_env('CIMI_PASSWORD')
 
     # CIMI
     LOG.info('Checking CIMI configuration...')
