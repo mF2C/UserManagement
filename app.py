@@ -43,14 +43,25 @@ try:
 
     # get CIMI from environment values:
     LOG.info('Reading values from ENVIRONMENT...')
-    common.set_value_env('CIMI_URL')
     common.set_value_env('CIMI_COOKIES_PATH')
     common.set_value_env('CIMI_USER')
     common.set_value_env('CIMI_PASSWORD')
 
+    # CIMI URL
+    common.set_value_env('CIMI_URL')
+    LOG.debug('[CIMI_URL=' + config.dic['CIMI_URL'] + ']')
+    if "/api" not in config.dic['CIMI_URL'] and not config.dic['CIMI_URL'].endswith("/api"):
+        LOG.debug("Adding '/api' to CIMI_URL ...")
+        if config.dic['CIMI_URL'].endswith("/"):
+            config.dic['CIMI_URL'] = config.dic['CIMI_URL'] + "api"
+        else:
+            config.dic['CIMI_URL'] = config.dic['CIMI_URL'] + "/api"
+        LOG.debug('[CIMI_URL=' + config.dic['CIMI_URL'] + ']')
+    else:
+        LOG.debug("CIMI_URL ... " + config.dic['CIMI_URL'])
+
     # CIMI
     LOG.info('Checking CIMI configuration...')
-
     LOG.info('[CIMI_URL=' + config.dic['CIMI_URL'] + ']')
     LOG.info('[CIMI_COOKIES_PATH=' + config.dic['CIMI_COOKIES_PATH'] + ']')
     LOG.info('[CIMI_USER=' + config.dic['CIMI_USER'] + ']')
