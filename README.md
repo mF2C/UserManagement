@@ -19,6 +19,8 @@ The User Management module is a component of the European Project mF2C.
 
 [Relation to other mF2C components](#relation-to-other-mf2c-components)
 
+[LICENSE](#license)
+
 -----------------------
 
 ### Description
@@ -146,3 +148,10 @@ The User Management module is connected with the following mF2C components:
 - Makes calls to the following modules / components:
     - Landscaper: ??
     - Lifecycle Management: it sends the Lifecycle warnings when mF2C uses more resources than defined by the user
+
+
+-----------------------
+
+### LICENSE
+
+The User Management application is licensed under [Apache License, version 2](LICENSE.TXT).
