@@ -16,7 +16,7 @@ import time
 import threading
 import usermgnt.mF2C.mf2c as mf2c
 import usermgnt.mF2C.data as datamgmt
-from usermgnt.utils.logs import LOG
+from common.logs import LOG
 
 
 execute = True
@@ -61,7 +61,7 @@ def daemon():
             else:
                 list_resources_used = []
                 for serviceID in allowed_services:
-                    resources_used = mf2c.get_resources_used_by_service(serviceID) # TODO
+                    resources_used = mf2c.get_resources_used_by_mf2c(serviceID) # TODO
                     list_resources_used.append(resources_used)
 
                 # 5. check information and send warning to Lifecycle if needed

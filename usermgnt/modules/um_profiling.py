@@ -13,8 +13,8 @@ Created on 27 sept. 2017
 
 
 import usermgnt.mF2C.data as datamgmt
-import usermgnt.utils.common as common
-from usermgnt.utils.logs import LOG
+import common.common as common
+from common.logs import LOG
 
 
 # Profile content:
@@ -78,14 +78,9 @@ def register_user(data):
 
 # Updates users profile
 #   data: {'user_id':'', 'email':'', 'service_consumer': '', 'resource_contributor': ''}
-def update_profile(data):
+def update_profile(user_id, data):
     LOG.info("User-Management: Profiling module: update_profile: " + str(data))
-    if 'user_id' not in data:
-        LOG.warning('User-Management: Profiling module: update_profile: parameter not found: user_id')
-        return common.gen_response(405, 'parameter not found: user_id', 'data', str(data))
-
     # update user
-    user_id = data['user_id']
     user_profile = datamgmt.update_profile(data)
     if user_profile is None:
         return common.gen_response(500, 'Error', 'profile', {})
@@ -97,16 +92,12 @@ def update_profile(data):
 
 # Deletes users profile
 #   data: {'user_id':''}
-def delete_profile(data):
-    LOG.info("User-Management: Profiling module: delete_profile: " + str(data))
-    if 'user_id' not in data:
-        LOG.warning('User-Management: Profiling module: delete_profile: parameter not found: user_id')
-        return common.gen_response(405, 'parameter not found: user_id', 'data', str(data))
-
+def delete_profile(user_id):
+    LOG.info("User-Management: Profiling module: delete_profile: " + user_id)
     # delete profile
-    if datamgmt.delete_profile(data['user_id']) is None:
-        return common.gen_response(500, 'Error', 'user_id', data['user_id'])
+    if datamgmt.delete_profile(user_id) is None:
+        return common.gen_response(500, 'Error', 'user_id', user_id)
     else:
-        return common.gen_response_ok('Profile deleted', 'user_id', data['user_id'])
+        return common.gen_response_ok('Profile deleted', 'user_id', user_id)
 
 

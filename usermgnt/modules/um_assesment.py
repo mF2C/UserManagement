@@ -13,8 +13,8 @@ Created on 27 sept. 2017
 
 
 import usermgnt.modules.assessment_process as process
-from usermgnt.utils.logs import LOG
-import usermgnt.utils.common as common
+from common.logs import LOG
+import common.common as common
 
 
 # start process

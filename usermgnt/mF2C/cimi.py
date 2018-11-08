@@ -15,8 +15,8 @@ Created on 27 sept. 2017
 import requests
 import datetime
 import sys, traceback
-from usermgnt import config
-from usermgnt.utils.logs import LOG
+import config
+from common.logs import LOG
 
 
 # CIMI initialization

@@ -12,8 +12,8 @@ Created on 27 sept. 2017
 """
 
 import usermgnt.mF2C.cimi as cimi
-from usermgnt.utils.logs import LOG
-from usermgnt import config
+from common.logs import LOG
+import config
 
 
 ###############################################################################

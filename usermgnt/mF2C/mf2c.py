@@ -11,9 +11,9 @@ Created on 27 sept. 2017
 @author: Roi Sucasas - ATOS
 """
 
-from usermgnt import config
+import config
 import requests
-from usermgnt.utils.logs import LOG
+from common.logs import LOG
 
 
 # CALL TO ?????
@@ -35,17 +35,10 @@ def get_allowed_services():
 # CALL TO LANDSCAPER
 # get resources used by apps ==> landscaper.GetSubgraph(serviceID)
 # TODO
-def get_resources_used_by_service(serviceID):
+def get_resources_used_by_mf2c(serviceID):
     try:
         LOG.info("User-Management: Dependencies: get_resources_used_by_service: " + str(serviceID))
-
         LOG.warning("User-Management: Dependencies: get_resources_used_by_service not implemented")
-
-        r = requests.get(config.dic['URL_PM_LANDSCAPER'], verify=config.dic['VERIFY_SSL'])
-        if r.status_code == 200:
-            LOG.debug('User-Management: Dependencies: status_code=' + r.status_code + '; response: ' + r.text)
-        else:
-            LOG.error('User-Management: Dependencies: Error: status_code=' + r.status_code)
 
         return ""
     except:

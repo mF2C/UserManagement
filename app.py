@@ -1,71 +1,62 @@
+#!/usr/bin/python3
+
 """
-REST API
+USER MANAGEMENT MODULE & LIFECYCLE MANAGER - REST API
 This is being developed for the MF2C Project: http://www.mf2c-project.eu/
 
 Copyright: Roi Sucasas Font, Atos Research and Innovation, 2017.
 
 This code is licensed under an Apache 2.0 license. Please, refer to the LICENSE.TXT file for more information
 
-Created on 27 sept. 2017
+Created on 18 oct. 2018
 
 @author: Roi Sucasas - ATOS
 """
 
-#!/usr/bin/python
-
+import config as config
+# um
+import usermgnt.init_config as um_init_config
 import usermgnt.modules.um_profiling as um_profiling
 import usermgnt.modules.um_sharing_model as um_sharing_model
 import usermgnt.modules.um_assesment as um_assesment
-import usermgnt.utils.auth as auth
-import usermgnt.utils.common as common
-from usermgnt import config
-from usermgnt.utils.logs import LOG
+# common
+from common.logs import LOG
+# ext
 from flask_cors import CORS
 from flask import Flask, request, Response, json
 from flask_restful import Resource, Api
 from flask_restful_swagger import swagger
 
 
+'''
+REST API
+    Routes:
+        Root:
+            /api/v2
+                        GET:    get rest api service status
+            User Management:
+                /um/profiling/
+                        POST:
+                /um/profiling/<string:user_id>/<string:device_id>
+                        GET:    get user's profile
+                        PUT:    updates profile
+                        DELETE: deletes profile
+                /um/profile-services/<string:user_id>/<string:device_id>
+                        GET:    get allowed services (not implemented !)
+                /um/sharingmodel
+                        POST:
+                /um/sharingmodel/<string:user_id>/<string:device_id>
+                        GET:    get user's sharing model
+                        PUT:    updates sharing model
+                        DELETE: deletes sharing model
+                /um/assesment
+                        GET:    gets the status of the current assessment in the device
+                        PUT:    start / stop assessment
+'''
+
+
 try:
-    # CONFIGURATION values
-    LOG.info('Reading values from CONFIG FILE...')
-
-    LOG.info('[SERVER_PORT=' + str(config.dic['SERVER_PORT']) + ']')
-    LOG.info('[API_DOC_URL=' + config.dic['API_DOC_URL'] + ']')
-    LOG.info('[CERT_CRT=' + config.dic['CERT_CRT'] + ']')
-    LOG.info('[CERT_KEY=' + config.dic['CERT_KEY'] + ']')
-    LOG.info('[DEBUG=' + str(config.dic['DEBUG']) + ']')
-    # CIMI
-    LOG.info('[CIMI_URL=' + config.dic['CIMI_URL'] + ']')
-    LOG.info('[CIMI_COOKIES_PATH=' + config.dic['CIMI_COOKIES_PATH'] + ']')
-    LOG.info('[CIMI_USER=' + config.dic['CIMI_USER'] + ']')
-    LOG.info('[CIMI_PASSWORD=' + config.dic['CIMI_PASSWORD'] + ']')
-
-    # get CIMI from environment values:
-    LOG.info('Reading values from ENVIRONMENT...')
-    common.set_value_env('CIMI_COOKIES_PATH')
-    common.set_value_env('CIMI_USER')
-    common.set_value_env('CIMI_PASSWORD')
-
-    # CIMI URL
-    common.set_value_env('CIMI_URL')
-    LOG.debug('[CIMI_URL=' + config.dic['CIMI_URL'] + ']')
-    if "/api" not in config.dic['CIMI_URL'] and not config.dic['CIMI_URL'].endswith("/api"):
-        LOG.debug("Adding '/api' to CIMI_URL ...")
-        if config.dic['CIMI_URL'].endswith("/"):
-            config.dic['CIMI_URL'] = config.dic['CIMI_URL'] + "api"
-        else:
-            config.dic['CIMI_URL'] = config.dic['CIMI_URL'] + "/api"
-        LOG.debug('[CIMI_URL=' + config.dic['CIMI_URL'] + ']')
-    else:
-        LOG.debug("CIMI_URL ... " + config.dic['CIMI_URL'])
-
-    # CIMI
-    LOG.info('Checking CIMI configuration...')
-    LOG.info('[CIMI_URL=' + config.dic['CIMI_URL'] + ']')
-    LOG.info('[CIMI_COOKIES_PATH=' + config.dic['CIMI_COOKIES_PATH'] + ']')
-    LOG.info('[CIMI_USER=' + config.dic['CIMI_USER'] + ']')
-    LOG.info('[CIMI_PASSWORD=' + config.dic['CIMI_PASSWORD'] + ']')
+    um_init_config.init()
 
     # APP
     app = Flask(__name__)
@@ -73,25 +64,28 @@ try:
 
     # API DOC
     api = swagger.docs(Api(app),
-                       apiVersion='1.0',
+                       apiVersion='1.0.1',
                        api_spec_url=config.dic['API_DOC_URL'],
                        produces=["application/json", "text/html"],
                        swaggerVersion="1.2",
-                       description='User Management component REST API - mF2C',
+                       description='mF2C - User Management REST API',
                        basePath='http://localhost:' + str(config.dic['SERVER_PORT']),
                        resourcePath='/')
 except ValueError:
-    LOG.error('ERROR')
+    LOG.error('User-Management: app: Exception: Error while initializing app / api')
 
 
-###############################################################################
-## API Route
-###############################################################################
-@app.route('/api/v1/', methods=['GET'])
-@auth.requires_auth # test basic auth
+'''
+ API 'home' Route
+
+    '/api/v2/'
+    
+        GET:    get rest api service status
+'''
+@app.route('/api/v2/', methods=['GET'])
 def default_route():
     data = {
-        'app': 'User Management Module REST API',
+        'app': 'User Management modules REST API',
         'status': 'Running',
         'api_doc_json': 'https://localhost:' + str(config.dic['SERVER_PORT']) + config.dic['API_DOC_URL'],
         'api_doc_html': 'https://localhost:' + str(config.dic['SERVER_PORT']) + config.dic['API_DOC_URL'] + '.html#!/spec'
@@ -100,11 +94,21 @@ def default_route():
     return resp
 
 
-###############################################################################
-## Profiling
-###############################################################################
-class GetProfiling(Resource):
+########################################################################################################################
+### USER MANAGEMENT
+########################################################################################################################
+'''
+ ProfileInstance route: gets user's profile
+
+    '/api/v2/um/profiling/<string:user_id>/<string:device_id>'
+
+        GET:       Gets the user's profile from a device
+        PUT:
+        DELETE:
+'''
+class ProfileInstance(Resource):
     # Get Profile properties from user
+    # GET /api/v2/um/profiling/<string:user_id>/<string:device_id>
     @swagger.operation(
         summary="Returns the user's profile",
         notes="Returns the user's profile",
@@ -113,6 +117,12 @@ class GetProfiling(Resource):
         parameters=[{
                 "name": "user_id",
                 "description": "User ID. Example: 'testuser'",
+                "required": True,
+                "paramType": "path",
+                "type": "string"
+            }, {
+                "name": "device_id",
+                "description": "Device ID. Example: 'testdevice'",
                 "required": True,
                 "paramType": "path",
                 "type": "string"
@@ -125,38 +135,26 @@ class GetProfiling(Resource):
         return um_profiling.get_profiling(user_id)    # TODO solve 'slash' problem
 
 
-class Profiling(Resource):
-    # Initializes the users profile - User registration
-    @swagger.operation(
-        summary="Initializes a user's profile.",
-        notes="Initializes a user's profile.",
-        produces=["application/json"],
-        authorizations=[],
-        parameters=[{
-                "name": "body",
-                "description": "Parameters in JSON format.<br/>Example: <br/>{\"user_id\":\"testuser\", "
-                               "\"service_consumer\":true, \"resource_contributor\":false}",
-                "required": True,
-                "paramType": "body",
-                "type": "string"
-            }],
-        responseMessages=[{
-                "code": 405,
-                "message": "Parameter not found: user_id / service_consumer / resource_contributor"
-            },{
-                "code": 500,
-                "message": "Exception processing request"
-            }])
-    def post(self):
-        return um_profiling.register_user( request.get_json() )
-
     # Updates the users profile
+    # PUT /api/v2/um/profiling/<string:user_id>/<string:device_id>
     @swagger.operation(
         summary="Updates a user's profile.",
         notes="Updates a user's profile.",
         produces=["application/json"],
         authorizations=[],
         parameters=[{
+                "name": "user_id",
+                "description": "User ID. Example: 'testuser'",
+                "required": True,
+                "paramType": "path",
+                "type": "string"
+            }, {
+                "name": "device_id",
+                "description": "Device ID. Example: 'testdevice'",
+                "required": True,
+                "paramType": "path",
+                "type": "string"
+            }, {
                 "name": "body",
                 "description": "Parameters in JSON format.<br/>Example: <br/>{\"user_id\":\"testuser\", "
                                "\"resource_contributor\":false, \"service_consumer\":false}",
@@ -166,39 +164,93 @@ class Profiling(Resource):
             }],
         responseMessages=[{
                 "code": 405,
-                "message": "User ID parameter not found"
+                "message": "User ID / Device ID parameters not found"
             },{
                 "code": 500,
                 "message": "Exception processing request"
             }])
-    def put(self):
-        return um_profiling.update_profile( request.get_json() )
+    def put(self, user_id):
+        return um_profiling.update_profile(user_id, request.get_json())
+
 
     # Deletes the users profile
+    # DELETE /api/v2/um/profiling/<string:user_id>/<string:device_id>
     @swagger.operation(
         summary="Deletes the user's profile",
         notes="Deletes the user's profile.",
         produces=["application/json"],
         authorizations=[],
         parameters=[{
+                "name": "user_id",
+                "description": "User ID. Example: 'testuser'",
+                "required": True,
+                "paramType": "path",
+                "type": "string"
+            }, {
+                "name": "device_id",
+                "description": "Device ID. Example: 'testdevice'",
+                "required": True,
+                "paramType": "path",
+                "type": "string"
+            }],
+        responseMessages=[{
+                "code": 406,
+                "message": "User ID / Device ID parameters not found"
+            },{
+                "code": 500,
+                "message": "Exception processing request"
+            }])
+    def delete(self, user_id):
+        return um_profiling.delete_profile(user_id)
+
+api.add_resource(ProfileInstance, '/api/v2/um/profiling/<string:user_id>/<string:device_id>')
+
+
+'''
+ Profile route:
+
+    '/api/v2/um/profiling'
+
+        POST:       Creates a new profile
+'''
+class Profile(Resource):
+    # Initializes the users profile - User registration
+    # POST /api/v2/um/profiling
+    @swagger.operation(
+        summary="Initializes a user's profile.",
+        notes="Initializes a user's profile.",
+        produces=["application/json"],
+        authorizations=[],
+        parameters=[{
                 "name": "body",
-                "description": "Parameters in JSON format.<br/>Example: <br/>{\"user_id\":\"testuser\"}",
+                "description": "Parameters in JSON format.<br/>Example: <br/>{\"user_id\":\"testuser\", \"device_id\":\"testdevice\", "
+                               "\"service_consumer\":true, \"resource_contributor\":false}",
                 "required": True,
                 "paramType": "body",
                 "type": "string"
             }],
         responseMessages=[{
-                "code": 406,
-                "message": "User ID parameter not found"
+                "code": 405,
+                "message": "Parameter not found: user_id / device_id / service_consumer / resource_contributor"
             },{
                 "code": 500,
                 "message": "Exception processing request"
             }])
-    def delete(self):
-        return um_profiling.delete_profile( request.get_json() )
+    def post(self):
+        return um_profiling.register_user( request.get_json() )
+
+api.add_resource(Profile, '/api/v2/um/profiling/')
 
 
-class Services(Resource):
+'''
+TODO
+ ProfileServices route:
+
+    '/api/v2/um/profile-services/<string:user_id>/<string:device_id>'
+
+        GET:    Gets allowed services for user and device
+'''
+class ProfileServices(Resource):
     # Get Profile properties from user
     @swagger.operation(
         summary="Returns the user's allowed services",
@@ -211,6 +263,12 @@ class Services(Resource):
                 "required": True,
                 "paramType": "path",
                 "type": "string"
+            }, {
+                "name": "device_id",
+                "description": "Device ID. Example: 'testdevice'",
+                "required": True,
+                "paramType": "path",
+                "type": "string"
             }],
         responseMessages=[{
                 "code": 500,
@@ -219,18 +277,21 @@ class Services(Resource):
     def get(self, user_id):
         return um_profiling.get_services(user_id)
 
-
-api.add_resource(Profiling, '/api/v1/user-management/profiling/')
-api.add_resource(GetProfiling, '/api/v1/user-management/profiling/<string:user_id>')
 # TODO IT-2:
-#api.add_resource(Services, '/api/v1/user-management/profiling/services/<string:user_id>')
+#api.add_resource(ProfileServices, '/api/v2/um/profile-services/<string:user_id>/<string:device_id>')
 
 
-###############################################################################
-## Assessment
-###############################################################################
+'''
+ Assessment route:
+
+    '/api/v2/um/assesment'
+
+        GET:    gets the status of the current assessment in the device
+        PUT:    start / stop assessment
+'''
 class Assessment(Resource):
     # Get process status
+    # GET /api/v2/um/assesment
     @swagger.operation(
         summary="Returns the assessment process status",
         notes="Returns a json object with the information about the assessment process status",
@@ -245,6 +306,7 @@ class Assessment(Resource):
 
     # Process operation: start / stop
     #   data: {'operation':'stop/start'}
+    # PUT /api/v2/um/assesment
     @swagger.operation(
         summary="Starts / stops the assessment process",
         notes="Starts / stops the assessment process. 'operation' value (start, stop) is readed from body.",
@@ -271,14 +333,19 @@ class Assessment(Resource):
     def put(self):
         return um_assesment.operation( request.get_json() )
 
+api.add_resource(Assessment, '/api/v2/um/assesment')
 
-api.add_resource(Assessment, '/api/v1/user-management/assesment')
 
+'''
+ SharingModelInstance route:
 
-###############################################################################
-## Sharing Model
-###############################################################################
-class GetSharingModel(Resource):
+    '/api/v2/um/sharingmodel/<string:user_id>/<string:device_id>'
+
+        GET:    
+        PUT:    
+        DELETE:
+'''
+class SharingModelInstance(Resource):
     # Get the user sharing model
     @swagger.operation(
         summary="Returns the user's sharing model information",
@@ -291,6 +358,12 @@ class GetSharingModel(Resource):
                 "required": True,
                 "paramType": "path",
                 "type": "string"
+            }, {
+                "name": "device_id",
+                "description": "Device ID. Example: 'testdevice'",
+                "required": True,
+                "paramType": "path",
+                "type": "string"
             }],
         responseMessages=[{
                 "code": 500,
@@ -300,6 +373,92 @@ class GetSharingModel(Resource):
         return um_sharing_model.get_sharing_model(user_id)    # TODO solve 'slash' problem
 
 
+    # Updates sharing model
+    # PUT /api/v2/um/sharingmodel/<string:user_id>/<string:device_id>
+    @swagger.operation(
+        summary="Updates the user's shared resources values",
+        notes="Updates the user's shared resources values",
+        produces=["application/json"],
+        authorizations=[],
+        parameters=[{
+                "name": "user_id",
+                "description": "User ID. Example: 'testuser'",
+                "required": True,
+                "paramType": "path",
+                "type": "string"
+            }, {
+                "name": "device_id",
+                "description": "Device ID. Example: 'testdevice'",
+                "required": True,
+                "paramType": "path",
+                "type": "string"
+            }, {
+            "name": "body",
+            "description": "Parameters in JSON format.<br/>Example: <br/>"
+                           "{\"user_id\":\"testuser\", "
+                           "\"device_id\":\"testdevice\", "
+                           "\"max_apps\": 2, "
+                           "\"gps_allowed\": false, "
+                           "\"max_cpu_usage\": 3, "
+                           "\"max_memory_usage\": 3, "
+                           "\"max_storage_usage\": 3, "
+                           "\"max_bandwidth_usage\": 3, "
+                           "\"battery_limit\": 3 }",
+            "required": True,
+            "paramType": "body",
+            "type": "string"
+        }],
+        responseMessages=[{
+            "code": 406,
+            "message": "User ID / Device ID parameters not found not found"
+        }, {
+            "code": 500,
+            "message": "Exception processing request"
+        }])
+    def put(self, user_id):
+        return um_sharing_model.update_sharing_model(user_id, request.get_json())
+
+
+    # Deletes the shared resources values from a user
+    # DELETE /api/v2/um/sharingmodel/<string:user_id>/<string:device_id>
+    @swagger.operation(
+        summary="Deletes the shared resources values from a user",
+        notes="Deletes the shared resources values from a user",
+        produces=["application/json"],
+        authorizations=[],
+        parameters=[{
+                "name": "user_id",
+                "description": "User ID. Example: 'testuser'",
+                "required": True,
+                "paramType": "path",
+                "type": "string"
+            }, {
+                "name": "device_id",
+                "description": "Device ID. Example: 'testdevice'",
+                "required": True,
+                "paramType": "path",
+                "type": "string"
+            }],
+        responseMessages=[{
+            "code": 406,
+            "message": "User ID / Device ID parameters not found not found"
+        }, {
+            "code": 500,
+            "message": "Exception processing request"
+        }])
+    def delete(self, user_id):
+        return um_sharing_model.delete_sharing_model_values(user_id)
+
+api.add_resource(SharingModelInstance, '/api/v2/um/sharingmodel/<string:user_id>/<string:device_id>')
+
+
+'''
+ SharingModel route:
+
+    '/api/v2/um/sharingmodel'
+
+        POST:
+'''
 class SharingModel(Resource):
     # Initializes sharing model
     @swagger.operation(
@@ -311,6 +470,7 @@ class SharingModel(Resource):
                 "name": "body",
                 "description": "Parameters in JSON format.<br/>Example: <br/>"
                                "{\"user_id\":\"testuser\", "
+                               "\"device_id\":\"testdevice\", "
                                "\"max_apps\": 2, "
                                "\"gps_allowed\": false, "
                                "\"max_cpu_usage\": 3, "
@@ -324,7 +484,7 @@ class SharingModel(Resource):
             }],
         responseMessages=[{
                 "code": 406,
-                "message": "User ID parameter not found"
+                "message": "User ID / Device ID parameters not found not found"
             },{
                 "code": 500,
                 "message": "Exception processing request"
@@ -332,71 +492,22 @@ class SharingModel(Resource):
     def post(self):
         return um_sharing_model.init_sharing_model( request.get_json() )
 
-    # Updates sharing model
-    @swagger.operation(
-        summary="Updates the user's shared resources values",
-        notes="Updates the user's shared resources values",
-        produces=["application/json"],
-        authorizations=[],
-        parameters=[{
-                "name": "body",
-                "description": "Parameters in JSON format.<br/>Example: <br/>"
-                               "{\"user_id\":\"testuser\", "
-                               "\"max_apps\": 2, "
-                               "\"gps_allowed\": false, "
-                               "\"max_cpu_usage\": 3, "
-                               "\"max_memory_usage\": 3, "
-                               "\"max_storage_usage\": 3, "
-                               "\"max_bandwidth_usage\": 3, "
-                               "\"battery_limit\": 3 }",
-                "required": True,
-                "paramType": "body",
-                "type": "string"
-            }],
-        responseMessages=[{
-                "code": 406,
-                "message": "User ID parameter not found"
-            },{
-                "code": 500,
-                "message": "Exception processing request"
-            }])
-    def put(self):
-        return um_sharing_model.update_sharing_model( request.get_json() )
-
-    # Deletes the shared resources values from a user
-    @swagger.operation(
-        summary="Deletes the shared resources values from a user",
-        notes="Deletes the shared resources values from a user",
-        produces=["application/json"],
-        authorizations=[],
-        parameters=[{
-                "name": "body",
-                "description": "Parameters in JSON format.<br/>Example: <br/>{\"user_id\":\"testuser\"}",
-                "required": True,
-                "paramType": "body",
-                "type": "string"
-            }],
-        responseMessages=[{
-                "code": 406,
-                "message": "User ID parameter not found"
-            },{
-                "code": 500,
-                "message": "Exception processing request"
-            }])
-    def delete(self):
-        return um_sharing_model.delete_sharing_model_values( request.get_json() )
+api.add_resource(SharingModel, '/api/v2/um/sharingmodel')
 
 
-api.add_resource(SharingModel, '/api/v1/user-management/sharingmodel')
-api.add_resource(GetSharingModel, '/api/v1/user-management/sharingmodel/<string:user_id>')
-
-
-###############################################################################
-
+########################################################################################################################
+# MAIN
 def main():
+    LOG.info("Starting User Management application [version=" + str(config.dic['VERSION']) + "] ...")
+    LOG.info("Swagger running on http://localhost:" + str(config.dic['SERVER_PORT']) + config.dic['API_DOC_URL'] + ".html")
+    LOG.info("REST API running on http://localhost:" + str(config.dic['SERVER_PORT']) + config.dic['API_DOC_URL'])
+
+    # START (SSL) SERVER
+    # context = (config.dic['CERT_CRT'], config.dic['CERT_KEY'])
+    # app.run(host='0.0.0.0', port=config.dic['SERVER_PORT'], ssl_context=context, threaded=True, debug=False)
+
     # START SERVER
-    context = (config.dic['CERT_CRT'], config.dic['CERT_KEY'])
-    app.run(host='0.0.0.0', port=config.dic['SERVER_PORT'], ssl_context=context, threaded=True, debug=config.dic['DEBUG'])
+    app.run(host='0.0.0.0', port=config.dic['SERVER_PORT'], threaded=True, debug=False)
 
 
 if __name__ == "__main__":

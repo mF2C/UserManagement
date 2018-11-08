@@ -13,8 +13,8 @@ Created on 27 sept. 2017
 
 
 import usermgnt.mF2C.data as datamgmt
-import usermgnt.utils.common as common
-from usermgnt.utils.logs import LOG
+import common.common as common
+from common.logs import LOG
 
 
 # Sharing model content:
@@ -66,14 +66,9 @@ def init_sharing_model(data):
 
 
 # Updates shared resources values
-def update_sharing_model(data):
+def update_sharing_model(user_id, data):
     LOG.info("User-Management: Sharing model module: update_sharing_model_values: " + str(data))
-    if 'user_id' not in data:
-        LOG.warning('User-Management: Sharing model module: update_sharing_model_values: parameter not found: user_id')
-        return common.gen_response(406, 'parameter not found: user_id', 'data', str(data))
-
     # updates sharing_model
-    user_id = data['user_id']
     sharing_model = datamgmt.update_sharing_model(data)
     if sharing_model is None:
         return common.gen_response(500, 'Exception', 'data', str(data), 'sharing_model', {})
@@ -84,14 +79,9 @@ def update_sharing_model(data):
 
 
 # Deletes  shared resources values
-def delete_sharing_model_values(data):
-    LOG.info("User-Management: Sharing model module: delete_sharing_model_values: " + str(data))
-    if 'user_id' not in data:
-        LOG.warning('User-Management: Sharing model module: delete_sharing_model_values: parameter not found: user_id')
-        return common.gen_response(406, 'parameter not found: user_id', 'data', str(data))
-
+def delete_sharing_model_values(user_id):
+    LOG.info("User-Management: Sharing model module: delete_sharing_model_values: " + user_id)
     # deletes sharing_model
-    user_id = data['user_id']
     res = datamgmt.delete_sharing_model(user_id)
     if res is None:
         return common.gen_response(500, 'Exception', 'user_id', user_id)

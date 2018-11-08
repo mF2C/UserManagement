@@ -6,7 +6,7 @@ Copyright: Roi Sucasas Font, Atos Research and Innovation, 2017.
 
 This code is licensed under an Apache 2.0 license. Please, refer to the LICENSE.TXT file for more information
 
-Created on 27 sept. 2017
+Created on 09 feb. 2018
 
 @author: Roi Sucasas - ATOS
 """
@@ -24,4 +24,3 @@ consoleHandler = logging.StreamHandler()
 formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
 consoleHandler.setFormatter(formatter)
 LOG.addHandler(consoleHandler)
-
