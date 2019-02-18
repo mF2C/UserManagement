@@ -19,6 +19,8 @@ The User Management module is a component of the European Project mF2C.
 
 [Relation to other mF2C components](#relation-to-other-mf2c-components)
 
+[Resources managed by this component](#resources-managed-by-this-component)
+
 [LICENSE](#license)
 
 -----------------------
@@ -45,92 +47,34 @@ This module is composed of three components:
 
 ### Installation Guide
 
+This component is part of the mF2C Agent Controller and it requires all the other components to work properly.
+
 #### 1. Requirements
 
 1. [Docker](https://docs.docker.com/install/)
-2. [mF2C CIMI server](https://github.com/mF2C/cimi)
+2. [mF2C](https://github.com/mF2C/mF2C)
 
-Dockerfile content:
-
-```
-FROM python:3.4-alpine
-ADD . /code
-WORKDIR /code
-RUN pip install -r requirements.txt
-EXPOSE 46300
-CMD ["python", "app.py"]
-```
-
-#### 2. Install & Launch with Docker
-
-1. [Install and launch the CIMI server](https://github.com/mF2C/cimi/tree/master/_demo)
-
-2. Clone / download repository
-
-```bash
-git clone https://github.com/mF2C/UserManagement.git
-```
-
-3. Go to UserManagement folder
-
-```bash
-cd UserManagement
-```
-
-4. Build application:
-
-```bash
-sudo docker build -t um-app .
-```
-
-5. Run application:
-
-```bash
-sudo docker run -p 46300:46300 um-app
-```
-
-```bash
-sudo docker run --env CIMI_URL=https://192.192.192.192 -p 46300:46300 um-app
-```
-
-6. REST API can be accessed at port 46300:
-
-     - List of services (json): _https://192.192.192.192:46300/api/v1/user-management_
-
-     - List of services (swagger ui): _https://192.192.192.192:46300/api/v1/user-management.html_
+Read [Usage Guide](#usage-guide) section to see how to properly start the component.
 
 -----------------------
 
 ### Usage Guide
 
-Create one or more users by executing `create_user.py`
-    - Edit the URLs of this file before executing it:
+1. See the user guide that can be found in https://github.com/mF2C/Documentation/blob/master/documentation/user_guide/api.rst (TO BE DONE !!)
 
-```python
-r = requests.post('https://192.192.192.192/api/user',
-                  verify=False,
-                  headers={'Content-Type': 'application/json',
-                          'Accept': 'application/json'},
-                  json=body)
-```
-
-Launch the User Management module...
-
-```bash
-sudo docker run --env CIMI_URL=https://192.192.192.192 -p 46300:46300 um-app
-```
-
-Other environment variables that can be defined when launching the service:
+2. Environment variables that can be defined (in the [docker-compose](https://github.com/mF2C/mF2C) file) when launching the service:
 
 - CIMI_USER
 - CIMI_PASSWORD
 - CIMI_COOKIES_PATH
 
+Example:
+
 ```bash
 sudo docker run --env CIMI_URL=https://192.192.192.192 --env CIMI_USER="testuser" --env CIMI_PASSWORD="testuserpassword"  --env CIMI_COOKIES_PATH="~./cookies" -p 46300:46300 um-app
 ```
 
-After installing the User Management module, the REST API services can be accessed at port 46300:
+3. After installing the User Management module, the REST API services can be accessed at port 46300:
 
      - List of services (json): _https://192.192.192.192:46300/api/v1/user-management_
 
@@ -146,8 +90,64 @@ The User Management module is connected with the following mF2C components:
     - Lifecycle Management: it needs information about the profiling and sharing model before 'launching' a service
 
 - Makes calls to the following modules / components:
-    - Landscaper: ??
+    - Resource Manager:
     - Lifecycle Management: it sends the Lifecycle warnings when mF2C uses more resources than defined by the user
+
+-----------------------
+
+### Resources managed by this component
+
+
+
+**user_profile**
+
+```json
+{
+  "user_id": "user/1230958abdef",
+  "device_id": string,
+  "id": URI,
+  "name": string,
+  "description": "profiling ...",
+  "id_key": string,
+  "email": string,
+  "service_consumer": boolean,
+  "resource_contributor": boolean,
+  "max_apps": integer
+}
+```
+
+**sharing_model**
+
+```json
+{
+  "user_id": {:href "user/1230958abdef"},
+  "device_id": string,
+  "id": URI,
+  "name": string,
+  "description": "sharing model ...",
+  "GPS_allowed": boolean,
+  "max_CPU_usage": integer,
+  "max_memory_usage": integer,
+  "max_storage_usage": integer,
+  "max_bandwidth_usage": integer,
+  "battery_limit": integer
+}
+```
+
+To get information about battery level status:
+https://github.com/mF2C/cimi/blob/atos2/server/src/com/sixsq/slipstream/ssclj/resources/spec/device_dynamic.cljc
+
+```
+(s/def :cimi.device-dynamic/device ::cimi-common/resource-link)
+
+
+(s/def :cimi.device-dynamic/powerRemainingStatus ::cimi-core/nonblank-string)
+(s/def :cimi.device-dynamic/powerRemainingStatusSeconds ::cimi-core/nonblank-string)
+```
+
+To get number of apps running in a device:
+Lifecycle
+
 
 
 -----------------------

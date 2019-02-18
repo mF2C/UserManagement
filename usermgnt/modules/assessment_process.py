@@ -44,13 +44,13 @@ def daemon():
 
             # 0. get user_id & device_id    # TODO
             user_id = "user/testuser2"      # TODO user_id?
-            device_id = "device_id"         # TODO device_id?
+            device_id = "device_id"  # TODO device_id?
 
             # 1. get profile
             profile = datamgmt.get_profiling(user_id)
 
             # 2. get shared resources
-            shared_model = datamgmt.get_sharing_model(user_id)
+            shared_model = datamgmt.get_sharing_model(user_id, device_id)
 
             # 3. get services running in device or get all allowed services
             allowed_services = datamgmt.get_services(user_id) # TODO

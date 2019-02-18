@@ -20,42 +20,47 @@ from common.logs import LOG
 def init():
     try:
         # CONFIGURATION values
-        LOG.info('Reading values from CONFIG FILE...')
+        LOG.info('> USRMNGT: Reading values from CONFIG FILE...')
 
-        LOG.info('[SERVER_PORT=' + str(config.dic['SERVER_PORT']) + ']')
-        LOG.info('[API_DOC_URL=' + config.dic['API_DOC_URL'] + ']')
-        LOG.info('[CERT_CRT=' + config.dic['CERT_CRT'] + ']')
-        LOG.info('[CERT_KEY=' + config.dic['CERT_KEY'] + ']')
+        # HOST IP from environment values:
+        common.set_value_env('HOST_IP')
+
+        LOG.info('USRMNGT: [SERVER_PORT=' + str(config.dic['SERVER_PORT']) + ']')
+        LOG.info('USRMNGT: [API_DOC_URL=' + config.dic['API_DOC_URL'] + ']')
+        LOG.info('USRMNGT: [CERT_CRT=' + config.dic['CERT_CRT'] + ']')
+        LOG.info('USRMNGT: [CERT_KEY=' + config.dic['CERT_KEY'] + ']')
+        LOG.info('USRMNGT: [HOST_IP=' + config.dic['HOST_IP'] + ']')
+
         # CIMI
-        LOG.info('[CIMI_URL=' + config.dic['CIMI_URL'] + ']')
-        LOG.info('[CIMI_COOKIES_PATH=' + config.dic['CIMI_COOKIES_PATH'] + ']')
-        LOG.info('[CIMI_USER=' + config.dic['CIMI_USER'] + ']')
-        LOG.info('[CIMI_PASSWORD=' + config.dic['CIMI_PASSWORD'] + ']')
+        LOG.info('USRMNGT: [CIMI_URL=' + config.dic['CIMI_URL'] + ']')
+        LOG.info('USRMNGT: [CIMI_COOKIES_PATH=' + config.dic['CIMI_COOKIES_PATH'] + ']')
+        LOG.info('USRMNGT: [CIMI_USER=' + config.dic['CIMI_USER'] + ']')
+        LOG.info('USRMNGT: [CIMI_PASSWORD=' + config.dic['CIMI_PASSWORD'] + ']')
 
         # get CIMI from environment values:
-        LOG.info('Reading values from ENVIRONMENT...')
+        LOG.info('> USRMNGT: Reading values from ENVIRONMENT...')
         common.set_value_env('CIMI_COOKIES_PATH')
         common.set_value_env('CIMI_USER')
         common.set_value_env('CIMI_PASSWORD')
 
         # CIMI URL
         common.set_value_env('CIMI_URL')
-        LOG.debug('[CIMI_URL=' + config.dic['CIMI_URL'] + ']')
+        LOG.debug('USRMNGT: [CIMI_URL=' + config.dic['CIMI_URL'] + ']')
         if "/api" not in config.dic['CIMI_URL'] and not config.dic['CIMI_URL'].endswith("/api"):
             LOG.debug("Adding '/api' to CIMI_URL ...")
             if config.dic['CIMI_URL'].endswith("/"):
                 config.dic['CIMI_URL'] = config.dic['CIMI_URL'] + "api"
             else:
                 config.dic['CIMI_URL'] = config.dic['CIMI_URL'] + "/api"
-            LOG.debug('[CIMI_URL=' + config.dic['CIMI_URL'] + ']')
+            LOG.debug('USRMNGT: [CIMI_URL=' + config.dic['CIMI_URL'] + ']')
         else:
-            LOG.debug("CIMI_URL ... " + config.dic['CIMI_URL'])
+            LOG.debug("USRMNGT: CIMI_URL ... " + config.dic['CIMI_URL'])
 
         # CIMI
-        LOG.info('Checking CIMI configuration...')
-        LOG.info('[CIMI_URL=' + config.dic['CIMI_URL'] + ']')
-        LOG.info('[CIMI_COOKIES_PATH=' + config.dic['CIMI_COOKIES_PATH'] + ']')
-        LOG.info('[CIMI_USER=' + config.dic['CIMI_USER'] + ']')
-        LOG.info('[CIMI_PASSWORD=' + config.dic['CIMI_PASSWORD'] + ']')
+        LOG.info('> USRMNGT: Checking CIMI configuration...')
+        LOG.info('USRMNGT: [CIMI_URL=' + config.dic['CIMI_URL'] + ']')
+        LOG.info('USRMNGT: [CIMI_COOKIES_PATH=' + config.dic['CIMI_COOKIES_PATH'] + ']')
+        LOG.info('USRMNGT: [CIMI_USER=' + config.dic['CIMI_USER'] + ']')
+        LOG.info('USRMNGT: [CIMI_PASSWORD=' + config.dic['CIMI_PASSWORD'] + ']')
     except:
-        LOG.error('Lifecycle-Management: init_config: Exception: Error while initializing application')
+        LOG.error('USRMNGT: init_config: Exception: Error while initializing application')

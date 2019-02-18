@@ -5,4 +5,3 @@ flask_cors
 flask_restful_swagger
 docker==3.0.1
 pydblite
-slipstream-api
