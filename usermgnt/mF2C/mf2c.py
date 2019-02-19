@@ -16,36 +16,6 @@ import requests
 from common.logs import LOG
 
 
-# CALL TO ?????
-# get allowed services ==> ??
-# TODO
-def get_allowed_services():
-    try:
-        LOG.info("User-Management: Dependencies: get_allowed_services")
-
-        LOG.warning("User-Management: Dependencies: get_allowed_services not implemented")
-
-        allowed_services = ['serv1', 'serv2', 'serv3']
-        return allowed_services
-    except:
-        LOG.error('User-Management: Dependencies: get_allowed_services: Exception')
-    return []
-
-
-# CALL TO LANDSCAPER
-# get resources used by apps ==> landscaper.GetSubgraph(serviceID)
-# TODO
-def get_resources_used_by_mf2c(serviceID):
-    try:
-        LOG.info("User-Management: Dependencies: get_resources_used_by_service: " + str(serviceID))
-        LOG.warning("User-Management: Dependencies: get_resources_used_by_service not implemented")
-
-        return ""
-    except:
-        LOG.error('User-Management: Dependencies: get_resources_used_by_service: Exception')
-    return ""
-
-
 # CALL TO LIFECYCLE MGMT
 # send warning to LM - Warnings Handler: it handles warnings coming from User Management Assessment:
 #   {
@@ -54,13 +24,12 @@ def get_resources_used_by_mf2c(serviceID):
 #           {
 #               "user_id": "",
 #               "device_id": "",
-#               "service_id": "",
-#               "warning_id": "",
-#               "warning_txt": ""
+#               "user_profile": {},
+#               "sharing_model": {},
+#               "result": {'battery_limit_violation': true, 'max_apps_violation': true}
 #           }
 #   }
-# TODO
-def send_warning(user_id, device_id, list_resources_used, profile, shared_model):
+def send_warning(user_id, device_id, user_profile, sharing_model, result):
     try:
         LOG.info("User-Management: Dependencies: send_warning: " + user_id + "/" + device_id)
 
@@ -73,9 +42,9 @@ def send_warning(user_id, device_id, list_resources_used, profile, shared_model)
                     "data": {
                         "user_id": user_id,
                         "device_id": device_id,
-                        "service_id": "XXXXXXXXXXX",
-                        "warning_id": "XXXXXXXXXXX",
-                        "warning_txt": "XXXXXXXXXXX"}}
+                        "user_profile": user_profile,
+                        "sharing_model": sharing_model,
+                        "result": result}}
             r = requests.post(config.dic['URL_PM_LIFECYCLE'] + param, json=body, verify=config.dic['VERIFY_SSL'])
             if r.status_code == 200:
                 LOG.debug('User-Management: Dependencies: send_warning: status_code=' + r.status_code + '; response: ' + r.text)

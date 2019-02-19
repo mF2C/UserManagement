@@ -60,14 +60,15 @@ def common_update_map_fields():
 ###############################################################################
 # COMMON
 
-# get_device_info
-def get_device_info():
+# TODO get this information from new RESOURCE: AGENT
+# get_current_device_info
+def get_current_device_info():
     try:
         res = requests.get(config.dic['CIMI_URL'] + "/device",
                            headers={CIMI_HEADER_PROPERTY: CIMI_HEADER_VALUE},
                            verify=False)
 
-        LOG.info("User-Management: cimi: get_device_info: response: " + str(res.json()))
+        LOG.info("User-Management: cimi: get_current_device_info: response: " + str(res.json()))
         if res.status_code == 200:
             return res.json()['devices'][0]
         else:
@@ -75,8 +76,18 @@ def get_device_info():
             return -1
     except:
         traceback.print_exc(file=sys.stdout)
-        LOG.error('User-Management: cimi: get_device_info: Exception')
+        LOG.error('User-Management: cimi: get_current_device_info: Exception')
         return None
+
+
+# exist_user: check if 'user id' exists
+def exist_user(user_id):
+    return True
+
+
+# exist_device: check if 'device id' exists
+def exist_device(device_id):
+    return True
 
 
 ###############################################################################
@@ -100,23 +111,6 @@ def get_resource_by_id(resource_id):
         return None
 
 
-# delete_resource: delete resource by id
-def delete_resource(resource_id):
-    try:
-        res = requests.delete(config.dic['CIMI_URL'] + '/' + resource_id,
-                              headers={CIMI_HEADER_PROPERTY: CIMI_HEADER_VALUE},
-                              verify=False)
-
-        LOG.debug("User-Management: cimi: delete_resource: response: " + str(res))
-        LOG.debug("User-Management: cimi: delete_resource: response: " + str(res.json()))
-
-        if res.status_code == 200:
-            return res.json()
-        return None
-    except:
-        traceback.print_exc(file=sys.stdout)
-        LOG.error('User-Management: cimi: delete_resource: Exception')
-        return None
 
 
 # get_user_profile: get profile from user and device
@@ -143,8 +137,32 @@ def get_user_profile(user_id, device_id):
         return None
 
 
-# get_user_sharing_model: get sharing model from user
-def get_user_sharing_model(user_id, device_id):
+# TODO get this information from new RESOURCE: AGENT
+# get_user_profile_by_device: get profile from device
+def get_user_profile_by_device(device_id):
+    try:
+        device_id = device_id.replace('device/', '')
+
+        res = requests.get(config.dic['CIMI_URL'] + "/user-profile?$filter=device_id=\"device/" + device_id + "\"",
+                           headers={CIMI_HEADER_PROPERTY: CIMI_HEADER_VALUE},
+                           verify=False)
+
+        LOG.debug("User-Management: cimi: get_user_profile_by_device: response: " + str(res))
+        LOG.debug("User-Management: cimi: get_user_profile_by_device: response: " + str(res.json()))
+
+        if res.status_code == 200 and len(res.json()['userProfiles']) > 0:
+            return res.json()['userProfiles'][0]
+        else:
+            LOG.warning("User-Management: cimi: get_user_profile_by_device: User's profile not found [device_id=" + device_id + "]")
+            return -1
+    except:
+        traceback.print_exc(file=sys.stdout)
+        LOG.error('User-Management: cimi: get_user_profile_by_device: Exception')
+        return None
+
+
+# get_sharing_model: get sharing model from user
+def get_sharing_model(user_id, device_id):
     try:
         user_id = user_id.replace('user/', '')
         device_id = device_id.replace('device/', '')
@@ -153,17 +171,41 @@ def get_user_sharing_model(user_id, device_id):
                            headers={CIMI_HEADER_PROPERTY: CIMI_HEADER_VALUE},
                            verify=False)
 
-        LOG.debug("User-Management: cimi: get_user_sharing_model: response: " + str(res))
-        LOG.debug("User-Management: cimi: get_user_sharing_model: response: " + str(res.json()))
+        LOG.debug("User-Management: cimi: get_sharing_model: response: " + str(res))
+        LOG.debug("User-Management: cimi: get_sharing_model: response: " + str(res.json()))
 
-        if res.status_code == 200 and res.json()['count'] > 0:
+        if res.status_code == 200 and res.json()['sharingModels'] > 0:
             return res.json()['sharingModels'][0]
         else:
-            LOG.warning("User-Management: cimi: get_user_sharing_model: User's profile not found [user_id=" + user_id + "]")
+            LOG.warning("User-Management: cimi: get_sharing_model: Sharing-model not found [user_id=" + user_id + ", device_id=" + device_id + "]")
             return -1
     except:
         traceback.print_exc(file=sys.stdout)
-        LOG.error('User-Management: cimi: get_user_sharing_model: Exception')
+        LOG.error('User-Management: cimi: get_sharing_model: Exception')
+        return None
+
+
+# TODO get this information from new RESOURCE: AGENT
+# get_sharing_model_by_device: get sharing model from device
+def get_sharing_model_by_device(device_id):
+    try:
+        device_id = device_id.replace('device/', '')
+
+        res = requests.get(config.dic['CIMI_URL'] + "/sharing-model?$filter=device_id=\"device/" + device_id + "\"",
+                           headers={CIMI_HEADER_PROPERTY: CIMI_HEADER_VALUE},
+                           verify=False)
+
+        LOG.debug("User-Management: cimi: get_sharing_model_by_device: response: " + str(res))
+        LOG.debug("User-Management: cimi: get_sharing_model_by_device: response: " + str(res.json()))
+
+        if res.status_code == 200 and len(res.json()['sharingModels']) > 0:
+            return res.json()['sharingModels'][0]
+        else:
+            LOG.warning("User-Management: cimi: get_sharing_model_by_device: Sharing-model not found [device_id=" + device_id + "]")
+            return -1
+    except:
+        traceback.print_exc(file=sys.stdout)
+        LOG.error('User-Management: cimi: get_sharing_model_by_device: Exception')
         return None
 
 
@@ -225,6 +267,25 @@ def update_resource(resource_id, content):
         return None
 
 
+# delete_resource: delete resource by id
+def delete_resource(resource_id):
+    try:
+        res = requests.delete(config.dic['CIMI_URL'] + '/' + resource_id,
+                              headers={CIMI_HEADER_PROPERTY: CIMI_HEADER_VALUE},
+                              verify=False)
+
+        LOG.debug("User-Management: cimi: delete_resource: response: " + str(res))
+        LOG.debug("User-Management: cimi: delete_resource: response: " + str(res.json()))
+
+        if res.status_code == 200:
+            return res.json()
+        return None
+    except:
+        traceback.print_exc(file=sys.stdout)
+        LOG.error('User-Management: cimi: delete_resource: Exception')
+        return None
+
+
 # TODO!!!
 ###############################################################################
 # DEVICE DYNAMIC
@@ -274,7 +335,7 @@ def update_resource(resource_id, content):
 # }
 
 # get_power
-def get_power(user_id, device_id):
+def get_power(device_id):
     try:
         res = requests.get(config.dic['CIMI_URL'] + "/device-dynamic?$filter=device_id='" + device_id + "'",
                            headers={CIMI_HEADER_PROPERTY: CIMI_HEADER_VALUE},

@@ -38,17 +38,26 @@ REST API
                 /um/
                         GET:    check initialization values
                         
-                /um/profiling/
+                /um/user-profile/
                         GET:    get "current" profile
                         POST:   create a new profile
-                /um/profiling/user/<string:user_id>/device/<string:device_id>
-                        GET:    get user's profile
+                /um/user-profile/<string:user_profile_id>
+                        GET:    get profile by profile ID
                         PUT:    updates profile
                         DELETE: deletes profile
-                /um/sharingmodel
+                /um/user-profile/user/<string:user_id>/device/<string:device_id>
+                        GET:    get user's profile by user ID and device ID
+                        PUT:    updates profile
+                        DELETE: deletes profile
+                        
+                /um/sharing-model
                         GET:    get current sharing model
                         POST:   create new sharing model
-                /um/sharingmodel/user/<string:user_id>/profile/<string:device_id>
+                /um/sharing-model/<string:sharing_model_id>
+                        GET:    get a sharing model
+                        PUT:    updates a sharing model
+                        DELETE: deletes a sharing model
+                /um/sharing-model/user/<string:user_id>/profile/<string:device_id>
                         GET:    get user's sharing model
                         PUT:    updates sharing model
                         DELETE: deletes sharing model
@@ -56,8 +65,6 @@ REST API
                 /um/assesment
                         GET:    gets the status of the current assessment in the device
                         PUT:    start / stop assessment
-                /um/profile-services/<string:user_id>/<string:device_id>
-                        GET:    get allowed services (not implemented !)
 '''
 
 
@@ -81,28 +88,26 @@ except ValueError:
     LOG.error('User-Management: app: Exception: Error while initializing app / api')
 
 
-'''
- API 'home' Route
+########################################################################################################################
+### USER MANAGEMENT
+########################################################################################################################
 
-    '/api/v2/'
-    
-        GET:    get rest api service status
-'''
+#
+# API 'home' Route
+#
+#     '/api/v2/'
+#         GET:    get rest api service status
+#
 @app.route('/api/v2/', methods=['GET'])
 def default_route():
     data = {
-        'app': "User Management module REST API",
-        'status': "Running",
-        'api_doc_json': "http://" + config.dic['HOST_IP'] + ":" + str(config.dic['SERVER_PORT']) + config.dic['API_DOC_URL'],
+        'app': "User Management module REST API", 'status': "Running", 'api_doc_json': "http://" + config.dic['HOST_IP'] + ":" + str(config.dic['SERVER_PORT']) + config.dic['API_DOC_URL'],
         'api_doc_html': "http://" + config.dic['HOST_IP'] + ":" + str(config.dic['SERVER_PORT']) + config.dic['API_DOC_URL'] + ".html#!/spec"
     }
     resp = Response(json.dumps(data), status=200, mimetype='application/json')
     return resp
 
 
-########################################################################################################################
-### USER MANAGEMENT
-########################################################################################################################
 #
 # UserManagementModule route:
 #
@@ -122,14 +127,6 @@ class UserManagementModule(Resource):
             "message": "Exception processing request"
         }])
     def get(self):
-        LOG.info('USRMNGT: [SERVER_PORT=' + str(config.dic['SERVER_PORT']) + ']')
-        LOG.info('USRMNGT: [API_DOC_URL=' + config.dic['API_DOC_URL'] + ']')
-        LOG.info('USRMNGT: [CERT_CRT=' + config.dic['CERT_CRT'] + ']')
-        LOG.info('USRMNGT: [CERT_KEY=' + config.dic['CERT_KEY'] + ']')
-        LOG.info('USRMNGT: [CIMI_URL=' + config.dic['CIMI_URL'] + ']')
-        LOG.info('USRMNGT: [CIMI_COOKIES_PATH=' + config.dic['CIMI_COOKIES_PATH'] + ']')
-        LOG.info('USRMNGT: [CIMI_USER=' + config.dic['CIMI_USER'] + ']')
-        LOG.info('USRMNGT: [CIMI_PASSWORD=' + config.dic['CIMI_PASSWORD'] + ']')
         data = {
             'app': 'User Management modules REST API',
             'status': 'Running',
@@ -147,9 +144,99 @@ api.add_resource(UserManagementModule, '/api/v2/um/')
 ### PROFILE
 ########################################################################################################################
 #
-#  ProfileInstance route: gets user's profile
+#  ProfileInstanceById route:
 #
-#     '/api/v2/um/profiling/user/<string:user_id>/device/<string:device_id>'
+#     '/api/v2/um/user-profile/<string:user_profile_id>'
+#
+#         GET:    get profile by ID
+#         PUT:    updates profile
+#         DELETE: deletes profile
+#
+class ProfileInstanceById(Resource):
+    # GET Get Profile by ID
+    @swagger.operation(
+        summary="Returns a profile by ID",
+        notes="Returns a profile by ID",
+        produces=["application/json"],
+        authorizations=[],
+        parameters=[{
+                "name": "user_profile_id",
+                "description": "User ID. Example: '50b12ccc-76fb-45a6-af7f-634312bc7ca5'",
+                "required": True,
+                "paramType": "path",
+                "type": "string"
+            }],
+        responseMessages=[{
+                "code": 500,
+                "message": "Exception processing request"
+            }])
+    def get(self, user_profile_id):
+        return um_profiling.get_user_profile_by_id(user_profile_id)
+
+
+    # PUT Updates the users profile
+    @swagger.operation(
+        summary="Updates a profile.",
+        notes="Updates a profile.",
+        produces=["application/json"],
+        authorizations=[],
+        parameters=[{
+                "name": "user_profile_id",
+                "description": "User ID. Example: '50b12ccc-76fb-45a6-af7f-634312bc7ca5'",
+                "required": True,
+                "paramType": "path",
+                "type": "string"
+            }, {
+                "name": "body",
+                "description": "Parameters in JSON format.<br/>Example: <br/>{\"user_id\":\"user/testuser\", "
+                               "\"device_id\":\"device/50b12ccc-76fb-45a6-af7f-634312bc7ca5\", "
+                               "\"resource_contributor\":false, \"service_consumer\":false, \"max_apps\":1}",
+                "required": True,
+                "paramType": "body",
+                "type": "string"
+            }],
+        responseMessages=[{
+                "code": 405,
+                "message": "User ID / Device ID parameters not found"
+            },{
+                "code": 500,
+                "message": "Exception processing request"
+            }])
+    def put(self, user_profile_id):
+        return um_profiling.update_user_profile_by_id(user_profile_id, request.get_json())
+
+
+    # DELETE Deletes the users profile
+    @swagger.operation(
+        summary="Deletes a profile",
+        notes="Deletes a profile.",
+        produces=["application/json"],
+        authorizations=[],
+        parameters=[{
+                "name": "user_profile_id",
+                "description": "User ID. Example: '50b12ccc-76fb-45a6-af7f-634312bc7ca5'",
+                "required": True,
+                "paramType": "path",
+                "type": "string"
+            }],
+        responseMessages=[{
+                "code": 406,
+                "message": "User ID / Device ID parameters not found"
+            },{
+                "code": 500,
+                "message": "Exception processing request"
+            }])
+    def delete(self, user_profile_id):
+        return um_profiling.delete_user_profile_by_id(user_profile_id)
+
+
+api.add_resource(ProfileInstanceById, '/api/v2/um/user-profile/<string:user_profile_id>')
+
+
+#
+#  ProfileInstance route:
+#
+#     '/api/v2/um/user-profile/user/<string:user_id>/device/<string:device_id>'
 #
 #         GET:    get user's profile from a specific device
 #         PUT:    updates profile from a specific device
@@ -180,7 +267,7 @@ class ProfileInstance(Resource):
                 "message": "Exception processing request"
             }])
     def get(self, user_id, device_id):
-        return um_profiling.get_profiling(user_id, device_id)    # TODO solve 'slash' problem
+        return um_profiling.get_user_profile(user_id, device_id)
 
 
     # PUT Updates the users profile
@@ -218,7 +305,7 @@ class ProfileInstance(Resource):
                 "message": "Exception processing request"
             }])
     def put(self, user_id, device_id):
-        return um_profiling.update_profile(user_id, device_id, request.get_json())
+        return um_profiling.update_user_profile(user_id, device_id, request.get_json())
 
 
     # DELETE Deletes the users profile
@@ -248,30 +335,31 @@ class ProfileInstance(Resource):
                 "message": "Exception processing request"
             }])
     def delete(self, user_id, device_id):
-        return um_profiling.delete_profile(user_id, device_id)
+        return um_profiling.delete_user_profile(user_id, device_id)
 
-api.add_resource(ProfileInstance, '/api/v2/um/profiling/user/<string:user_id>/profile/<string:device_id>')
+
+api.add_resource(ProfileInstance, '/api/v2/um/user-profile/user/<string:user_id>/profile/<string:device_id>')
 
 
 #
 #  Profile route:
 #
-#     '/api/v2/um/profiling'
+#     '/api/v2/um/user-profile'
 #         GET:    get "current" profile
 #         POST:   create new profile
 #
 class Profile(Resource):
     # GET Get the user profile of current device
     @swagger.operation(
-        summary="Returns the current device/user's sharing model information",
-        notes="Returns the current device/user's sharing model information",
+        summary="Returns the current user-profile information",
+        notes="Returns the current user-profile information",
         produces=["application/json"],
         authorizations=[],
         parameters=[], responseMessages=[{
         "code": 500, "message": "Exception processing request"
     }])
     def get(self):
-        return um_profiling.get_profiling(None, None) # TODO
+        return um_profiling.get_current_user_profile()
 
     # POST Initializes the users profile - User registration
     @swagger.operation(
@@ -296,9 +384,10 @@ class Profile(Resource):
                 "message": "Exception processing request"
             }])
     def post(self):
-        return um_profiling.register_user( request.get_json() )
+        return um_profiling.create_user_profile( request.get_json() )
 
-api.add_resource(Profile, '/api/v2/um/profiling/')
+
+api.add_resource(Profile, '/api/v2/um/user-profile/')
 
 
 ########################################################################################################################
@@ -307,7 +396,7 @@ api.add_resource(Profile, '/api/v2/um/profiling/')
 #
 #  SharingModelInstance route:
 #
-#     '/api/v2/um/sharingmodel/user/<string:user_id>/device/<string:device_id>'
+#     '/api/v2/um/sharing-model/user/<string:user_id>/device/<string:device_id>'
 #
 #         GET:
 #         PUT:
@@ -414,7 +503,105 @@ class SharingModelInstance(Resource):
     def delete(self, user_id, device_id):
         return um_sharing_model.delete_sharing_model_values(user_id, device_id)
 
-api.add_resource(SharingModelInstance, '/api/v2/um/sharingmodel/user/<string:user_id>/device/<string:device_id>')
+
+api.add_resource(SharingModelInstance, '/api/v2/um/sharing-model/user/<string:user_id>/device/<string:device_id>')
+
+
+# TODO
+#
+#  SharingModelInstance route:
+#
+#     /um/sharing-model/<string:sharing_model_id>
+#
+#         GET:
+#         PUT:
+#         DELETE:
+#
+class SharingModelInstanceById(Resource):
+    # GET Get the user sharing model
+    @swagger.operation(
+        summary="Returns a sharing model information",
+        notes="Returns a sharing model information",
+        produces=["application/json"],
+        authorizations=[],
+        parameters=[{
+                "name": "sharing_model_id",
+                "description": "User ID. Example: '50b12ccc-76fb-45a6-af7f-634312bc7ca5'",
+                "required": True,
+                "paramType": "path",
+                "type": "string"
+            }],
+        responseMessages=[{
+                "code": 500,
+                "message": "Exception processing request"
+            }])
+    def get(self, sharing_model_id):
+        return um_sharing_model.get_sharing_model_by_id(sharing_model_id)
+
+
+    # PUT Updates sharing model
+    @swagger.operation(
+        summary="Updates a sharing model",
+        notes="Updates a sharing model",
+        produces=["application/json"],
+        authorizations=[],
+        parameters=[{
+                "name": "sharing_model_id",
+                "description": "User ID. Example: '50b12ccc-76fb-45a6-af7f-634312bc7ca5'",
+                "required": True,
+                "paramType": "path",
+                "type": "string"
+            }, {
+            "name": "body",
+            "description": "Parameters in JSON format.<br/>Example: <br/>"
+                           "{\"user_id\":\"user/testuser\", "
+                           "\"device_id\":\"device/50b12ccc-76fb-45a6-af7f-634312bc7ca5\", "
+                           "\"gps_allowed\": false, "
+                           "\"max_cpu_usage\": 3, "
+                           "\"max_memory_usage\": 3, "
+                           "\"max_storage_usage\": 3, "
+                           "\"max_bandwidth_usage\": 3, "
+                           "\"battery_limit\": 3 }",
+            "required": True,
+            "paramType": "body",
+            "type": "string"
+        }],
+        responseMessages=[{
+            "code": 406,
+            "message": "User ID / Device ID parameters not found not found"
+        }, {
+            "code": 500,
+            "message": "Exception processing request"
+        }])
+    def put(self, sharing_model_id):
+        return um_sharing_model.update_sharing_model_by_id(sharing_model_id, request.get_json())
+
+
+    # DELETE Deletes a sharing model
+    @swagger.operation(
+        summary="Deletes a sharing model",
+        notes="Deletes a sharing model",
+        produces=["application/json"],
+        authorizations=[],
+        parameters=[{
+                "name": "sharing_model_id",
+                "description": "User ID. Example: '50b12ccc-76fb-45a6-af7f-634312bc7ca5'",
+                "required": True,
+                "paramType": "path",
+                "type": "string"
+            }],
+        responseMessages=[{
+            "code": 406,
+            "message": "User ID / Device ID parameters not found not found"
+        }, {
+            "code": 500,
+            "message": "Exception processing request"
+        }])
+    def delete(self, sharing_model_id):
+        return um_sharing_model.delete_sharing_model_by_id(sharing_model_id)
+
+
+api.add_resource(SharingModelInstanceById, '/api/v2/um/sharing-model/<string:sharing_model_id>')
 
 
 #
@@ -435,7 +622,7 @@ class SharingModel(Resource):
         "code": 500, "message": "Exception processing request"
     }])
     def get(self):
-        return um_sharing_model.get_sharing_model(None, None)
+        return um_sharing_model.get_current_sharing_model()
 
     # POST Initializes sharing model
     @swagger.operation(
@@ -468,50 +655,11 @@ class SharingModel(Resource):
     def post(self):
         return um_sharing_model.init_sharing_model( request.get_json() )
 
-api.add_resource(SharingModel, '/api/v2/um/sharingmodel')
+
+api.add_resource(SharingModel, '/api/v2/um/sharing-model')
 
 
 ########################################################################################################################
-
-
-'''
-TODO
- ProfileServices route:
-
-    '/api/v2/um/profile-services/<string:user_id>/<string:device_id>'
-
-        GET:    Gets allowed services for user and device
-'''
-class ProfileServices(Resource):
-    # Get Profile properties from user
-    @swagger.operation(
-        summary="Returns the user's allowed services",
-        notes="Returns the user's allowed services",
-        produces=["application/json"],
-        authorizations=[],
-        parameters=[{
-                "name": "user_id",
-                "description": "User ID",
-                "required": True,
-                "paramType": "path",
-                "type": "string"
-            }, {
-                "name": "device_id",
-                "description": "Device ID. Example: 'testdevice'",
-                "required": True,
-                "paramType": "path",
-                "type": "string"
-            }],
-        responseMessages=[{
-                "code": 500,
-                "message": "Exception processing request"
-            }])
-    def get(self, user_id, device_id):
-        return um_profiling.get_services(user_id)
-
-# TODO IT-2:
-#api.add_resource(ProfileServices, '/api/v2/um/profile-services/<string:user_id>/<string:device_id>')
-
 
 '''
  Assessment route:

@@ -47,16 +47,6 @@ STATUS_CREATED_NOT_INITIALIZED = "created-not-initialized"
 
 
 ###############################################################################
-# STAND_ALONE_MODE:
-
-# is_standalone_mode
-def is_standalone_mode():
-    if config.dic['STANDALONE_MODE'] == 'True' or config.dic['STANDALONE_MODE'] is None:
-        return True
-    return False
-
-
-###############################################################################
 # RESPONSEs:
 
 # CLASS ResponseCIMI

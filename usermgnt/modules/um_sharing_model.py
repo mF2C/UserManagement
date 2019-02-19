@@ -19,8 +19,8 @@ from common.logs import LOG
 
 # Sharing model content:
 # {
-#       ----------------"user_id": "user/1230958abdef",
-# 	    "max_apps": integer,
+#       "user_id": "user/0000000000u",
+#       "device_id": "device/11111111d",
 # 	    "gps_allowed": boolean,
 # 	    "max_cpu_usage": integer,
 # 	    "max_memory_usage": integer,
@@ -30,30 +30,58 @@ from common.logs import LOG
 # }
 
 
-# Get shared resources
-def get_sharing_model(user_id, device_id):
-    if not user_id is None and not device_id is None:
-        LOG.info("User-Management: Sharing model module: get_sharing_model_values: " + str(user_id))
-
-        # get sharing_model
-        sharing_model = datamgmt.get_sharing_model_user_device(user_id, device_id)
-        if sharing_model is None:
-            return common.gen_response(500, 'Exception', 'user_id', user_id, 'device_id', device_id)
-        elif sharing_model == -1:
-            return common.gen_response_ko('Warning: Sharing model not found', 'user_id', user_id, 'device_id', device_id)
-        else:
-            return common.gen_response_ok('Sharing model found', 'user_id', user_id, 'sharing_model', sharing_model)
-
+# get_sharing_model_by_id: Get shared resources
+def get_sharing_model_by_id(sharing_model_id):
+    LOG.info("User-Management: Sharing-model module: get_sharing_model_by_id: " + sharing_model_id)
+    # get sharing_model
+    sharing_model = datamgmt.get_sharing_model_by_id(sharing_model_id)
+    if sharing_model is None:
+        return common.gen_response(500, 'Exception', 'sharing_model_id', sharing_model_id, 'sharing_model', {})
+    elif sharing_model == -1:
+        return common.gen_response_ko('Warning: Sharing-model not found', 'sharing_model_id', sharing_model_id, 'sharing_model', {})
     else:
-        LOG.info("User-Management: Sharing model module: get_sharing_model_values: getting current user-device value ...")
+        return common.gen_response_ok('Sharing model found', 'sharing_model_id', sharing_model_id, 'sharing_model', sharing_model)
+
+
+# get_sharing_model: Get shared resources
+def get_sharing_model(user_id, device_id):
+    LOG.info("User-Management: Sharing-model module: get_sharing_model: " + str(user_id))
+    # get sharing_model
+    sharing_model = datamgmt.get_sharing_model_user_device(user_id, device_id)
+    if sharing_model is None:
+        return common.gen_response(500, 'Exception', 'user_id', user_id, 'device_id', device_id)
+    elif sharing_model == -1:
+        return common.gen_response_ko('Warning: Sharing-model not found', 'user_id', user_id, 'device_id', device_id)
+    else:
+        return common.gen_response_ok('Sharing model found', 'user_id', user_id, 'sharing_model', sharing_model)
+
+
+# get_current_sharing_model: Get current sharing model
+def get_current_sharing_model():
+    LOG.info("User-Management: Sharing-model module: get_current_sharing_model: getting current user-device value ...")
+    sharing_model = datamgmt.get_current_sharing_model()
+    if sharing_model is None:
+        return common.gen_response(500, 'Error', 'sharing_model', 'not found / error', 'sharing_model', {})
+    elif sharing_model == -1:
+        return common.gen_response_ko('Warning: Sharing-model not found', 'sharing_model', 'not found / error', 'sharing_model', {})
+    else:
+        return common.gen_response_ok('Sharing-model found', 'sharing_model', sharing_model)
 
 
 # Initializes shared resources values
 def init_sharing_model(data):
-    LOG.info("User-Management: Sharing model module: init_sharing_model: " + str(data))
+    LOG.info("User-Management: Sharing-model module: init_sharing_model: " + str(data))
     if 'user_id' not in data or 'device_id' not in data:
-        LOG.warning('User-Management: Sharing model module: init_sharing_model: parameter not found: user_id / device_id')
+        LOG.warning('User-Management: Sharing-model module: init_sharing_model: parameter not found: user_id / device_id')
         return common.gen_response(406, 'parameter not found: user_id / device_id', 'data', str(data))
+
+    # check if user exists
+    if not datamgmt.exist_user(data['user_id']):
+        return common.gen_response(404, "Error", "user_id", data['user_id'], "message", "User ID not found")
+
+    # check if device exists
+    if not datamgmt.exist_device(data['device_id']):
+        return common.gen_response(404, "Error", "device_id", data['device_id'], "message", "Device ID not found")
 
     # check if sharing_model exists
     user_id = data['user_id']
@@ -65,14 +93,27 @@ def init_sharing_model(data):
         if sharing_model is None:
             return common.gen_response(500, 'Exception', 'data', str(data), 'sharing_model', {})
         else:
-            return common.gen_response_ok('Sharing model initialized', 'data', str(data), 'sharing_model', sharing_model)
+            return common.gen_response_ok('Sharing-model created', 'data', str(data), 'sharing_model', sharing_model)
     else:
-        return common.gen_response_ko('Warning: Sharing model already exists', 'user_id', user_id, 'sharing_model', sharing_model)
+        return common.gen_response_ko('Warning: Sharing-model already exists', 'user_id', user_id, 'sharing_model', sharing_model)
+
+
+# Updates shared resources values
+def update_sharing_model_by_id(sharing_model_id, data):
+    LOG.info("User-Management: Sharing-model module: update_sharing_model_by_id: " + sharing_model_id + ", " + str(data))
+    # updates sharing_model
+    sharing_model = datamgmt.update_sharing_model_by_id(sharing_model_id, data)
+    if sharing_model is None:
+        return common.gen_response(500, 'Exception', 'data', str(data), 'sharing_model', {})
+    elif sharing_model == -1:
+        return common.gen_response_ko('Warning: Sharing model not found', 'sharing_model_id', sharing_model_id, 'sharing_model', {})
+    else:
+        return common.gen_response_ok('Sharing-model updated', 'data', str(data), 'sharing_model', sharing_model)
 
 
 # Updates shared resources values
 def update_sharing_model(user_id, device_id, data):
-    LOG.info("User-Management: Sharing model module: update_sharing_model_values: " + user_id + ", " + device_id + ", " + str(data))
+    LOG.info("User-Management: Sharing-model module: update_sharing_model: " + user_id + ", " + device_id + ", " + str(data))
     # updates sharing_model
     sharing_model = datamgmt.update_sharing_model(data)
     if sharing_model is None:
@@ -80,19 +121,32 @@ def update_sharing_model(user_id, device_id, data):
     elif sharing_model == -1:
         return common.gen_response_ko('Warning: Sharing model not found', 'user_id', user_id, 'device_id', device_id)
     else:
-        return common.gen_response_ok('Sharing model updated', 'data', str(data), 'sharing_model', sharing_model)
+        return common.gen_response_ok('Sharing-model updated', 'data', str(data), 'sharing_model', sharing_model)
+
+
+# delete_sharing_model_by_id: Deletes  shared resources values
+def delete_sharing_model_by_id(sharing_model_id):
+    LOG.info("User-Management: Sharing-model module: delete_sharing_model_by_id: " + sharing_model_id)
+    # deletes sharing_model
+    res = datamgmt.delete_sharing_model_by_id(sharing_model_id)
+    if res is None:
+        return common.gen_response(500, 'Exception', 'sharing_model_id', sharing_model_id)
+    elif res == -1:
+        return common.gen_response_ko('Warning: Sharing-model not found', 'sharing_model_id', sharing_model_id)
+    else:
+        return common.gen_response_ok('Sharing-model deleted', 'sharing_model_id', sharing_model_id)
 
 
 # Deletes  shared resources values
 def delete_sharing_model_values(user_id, device_id):
-    LOG.info("User-Management: Sharing model module: delete_sharing_model_values: " + user_id + ", " + device_id)
+    LOG.info("User-Management: Sharing-model module: delete_sharing_model_values: " + user_id + ", " + device_id)
     # deletes sharing_model
     res = datamgmt.delete_sharing_model(user_id, device_id)
     if res is None:
         return common.gen_response(500, 'Exception', 'user_id', user_id, 'device_id', device_id)
     elif res == -1:
-        return common.gen_response_ko('Warning: Sharing model not found', 'user_id', user_id, 'device_id', device_id)
+        return common.gen_response_ko('Warning: Sharing-model not found', 'user_id', user_id, 'device_id', device_id)
     else:
-        return common.gen_response_ok('Sharing model deleted', 'user_id', user_id, 'device_id', device_id)
+        return common.gen_response_ok('Sharing-model deleted', 'user_id', user_id, 'device_id', device_id)
 
 
