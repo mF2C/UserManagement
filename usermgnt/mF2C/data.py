@@ -64,8 +64,8 @@ def get_sharing_model_by_id(sharing_model_id):
     LOG.debug("User-Management: Data: get_sharing_model_by_id: " + sharing_model_id)
 
     sharing_model = cimi.get_resource_by_id("sharing-model/" + sharing_model_id)
-    if not sharing_model['status'] is None and sharing_model['status'] == 404:
-        return -1
+    #if not sharing_model['status'] is None and sharing_model['status'] == 404:
+    #    return -1
     return sharing_model  # cimi.get_resource_by_id("sharing-model/" + sharing_model_id)
 
 
@@ -175,8 +175,8 @@ def get_user_profile_by_id(profile_id):
     LOG.debug("User-Management: Data: get_user_profile_by_id: " + profile_id)
 
     profile = cimi.get_resource_by_id("user-profile/" + profile_id)
-    if not profile['status'] is None and profile['status'] == 404:
-        return -1
+    #if not profile['status'] is None and profile['status'] == 404:
+    #    return -1
     return profile # cimi.get_resource_by_id("user-profile/" + profile_id)
 
 

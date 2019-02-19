@@ -82,12 +82,36 @@ def get_current_device_info():
 
 # exist_user: check if 'user id' exists
 def exist_user(user_id):
-    return True
+    try:
+        user_id = user_id.replace('user/', '')
+        res = requests.get(config.dic['CIMI_URL'] + "/user/" + user_id,
+                           headers={CIMI_HEADER_PROPERTY: CIMI_HEADER_VALUE},
+                           verify=False)
+        LOG.debug("User-Management: cimi: exist_user: Response: " + str(res.json()))
+        if res.status_code == 200:
+            return True
+        LOG.error("User-Management: cimi: exist_user: Request failed: " + res.status_code)
+    except:
+        traceback.print_exc(file=sys.stdout)
+        LOG.error('User-Management: cimi: exist_user: Exception')
+    return False
 
 
 # exist_device: check if 'device id' exists
 def exist_device(device_id):
-    return True
+    try:
+        device_id = device_id.replace('device/', '')
+        res = requests.get(config.dic['CIMI_URL'] + "/device/" + device_id,
+                           headers={CIMI_HEADER_PROPERTY: CIMI_HEADER_VALUE},
+                           verify=False)
+        LOG.debug("User-Management: cimi: exist_device: Response: " + str(res.json()))
+        if res.status_code == 200:
+            return True
+        LOG.error("User-Management: cimi: exist_device: Request failed: " + res.status_code)
+    except:
+        traceback.print_exc(file=sys.stdout)
+        LOG.error('User-Management: cimi: exist_device: Exception')
+    return False
 
 
 ###############################################################################
@@ -174,7 +198,7 @@ def get_sharing_model(user_id, device_id):
         LOG.debug("User-Management: cimi: get_sharing_model: response: " + str(res))
         LOG.debug("User-Management: cimi: get_sharing_model: response: " + str(res.json()))
 
-        if res.status_code == 200 and res.json()['sharingModels'] > 0:
+        if res.status_code == 200 and len(res.json()['sharingModels']) > 0:
             return res.json()['sharingModels'][0]
         else:
             LOG.warning("User-Management: cimi: get_sharing_model: Sharing-model not found [user_id=" + user_id + ", device_id=" + device_id + "]")

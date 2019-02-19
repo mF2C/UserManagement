@@ -38,7 +38,7 @@ def init():
         LOG.info('USRMNGT: [CIMI_PASSWORD=' + config.dic['CIMI_PASSWORD'] + ']')
 
         # get CIMI from environment values:
-        LOG.info('> USRMNGT: Reading values from ENVIRONMENT...')
+        LOG.info('USRMNGT: Reading values from ENVIRONMENT...')
         common.set_value_env('CIMI_COOKIES_PATH')
         common.set_value_env('CIMI_USER')
         common.set_value_env('CIMI_PASSWORD')
@@ -57,7 +57,7 @@ def init():
             LOG.debug("USRMNGT: CIMI_URL ... " + config.dic['CIMI_URL'])
 
         # CIMI
-        LOG.info('> USRMNGT: Checking CIMI configuration...')
+        LOG.info('USRMNGT: Checking CIMI configuration...')
         LOG.info('USRMNGT: [CIMI_URL=' + config.dic['CIMI_URL'] + ']')
         LOG.info('USRMNGT: [CIMI_COOKIES_PATH=' + config.dic['CIMI_COOKIES_PATH'] + ']')
         LOG.info('USRMNGT: [CIMI_USER=' + config.dic['CIMI_USER'] + ']')
