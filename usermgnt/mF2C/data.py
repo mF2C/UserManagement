@@ -22,13 +22,13 @@ import config
 # TODO get this information from new RESOURCE: AGENT
 # get_current_device_id
 def get_current_device_id():
-    LOG.info("User-Management: Data: get_device_id: Getting 'my' device ID ...")
+    LOG.info("USRMNGT: Data: get_device_id: Getting 'my' device ID ...")
 
     device = cimi.get_current_device_info()
-    LOG.debug("User-Management: Data: get_device_id: device = " + str(device))
+    LOG.debug("USRMNGT: Data: get_device_id: device = " + str(device))
 
     if not device is None and device != -1:
-        LOG.info("User-Management: Data: get_device_id: Returning 'my' device ID = " + str(device['id']))
+        LOG.info("USRMNGT: Data: get_device_id: Returning 'my' device ID = " + str(device['id']))
         return device['id']
     else:
         return -1
@@ -61,7 +61,7 @@ def exist_device(device_id):
 # get_user_profile_by_id
 def get_sharing_model_by_id(sharing_model_id):
     sharing_model_id = sharing_model_id.replace('sharing-model/', '')
-    LOG.debug("User-Management: Data: get_sharing_model_by_id: " + sharing_model_id)
+    LOG.debug("USRMNGT: Data: get_sharing_model_by_id: " + sharing_model_id)
 
     sharing_model = cimi.get_resource_by_id("sharing-model/" + sharing_model_id)
     #if not sharing_model['status'] is None and sharing_model['status'] == 404:
@@ -71,26 +71,26 @@ def get_sharing_model_by_id(sharing_model_id):
 
 # Get user profile
 def get_sharing_model_user_device(user_id, device_id):
-    LOG.debug("User-Management: Data: get_sharing_model_user_device: " + user_id + ", " + device_id)
+    LOG.debug("USRMNGT: Data: get_sharing_model_user_device: " + user_id + ", " + device_id)
     return cimi.get_sharing_model(user_id, device_id)
 
 
 # Get shared resources
 def get_sharing_model(user_id, device_id):
-    LOG.info("User-Management: Data: get_sharing_model_values: " + str(user_id))
+    LOG.info("USRMNGT: Data: get_sharing_model_values: " + str(user_id))
     return cimi.get_sharing_model(user_id, device_id)
 
 
 # Initializes shared resources values
 def init_sharing_model(data):
-    LOG.info("User-Management: Data: init_sharing_model: " + str(data))
+    LOG.info("USRMNGT: Data: init_sharing_model: " + str(data))
     return cimi.add_resource(config.dic['CIMI_SHARING_MODELS'], data)
 
 
 # Updates shared resources values
 def update_sharing_model_by_id(sharing_model_id, data):
     sharing_model_id = sharing_model_id.replace('sharing-model/', '')
-    LOG.info("User-Management: Data: update_sharing_model_by_id: " + sharing_model_id + ", " + str(data))
+    LOG.info("USRMNGT: Data: update_sharing_model_by_id: " + sharing_model_id + ", " + str(data))
     resp = cimi.get_resource_by_id("sharing-model/" + sharing_model_id)
     if resp and resp == -1:
         return -1
@@ -102,7 +102,7 @@ def update_sharing_model_by_id(sharing_model_id, data):
 
 # Updates shared resources values
 def update_sharing_model(data):
-    LOG.info("User-Management: Data: update_sharing_model_values: " + str(data))
+    LOG.info("USRMNGT: Data: update_sharing_model_values: " + str(data))
     resp = cimi.get_sharing_model(data['user_id'], data['device_id'])
     if resp and resp == -1:
         return -1
@@ -115,7 +115,7 @@ def update_sharing_model(data):
 # delete_sharing_model_by_id: Deletes  shared resources values
 def delete_sharing_model_by_id(sharing_model_id):
     sharing_model_id = sharing_model_id.replace('sharing-model/', '')
-    LOG.info("User-Management: Data: delete_sharing_model_by_id: " + sharing_model_id)
+    LOG.info("USRMNGT: Data: delete_sharing_model_by_id: " + sharing_model_id)
     resp = cimi.get_resource_by_id("sharing-model/" + sharing_model_id)
     if resp and resp == -1:
         return -1
@@ -127,7 +127,7 @@ def delete_sharing_model_by_id(sharing_model_id):
 
 # Deletes  shared resources values
 def delete_sharing_model(user_id, device_id):
-    LOG.info("User-Management: Data: delete_sharing_model_values: " + user_id + ", " + device_id)
+    LOG.info("USRMNGT: Data: delete_sharing_model_values: " + user_id + ", " + device_id)
     resp = cimi.get_sharing_model(user_id, device_id)
     if resp and resp == -1:
         return -1
@@ -143,19 +143,19 @@ def delete_sharing_model(user_id, device_id):
 # TODO get this information from new RESOURCE: AGENT
 # Get user profile
 def get_current_sharing_model():
-    LOG.debug("User-Management: Data: get_current_sharing_model: Getting information about current user and device...")
+    LOG.debug("USRMNGT: Data: get_current_sharing_model: Getting information about current user and device...")
     # get 'my' device_id
     device_id = get_current_device_id()
     if device_id == -1:
         return None
     else:
-        sharing_model = cimi.get_sharing_model_by_device(device_id)
-        if sharing_model is None or sharing_model == -1:
-            return None
-        else:
-            user_id = sharing_model['user_id']
-            LOG.debug("User-Management: Data: get_current_sharing_model: Get Sharing Model for user [" + user_id + "] and device [" + device_id + "]")
-            return cimi.get_sharing_model(user_id, device_id)
+        return cimi.get_sharing_model_by_device(device_id)
+        # sharing_model = cimi.get_sharing_model_by_device(device_id)
+        # if sharing_model is None or sharing_model == -1:
+        #     return None
+        # else:
+        #     user_id = sharing_model['user_id']
+        #     LOG.debug("USRMNGT: Data: get_current_sharing_model: Get Sharing Model for user [" + user_id + "] and device [" + device_id + "]")  #    return cimi.get_sharing_model(user_id, device_id)
 
 
 ###############################################################################
@@ -172,7 +172,7 @@ def get_current_sharing_model():
 # get_user_profile_by_id
 def get_user_profile_by_id(profile_id):
     profile_id = profile_id.replace('user-profile/', '')
-    LOG.debug("User-Management: Data: get_user_profile_by_id: " + profile_id)
+    LOG.debug("USRMNGT: Data: get_user_profile_by_id: " + profile_id)
 
     profile = cimi.get_resource_by_id("user-profile/" + profile_id)
     #if not profile['status'] is None and profile['status'] == 404:
@@ -182,14 +182,14 @@ def get_user_profile_by_id(profile_id):
 
 # get_user_profile: Get user profile
 def get_user_profile(user_id, device_id):
-    LOG.debug("User-Management: Data: get_profile_user_device: " + user_id + ", " + device_id)
+    LOG.debug("USRMNGT: Data: get_profile_user_device: " + user_id + ", " + device_id)
     return cimi.get_user_profile(user_id, device_id)
 
 
 # update_user_profile_by_id: Updates a profile
 def update_user_profile_by_id(profile_id, data):
     profile_id = profile_id.replace('user-profile/', '')
-    LOG.debug("User-Management: Data: update_user_profile_by_id: " + profile_id + ", " + str(data))
+    LOG.debug("USRMNGT: Data: update_user_profile_by_id: " + profile_id + ", " + str(data))
     resp = cimi.get_resource_by_id("user-profile/" + profile_id)
     if resp and resp == -1:
         return -1
@@ -201,7 +201,7 @@ def update_user_profile_by_id(profile_id, data):
 
 # update_user_profile: Updates users profile
 def update_user_profile(user_id, device_id, data):
-    LOG.debug("User-Management: Data: update_user_profile: Update Profile for user [" + data['user_id'] + "] and device [" + device_id + "]")
+    LOG.debug("USRMNGT: Data: update_user_profile: Update Profile for user [" + data['user_id'] + "] and device [" + device_id + "]")
     resp = cimi.get_user_profile(user_id, device_id)
     if resp and resp == -1:
         return -1
@@ -214,7 +214,7 @@ def update_user_profile(user_id, device_id, data):
 # Deletes users profile
 def delete_user_profile_by_id(profile_id):
     profile_id = profile_id.replace('user-profile/', '')
-    LOG.debug("User-Management: Data: delete_user_profile_by_id: Delete Profile [" + profile_id + "]")
+    LOG.debug("USRMNGT: Data: delete_user_profile_by_id: Delete Profile [" + profile_id + "]")
     resp = cimi.get_resource_by_id("user-profile/" + profile_id)
     if resp and resp == -1:
         return None
@@ -226,7 +226,7 @@ def delete_user_profile_by_id(profile_id):
 
 # Deletes users profile
 def delete_user_profile(user_id, device_id):
-    LOG.debug("User-Management: Data: delete_user_profile: Delete Profile from user [" + user_id + "] and device [" + device_id + "]")
+    LOG.debug("USRMNGT: Data: delete_user_profile: Delete Profile from user [" + user_id + "] and device [" + device_id + "]")
 
     resp = cimi.get_user_profile(user_id, device_id)
     if resp and resp == -1:
@@ -239,9 +239,16 @@ def delete_user_profile(user_id, device_id):
 
 # Initializes users profile
 def register_user(data):
-    LOG.debug("User-Management: Data: register_user: " + str(data))
-    LOG.debug("User-Management: Data: register_user: Creating new Profile for user [" + data['user_id'] + "] and device [" + data['device_id'] + "] ...")
+    LOG.debug("USRMNGT: Data: register_user: " + str(data))
+    LOG.debug("USRMNGT: Data: register_user: Creating new Profile for user [" + data['user_id'] + "] and device [" + data['device_id'] + "] ...")
     return cimi.add_resource(config.dic['CIMI_PROFILES'], data)
+
+
+# setAPPS_RUNNING
+def setAPPS_RUNNING(apps=0):
+    config.APPS_RUNNING = config.APPS_RUNNING + apps
+    if config.APPS_RUNNING < 0:
+        config.APPS_RUNNING = 0
 
 
 ###############################################################################
@@ -250,47 +257,43 @@ def register_user(data):
 # TODO get this information from new RESOURCE: AGENT
 # Get user profile
 def get_current_user_profile():
-    LOG.debug("User-Management: Data: get_current_user_profile: Getting information about current user and device...")
+    LOG.debug("USRMNGT: Data: get_current_user_profile: Getting information about current user and device...")
     # get 'my' device_id
     device_id = get_current_device_id()
     if device_id == -1:
         return None
     else:
-        user_profile = cimi.get_user_profile_by_device(device_id)
-        if user_profile is None or user_profile == -1:
-            return None
-        else:
-            user_id = user_profile['user_id']
-            LOG.debug("User-Management: Data: get_current_user_profile: Get Profile from user [" + user_id + "] and device [" + device_id + "]")
-            return cimi.get_user_profile(user_id, device_id)
+        return cimi.get_user_profile_by_device(device_id)
+        # user_profile = cimi.get_user_profile_by_device(device_id)
+        # if user_profile is None or user_profile == -1:
+        #     return None
+        # else:
+        #     user_id = user_profile['user_id']
+        #     LOG.debug("USRMNGT: Data: get_current_user_profile: Get Profile from user [" + user_id + "] and device [" + device_id + "]")  #    return cimi.get_user_profile(user_id, device_id)
 
 
 ###############################################################################
-## Services Running on current device
 
 # TODO
 # get_total_services_running: Get services running
-def get_total_services_running(device_id):
-    LOG.debug("User-Management: Data: get_total_services_running: Getting total of services running in device [" + device_id + "] ...")
+def get_total_services_running():
+    LOG.debug("USRMNGT: Data: get_total_services_running: Total of services running in device = " + config.APPS_RUNNING)
+    return config.APPS_RUNNING
 
-    # TODO CIMI
-    # ...
-
-    return 1
-
-
-###############################################################################
-# DEVICE DYNAMIC
 
 # TODO
 # Get battery level
-def get_power(device_id):
-    LOG.info("User-Management: Data: get_power: " + device_id)
+def get_power():
+    # get 'my' device_id
+    device_id = get_current_device_id()
+    LOG.info("USRMNGT: Data: get_power: Getting power status from device [" + device_id + "] ...")
     return cimi.get_power(device_id)
 
 
 # TODO
 # Get parent
-def get_parent(user_id, device_id):
-    LOG.info("User-Management: Data: get_parent: " + user_id + ", " + device_id)
-    return cimi.get_parent(user_id, device_id)
+def get_parent():
+    # get 'my' device_id
+    device_id = get_current_device_id()
+    LOG.info("USRMNGT: Data: get_parent: Getting LEADER ID from device [" + device_id + "] ...")
+    return cimi.get_parent(device_id)

@@ -40,5 +40,9 @@ dic = { "VERSION":                      "1.0.5",
 
         # URLs / ports from other mF2C components:
         # LIFECYCLE
-        "URL_PM_LIFECYCLE":             "https://lifecycle:46000/api/v2/lm"
+        "URL_PM_LIFECYCLE":             "http://lifecycle:46000/api/v2/lm"
 }
+
+
+# APPS RUNNING
+APPS_RUNNING = 0

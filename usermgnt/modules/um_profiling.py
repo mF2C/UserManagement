@@ -28,7 +28,7 @@ from common.logs import LOG
 
 # get_user_profile_by_id: Get user profile by ID
 def get_user_profile_by_id(profile_id):
-    LOG.debug("User-Management: Profiling module: get_user_profile_by_id: " + str(profile_id))
+    LOG.debug("USRMNGT: Profiling module: get_user_profile_by_id: " + str(profile_id))
     user_profile = datamgmt.get_user_profile_by_id(profile_id)
     if user_profile is None:
         return common.gen_response(500, 'Error', 'profile_id', profile_id, 'profile', {})
@@ -40,7 +40,7 @@ def get_user_profile_by_id(profile_id):
 
 # get_user_profile: Get user profile
 def get_user_profile(user_id, device_id):
-    LOG.debug("User-Management: Profiling module: get_user_profile: " + str(user_id) + ", " + str(device_id))
+    LOG.debug("USRMNGT: Profiling module: get_user_profile: " + str(user_id) + ", " + str(device_id))
     user_profile = datamgmt.get_user_profile(user_id, device_id)
     if user_profile is None:
         return common.gen_response(500, 'Error', 'user_id', user_id, 'device_id', device_id)
@@ -52,7 +52,7 @@ def get_user_profile(user_id, device_id):
 
 # get_current_user_profile: Get current user profile
 def get_current_user_profile():
-    LOG.info("User-Management: Profiling module: get_current_user_profile: getting current user-device value ...")
+    LOG.info("USRMNGT: Profiling module: get_current_user_profile: getting current user-device value ...")
     user_profile = datamgmt.get_current_user_profile()
     if user_profile is None:
         return common.gen_response(500, 'Error', 'user_profile', 'not found / error', 'profile', {})
@@ -62,11 +62,18 @@ def get_current_user_profile():
         return common.gen_response_ok('User found', 'user_profile', user_profile)
 
 
+# setAPPS_RUNNING
+def updateUM(data):
+    LOG.info("USRMNGT: Profiling module: register_user: " + str(data))
+    if 'apps_running' in data:
+        datamgmt.setAPPS_RUNNING(data['apps_running'])
+
+
 # Initializes users profile
 def create_user_profile(data):
-    LOG.info("User-Management: Profiling module: register_user: " + str(data))
+    LOG.info("USRMNGT: Profiling module: register_user: " + str(data))
     if 'user_id' not in data or 'device_id' not in data or 'service_consumer' not in data or 'resource_contributor' not in data or 'max_apps' not in data:
-        LOG.warning('User-Management: Profiling module: register_user: parameter not found: user_id / device_id / service_consumer'
+        LOG.warning('USRMNGT: Profiling module: register_user: parameter not found: user_id / device_id / service_consumer'
                     ' / resource_contributor / max_apps')
         return common.gen_response(405, 'parameter not found: user_id / device_id / service_consumer / resource_contributor / max_apps', 'data', str(data))
 
@@ -96,7 +103,7 @@ def create_user_profile(data):
 
 # update_user_profile: Updates users profile
 def update_user_profile_by_id(profile_id, data):
-    LOG.debug("User-Management: Profiling module: profile_id: " + str(profile_id) + ", " + str(data))
+    LOG.debug("USRMNGT: Profiling module: profile_id: " + str(profile_id) + ", " + str(data))
     # update user
     user_profile = datamgmt.update_user_profile_by_id(profile_id, data)
     if user_profile is None:
@@ -109,7 +116,7 @@ def update_user_profile_by_id(profile_id, data):
 
 # update_user_profile: Updates users profile
 def update_user_profile(user_id, device_id, data):
-    LOG.debug("User-Management: Profiling module: update_user_profile: " + str(user_id) + ", " + str(device_id) + ", " + str(data))
+    LOG.debug("USRMNGT: Profiling module: update_user_profile: " + str(user_id) + ", " + str(device_id) + ", " + str(data))
     # update user
     user_profile = datamgmt.update_user_profile(user_id, device_id, data)
     if user_profile is None:
@@ -122,7 +129,7 @@ def update_user_profile(user_id, device_id, data):
 
 # delete_user_profile: Deletes users profile
 def delete_user_profile_by_id(profile_id):
-    LOG.info("User-Management: Profiling module: delete_user_profile_by_id: " + profile_id)
+    LOG.info("USRMNGT: Profiling module: delete_user_profile_by_id: " + profile_id)
     # delete profile
     if datamgmt.delete_user_profile_by_id(profile_id) is None:
         return common.gen_response(500, 'Error', 'profile_id', profile_id)
@@ -132,7 +139,7 @@ def delete_user_profile_by_id(profile_id):
 
 # delete_user_profile: Deletes users profile
 def delete_user_profile(user_id, device_id):
-    LOG.info("User-Management: Profiling module: delete_user_profile: " + user_id + ", " + device_id)
+    LOG.info("USRMNGT: Profiling module: delete_user_profile: " + user_id + ", " + device_id)
     # delete profile
     if datamgmt.delete_user_profile(user_id, device_id) is None:
         return common.gen_response(500, 'Error', 'user_id', user_id)

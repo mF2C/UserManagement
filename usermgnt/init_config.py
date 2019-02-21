@@ -20,7 +20,7 @@ from common.logs import LOG
 def init():
     try:
         # CONFIGURATION values
-        LOG.info('> USRMNGT: Reading values from CONFIG FILE...')
+        LOG.info('USRMNGT: Reading values from CONFIG FILE...')
 
         # HOST IP from environment values:
         common.set_value_env('HOST_IP')

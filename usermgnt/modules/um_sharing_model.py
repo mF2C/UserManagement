@@ -32,7 +32,7 @@ from common.logs import LOG
 
 # get_sharing_model_by_id: Get shared resources
 def get_sharing_model_by_id(sharing_model_id):
-    LOG.info("User-Management: Sharing-model module: get_sharing_model_by_id: " + sharing_model_id)
+    LOG.info("USRMNGT: Sharing-model module: get_sharing_model_by_id: " + sharing_model_id)
     # get sharing_model
     sharing_model = datamgmt.get_sharing_model_by_id(sharing_model_id)
     if sharing_model is None:
@@ -45,7 +45,7 @@ def get_sharing_model_by_id(sharing_model_id):
 
 # get_sharing_model: Get shared resources
 def get_sharing_model(user_id, device_id):
-    LOG.info("User-Management: Sharing-model module: get_sharing_model: " + str(user_id))
+    LOG.info("USRMNGT: Sharing-model module: get_sharing_model: " + str(user_id))
     # get sharing_model
     sharing_model = datamgmt.get_sharing_model_user_device(user_id, device_id)
     if sharing_model is None:
@@ -58,7 +58,7 @@ def get_sharing_model(user_id, device_id):
 
 # get_current_sharing_model: Get current sharing model
 def get_current_sharing_model():
-    LOG.info("User-Management: Sharing-model module: get_current_sharing_model: getting current user-device value ...")
+    LOG.info("USRMNGT: Sharing-model module: get_current_sharing_model: getting current user-device value ...")
     sharing_model = datamgmt.get_current_sharing_model()
     if sharing_model is None:
         return common.gen_response(500, 'Error', 'sharing_model', 'not found / error', 'sharing_model', {})
@@ -70,9 +70,9 @@ def get_current_sharing_model():
 
 # Initializes shared resources values
 def init_sharing_model(data):
-    LOG.info("User-Management: Sharing-model module: init_sharing_model: " + str(data))
+    LOG.info("USRMNGT: Sharing-model module: init_sharing_model: " + str(data))
     if 'user_id' not in data or 'device_id' not in data:
-        LOG.warning('User-Management: Sharing-model module: init_sharing_model: parameter not found: user_id / device_id')
+        LOG.warning('USRMNGT: Sharing-model module: init_sharing_model: parameter not found: user_id / device_id')
         return common.gen_response(406, 'parameter not found: user_id / device_id', 'data', str(data))
 
     # check if user exists
@@ -100,7 +100,7 @@ def init_sharing_model(data):
 
 # Updates shared resources values
 def update_sharing_model_by_id(sharing_model_id, data):
-    LOG.info("User-Management: Sharing-model module: update_sharing_model_by_id: " + sharing_model_id + ", " + str(data))
+    LOG.info("USRMNGT: Sharing-model module: update_sharing_model_by_id: " + sharing_model_id + ", " + str(data))
     # updates sharing_model
     sharing_model = datamgmt.update_sharing_model_by_id(sharing_model_id, data)
     if sharing_model is None:
@@ -113,7 +113,7 @@ def update_sharing_model_by_id(sharing_model_id, data):
 
 # Updates shared resources values
 def update_sharing_model(user_id, device_id, data):
-    LOG.info("User-Management: Sharing-model module: update_sharing_model: " + user_id + ", " + device_id + ", " + str(data))
+    LOG.info("USRMNGT: Sharing-model module: update_sharing_model: " + user_id + ", " + device_id + ", " + str(data))
     # updates sharing_model
     sharing_model = datamgmt.update_sharing_model(data)
     if sharing_model is None:
@@ -126,7 +126,7 @@ def update_sharing_model(user_id, device_id, data):
 
 # delete_sharing_model_by_id: Deletes  shared resources values
 def delete_sharing_model_by_id(sharing_model_id):
-    LOG.info("User-Management: Sharing-model module: delete_sharing_model_by_id: " + sharing_model_id)
+    LOG.info("USRMNGT: Sharing-model module: delete_sharing_model_by_id: " + sharing_model_id)
     # deletes sharing_model
     res = datamgmt.delete_sharing_model_by_id(sharing_model_id)
     if res is None:
@@ -139,7 +139,7 @@ def delete_sharing_model_by_id(sharing_model_id):
 
 # Deletes  shared resources values
 def delete_sharing_model_values(user_id, device_id):
-    LOG.info("User-Management: Sharing-model module: delete_sharing_model_values: " + user_id + ", " + device_id)
+    LOG.info("USRMNGT: Sharing-model module: delete_sharing_model_values: " + user_id + ", " + device_id)
     # deletes sharing_model
     res = datamgmt.delete_sharing_model(user_id, device_id)
     if res is None:

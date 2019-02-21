@@ -81,7 +81,7 @@ try:
                        api_spec_url=config.dic['API_DOC_URL'],
                        produces=["application/json", "text/html"],
                        swaggerVersion="1.2",
-                       description='mF2C - User Management REST API',
+                       description='mF2C - User Management REST API - version ' + config.dic['VERSION'],
                        basePath='http://localhost:' + str(config.dic['SERVER_PORT']),
                        resourcePath='/')
 except ValueError:
@@ -137,7 +137,7 @@ class UserManagementModule(Resource):
         resp = Response(json.dumps(data), status=200, mimetype='application/json')
         return resp
 
-api.add_resource(UserManagementModule, '/api/v2/um/')
+api.add_resource(UserManagementModule, '/api/v2/um')
 
 
 ########################################################################################################################
@@ -346,6 +346,7 @@ api.add_resource(ProfileInstance, '/api/v2/um/user-profile/user/<string:user_id>
 #
 #     '/api/v2/um/user-profile'
 #         GET:    get "current" profile
+#         PUT:
 #         POST:   create new profile
 #
 class Profile(Resource):
@@ -360,6 +361,27 @@ class Profile(Resource):
     }])
     def get(self):
         return um_profiling.get_current_user_profile()
+
+    # PUT updates User Management global properties
+    @swagger.operation(
+        summary="updates User Management global properties",
+        notes="updates User Management global properties",
+        produces=["application/json"],
+        authorizations=[],
+        parameters=[{
+            "name": "body",
+            "description": "Parameters in JSON format.<br/>Example: <br/>{"
+                           "\"apps_running\":1}",
+            "required": True,
+            "paramType": "body",
+            "type": "string"
+    }], responseMessages=[{
+        "code": 405, "message": "Parameter not found: user_id / device_id / service_consumer / resource_contributor"
+    }, {
+        "code": 500, "message": "Exception processing request"
+    }])
+    def put(self):
+        return um_profiling.updateUM(request.get_json())
 
     # POST Initializes the users profile - User registration
     @swagger.operation(
@@ -387,7 +409,7 @@ class Profile(Resource):
         return um_profiling.create_user_profile( request.get_json() )
 
 
-api.add_resource(Profile, '/api/v2/um/user-profile/')
+api.add_resource(Profile, '/api/v2/um/user-profile')
 
 
 ########################################################################################################################
