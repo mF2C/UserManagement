@@ -19,12 +19,11 @@ import usermgnt.mF2C.data as datamgmt
 from common.logs import LOG
 
 
-execute = True
+execute = False
 d = None
 
 
 # check_resources_used: checks if the resources used by mF2C apps, match the user's profiling and sharing model properties
-# TODO
 def check_resources_used(user_profile, sharing_model, battery_level, total_services):
     try:
         LOG.debug("USRMNGT: << Assessment Process: check_resources_used >> [battery_level=" + str(battery_level) + "], "
@@ -36,7 +35,7 @@ def check_resources_used(user_profile, sharing_model, battery_level, total_servi
         if total_services > user_profile['max_apps']:
             result['max_apps_violation'] = True
     except:
-        LOG.error('USRMNGT: << Assessment Process: check_resources_used >> check_resources_used >> Exception')
+        LOG.exception('USRMNGT: << Assessment Process: check_resources_used >> check_resources_used >> Exception')
     return result # TODO check if empty
 
 
@@ -59,7 +58,7 @@ def daemon():
             else:
                 user_id = user_profile['user_id']
                 device_id = user_profile['device_id']
-                LOG.debug('USRMNGT: << Assessment Process: daemon >> executing ...')
+                LOG.debug('USRMNGT: << Assessment Process: daemon >> user_profile found')
 
             # 2. get current sharing model
             sharing_model = datamgmt.get_current_sharing_model()
@@ -70,7 +69,7 @@ def daemon():
             else:
                 user_id = sharing_model['user_id']
                 device_id = sharing_model['device_id']
-                LOG.debug('User-Management: << Assessment Process: daemon >> executing ...')
+                LOG.debug('User-Management: << Assessment Process: daemon >> sharing_model found')
 
             if not user_id is None and not device_id is None:
                 LOG.debug('USRMNGT: << Assessment Process: daemon >> checking values ...')
@@ -95,7 +94,7 @@ def daemon():
             # wait 60 seconds
             time.sleep(60)
     except:
-        LOG.error('USRMNGT: << Assessment Process: daemon >> Exception')
+        LOG.exception('USRMNGT: << Assessment Process: daemon >> Exception')
 
 
 # start process
@@ -103,20 +102,17 @@ def start():
     global execute
     global d
 
-    execute = True
+    LOG.debug("USRMNGT: << Assessment Process: start >> Starting assessment process [execute=" + str(execute) + "]")
+
     if d is None:
         LOG.debug("USRMNGT: << Assessment Process: start >> [d is None]")
-        d = threading.Thread(name='daemon', target=daemon)
+        d = threading.Thread(target=daemon) #(name='daemon', target=daemon)
         d.setDaemon(True)
-        d.start()
-        return "started"
-    elif execute == False and d.isAlive() == False:
-        LOG.debug("USRMNGT: << Assessment Process: start >> [execute == False and d.isAlive() == False]")
-        d.setDaemon(True)
+        execute = True
         d.start()
         return "started"
     else:
-        LOG.warning("USRMNGT: << Assessment Process: start >> [execute: " + str(execute) + "; d.isAlive(): " + str(d.isAlive() + "]"))
+        LOG.warning("USRMNGT: << Assessment Process: start >> [execute: " + str(execute) + "; d.isAlive(): " + str(d.isAlive()) + "]")
         return "???"
 
 
@@ -125,13 +121,16 @@ def stop():
     global execute
     global d
 
-    execute = False
+    LOG.debug("USRMNGT: << Assessment Process: stop >> Stopping assessment process [execute=" + str(execute) + "]")
+
     if d is None:
         LOG.warning('USRMNGT: << Assessment Process: stop >> [execute: ' + str(execute) + '; d.isAlive(): None]')
-        return "Stopped"
+        return "???"
     else:
-        LOG.debug('USRMNGT: << Assessment Process: start >> [d.join()]')
+        LOG.debug('USRMNGT: << Assessment Process: stop >> [d.join()]')
+        execute = False
         d.join()
+        d = None
         return "Stopped"
 
 
@@ -140,9 +139,13 @@ def get_status():
     global execute
     global d
 
+    LOG.debug("USRMNGT: << Assessment Process: stop >> Getting assessment process status [execute=" + str(execute) + "]")
+
     if d is None:
         return "Not initialized"
     elif execute and d.isAlive() == True:
         return "Running"
+    elif execute:
+        return "???"
     else:
         return "Stopped"

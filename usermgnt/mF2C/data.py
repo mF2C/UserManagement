@@ -277,7 +277,7 @@ def get_current_user_profile():
 # TODO
 # get_total_services_running: Get services running
 def get_total_services_running():
-    LOG.debug("USRMNGT: Data: get_total_services_running: Total of services running in device = " + config.APPS_RUNNING)
+    LOG.debug("USRMNGT: Data: get_total_services_running: Total of services running in device = " + str(config.APPS_RUNNING))
     return config.APPS_RUNNING
 
 

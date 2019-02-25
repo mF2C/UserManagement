@@ -37,7 +37,6 @@ def send_warning(user_id, device_id, user_profile, sharing_model, result):
         if config.dic['ENABLE_ASSESSMENT_TESTS']:
             LOG.debug('USRMNGT: Dependencies: send_warning: sending warning to LIFECYCLE [' +
                       config.dic['URL_PM_LIFECYCLE'] + '] ...')
-            param = "id_service"
             body = {"type": "um_warning",
                     "data": {
                         "user_id": user_id,
@@ -45,12 +44,12 @@ def send_warning(user_id, device_id, user_profile, sharing_model, result):
                         "user_profile": user_profile,
                         "sharing_model": sharing_model,
                         "result": result}}
-            r = requests.post(config.dic['URL_PM_LIFECYCLE'] + param, json=body, verify=config.dic['VERIFY_SSL'])
+            r = requests.post(config.dic['URL_PM_LIFECYCLE'], json=body, verify=config.dic['VERIFY_SSL'])
             if r.status_code == 200:
                 LOG.debug('USRMNGT: Dependencies: send_warning: status_code=' + r.status_code + '; response: ' + r.text)
                 return True
             else:
                 LOG.error('USRMNGT: Dependencies: send_warning: Error: status_code=' + r.status_code)
     except:
-        LOG.error('USRMNGT: Dependencies: send_warning: Exception')
+        LOG.exception('USRMNGT: Dependencies: send_warning: Exception')
     return False
