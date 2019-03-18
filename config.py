@@ -26,7 +26,7 @@ dic = { "VERSION":                      "1.0.6",
         "VERIFY_SSL":                   False,
 
         # for testing the interaction with the lifecycle management
-        "ENABLE_ASSESSMENT_TESTS":      True,
+        "ENABLE_ASSESSMENT":            True,
 
         # CIMI RESOURCES managed by this component
         "CIMI_PROFILES": "user-profile",  # "userProfiles",

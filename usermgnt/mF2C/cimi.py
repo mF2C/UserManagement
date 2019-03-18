@@ -385,28 +385,3 @@ def get_parent(device_id):
     except:
         LOG.exception('USRMNGT: cimi: get_parent: Exception')
         return None
-
-
-###############################################################################
-# NUM APPS RUNNING
-
-# get_num_apps_running
-def get_num_apps_running(device_id):
-    try:
-        # get IP from device-dynamic / agent
-
-
-        # get service instances filtering by agent/url
-
-        res = requests.get(config.dic['CIMI_URL'] + "/device-dynamic?$filter=device_id='" + device_id + "'",
-                           headers={CIMI_HEADER_PROPERTY: CIMI_HEADER_VALUE},
-                           verify=False)
-
-        if res.status_code == 200:
-            return res.json()['deviceDynamics'][0]
-        else:
-            LOG.warning("USRMNGT: cimi: 'device-dynamic' not found [device_id=" + device_id + "]")
-            return -1
-    except:
-        LOG.exception('USRMNGT: cimi: Exception')
-        return None

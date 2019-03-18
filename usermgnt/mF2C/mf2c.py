@@ -26,17 +26,15 @@ from common.logs import LOG
 #               "device_id": "",
 #               "user_profile": {},
 #               "sharing_model": {},
-#               "result": {'battery_limit_violation': true, 'max_apps_violation': true}
+#               "result": {'battery_limit_violation': true, 'max_apps_violation': true, 'resource_contributor_violation': true}
 #           }
 #   }
 def send_warning(user_id, device_id, user_profile, sharing_model, result):
     try:
         LOG.info("USRMNGT: Dependencies: send_warning: " + user_id + ", " + device_id)
 
-        # TEST INTERACTION WITH OTHER COMPONENTS
-        if config.dic['ENABLE_ASSESSMENT_TESTS']:
-            LOG.debug('USRMNGT: Dependencies: send_warning: sending warning to LIFECYCLE [' +
-                      config.dic['URL_PM_LIFECYCLE'] + '] ...')
+        if config.dic['ENABLE_ASSESSMENT']:
+            LOG.debug('USRMNGT: Dependencies: send_warning: sending warning to LIFECYCLE [' + config.dic['URL_PM_LIFECYCLE'] + '] ...')
             body = {"type": "um_warning",
                     "data": {
                         "user_id": user_id,
