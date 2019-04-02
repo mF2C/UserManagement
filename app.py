@@ -19,6 +19,7 @@ import usermgnt.init_config as um_init_config
 import usermgnt.modules.um_profiling as um_profiling
 import usermgnt.modules.um_sharing_model as um_sharing_model
 import usermgnt.modules.um_assesment as um_assesment
+import usermgnt.modules.policies as policies
 # common
 from common.logs import LOG
 # ext
@@ -65,6 +66,9 @@ REST API
                 /um/assesment
                         GET:    gets the status of the current assessment in the device
                         PUT:    start / stop assessment
+                        
+                /um/check
+                        GET:    checks if device can run more apps
 '''
 
 
@@ -736,6 +740,31 @@ class Assessment(Resource):
         return um_assesment.operation( request.get_json() )
 
 api.add_resource(Assessment, '/api/v2/um/assesment')
+
+
+########################################################################################################################
+
+'''
+ Assessment route:
+
+        '/um/check'
+                GET:    checks if device can run more apps - UP & SM policies
+'''
+class Policies(Resource):
+    # GET /api/v2/um/check
+    @swagger.operation(
+        summary="checks if device can run more apps - UP & SM policies",
+        notes="Returns a json object with the response",
+        produces=["application/json"],
+        authorizations=[],
+        responseMessages=[{
+                "code": 500,
+                "message": "Exception processing request"
+            }])
+    def get(self):
+        return policies.check_policies()
+
+api.add_resource(Policies, '/api/v2/um/check')
 
 
 ########################################################################################################################
