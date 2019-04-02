@@ -80,7 +80,7 @@ def daemon():
                 # 3. Get information:
                 #   - battery
                 battery_level = datamgmt.get_power()
-                battery_level = 50 # TODO
+                # battery_level = 50 # TODO
                 #   - total services running
                 total_services = datamgmt.get_total_services_running()
 

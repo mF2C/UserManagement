@@ -360,7 +360,8 @@ def get_power(device_id):
                            verify=False)
 
         if res.status_code == 200 and res.json()['count'] > 0:
-            return res.json()['deviceDynamics'][0]
+            power = float(res.json()['deviceDynamics'][0]['powerRemainingStatus'])
+            return int(power)
         else:
             LOG.warning("USRMNGT: cimi: 'device-dynamic' not found [device_id=" + device_id + "]")
             return -1

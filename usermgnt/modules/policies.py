@@ -60,10 +60,12 @@ def sm_policies():
         elif sharing_model == -1:
             LOG.warning('USRMNGT: Policies: sm_policies: sharing_model not found')
         else:
-            LOG.debug('User-Management: Policies: sm_policies: sharing_model found. checking values ...')
+            LOG.debug('USRMNGT: Policies: sm_policies: sharing_model found. checking values ...')
             # check ... TODO
             battery_level = datamgmt.get_power()
-            battery_level = 50  # TODO
+            LOG.debug("USRMNGT: Policies: sm_policies: [battery_level=" + str(battery_level) + "] ... [sharing_model('battery_limit')=" +
+                      str(sharing_model['battery_limit']) + "]")
+            #battery_level = 50  # TODO
             if battery_level is None or battery_level == -1 or battery_level > sharing_model['battery_limit']:
                 return True
 
