@@ -38,6 +38,10 @@ REST API
             User Management:
                 /um/
                         GET:    check initialization values
+                
+                /um/user
+                        GET     get my personal data (user cimi resource)
+                        DELETE  remove user (user cimi resource)
                         
                 /um/user-profile/
                         GET:    get "current" profile
@@ -142,6 +146,68 @@ class UserManagementModule(Resource):
         return resp
 
 api.add_resource(UserManagementModule, '/api/v2/um')
+
+
+########################################################################################################################
+### USER
+########################################################################################################################
+#
+# UserModule route:
+#
+#   /um/user
+#            GET     get my personal data (user cimi resource)
+#            DELETE  remove user (user cimi resource)
+#
+class UserModule(Resource):
+    # GET
+    @swagger.operation(
+        summary="gets 'my personal data' (from user cimi resource)",
+        notes="gets 'my personal data' (from user cimi resource)",
+        produces=["application/json"],
+        authorizations=[],
+        parameters=[],
+        responseMessages=[{
+            "code": 500,
+            "message": "Exception processing request"
+        }])
+    def get(self):
+        data = {
+            'app': 'User Management modules REST API',
+            'method': 'GET /um/user get my personal data (user cimi resource)',
+            'status': 'Not Implemented'
+        }
+        resp = Response(json.dumps(data), status=200, mimetype='application/json')
+        return resp
+
+    # DELETE Deletes a user
+    @swagger.operation(
+        summary="Deletes a user",
+        notes="Deletes a user",
+        produces=["application/json"],
+        authorizations=[],
+        parameters=[{
+                "name": "body",
+                "description": "Parameters in JSON format.<br/>Example: <br/>{\"user_id\":\"user/testuser\"}",
+                "required": True,
+                "paramType": "body",
+                "type": "string"
+            }],
+        responseMessages=[
+            {
+                "code": 406, "message": "User ID parameter not found"
+            }, {
+                "code": 500, "message": "Exception processing request"
+            }])
+    def delete(self):
+        data = {
+            'app': 'User Management modules REST API',
+            'method': 'DELETE /um/user get my personal data (user cimi resource)',
+            'status': 'Not Implemented'
+        }
+        resp = Response(json.dumps(data), status=200, mimetype='application/json')
+        return resp
+
+api.add_resource(UserModule, '/api/v2/um/user')
 
 
 ########################################################################################################################
