@@ -202,6 +202,7 @@ class UserModule(Resource):
         data = {
             'app': 'User Management modules REST API',
             'method': 'DELETE /um/user get my personal data (user cimi resource)',
+            'body': str(request.get_json()),
             'status': 'Not Implemented'
         }
         resp = Response(json.dumps(data), status=200, mimetype='application/json')
