@@ -45,6 +45,7 @@ REST API
                         
                 /um/user-profile/
                         GET:    get "current" profile
+                        PUT:    updates User Management global properties
                         POST:   create a new profile
                 /um/user-profile/<string:user_profile_id>
                         GET:    get profile by profile ID

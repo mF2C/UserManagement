@@ -72,23 +72,36 @@ def updateUM(data):
 # Initializes users profile
 def create_user_profile(data):
     LOG.info("USRMNGT: Profiling module: register_user: " + str(data))
-    if 'user_id' not in data or 'device_id' not in data or 'service_consumer' not in data or 'resource_contributor' not in data or 'max_apps' not in data:
+
+    # 1. check parameters
+    if 'user_id' not in data or 'service_consumer' not in data or 'resource_contributor' not in data or 'max_apps' not in data:
         LOG.warning('USRMNGT: Profiling module: register_user: parameter not found: user_id / device_id / service_consumer'
                     ' / resource_contributor / max_apps')
         return common.gen_response(405, 'parameter not found: user_id / device_id / service_consumer / resource_contributor / max_apps', 'data', str(data))
 
+    # 2. device_id: if device_id is not included in parameters, get it from 'agent' resource
+    if 'device_id' not in data:
+        LOG.info("USRMNGT: Profiling module: register_user: Getting 'device_id' from 'agent' resource")
+        device_id = datamgmt.get_current_device_id()
+    else:
+        device_id = data['device_id']
+
+    # 3. check if user and device exist
     # check if user exists
     if not datamgmt.exist_user(data['user_id']):
         return common.gen_response(404, "Error", "user_id", data['user_id'], "message", "User ID not found")
-
     # check if device exists
-    if not datamgmt.exist_device(data['device_id']):
-        return common.gen_response(404, "Error", "device_id", data['device_id'], "message", "Device ID not found")
+    if not datamgmt.exist_device(device_id):
+        return common.gen_response(404, "Error", "device_id", device_id, "message", "Device ID not found")
 
-    # check if profile exists
+    # 4. check if profile exists
     user_id = data['user_id']
-    device_id = data['device_id']
+    device_id = data['device_id'] # TODO
     user_profile = datamgmt.get_user_profile(user_id, device_id)
+
+    # TODO
+    datamgmt.save_device_id(device_id)
+    datamgmt.save_user_id(user_id)
 
     if user_profile == -1 or user_profile is None:
         # register user/profile

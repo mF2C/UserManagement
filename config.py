@@ -22,6 +22,9 @@ dic = { "VERSION":                      "1.1.2",
         "CERT_CRT":                     "cert/ia.crt",
         "CERT_KEY":                     "cert/ia.key",
 
+        # working dir
+        "UM_WORKING_DIR_VOLUME":        "/tmp/um/",
+
         # VERIFY_SSL controls whether we verify the server's TLS certificate or not
         "VERIFY_SSL":                   False,
 

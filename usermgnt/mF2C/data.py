@@ -12,6 +12,7 @@ Created on 27 sept. 2017
 """
 
 import usermgnt.mF2C.cimi as cimi
+import usermgnt.mF2C.volume as vol
 from common.logs import LOG
 import config
 
@@ -24,14 +25,20 @@ import config
 def get_current_device_id():
     LOG.info("USRMNGT: Data: get_device_id: Getting 'my' device ID ...")
 
-    device = cimi.get_current_device_info()
-    LOG.debug("USRMNGT: Data: get_device_id: device = " + str(device))
-
-    if not device is None and device != -1:
-        LOG.info("USRMNGT: Data: get_device_id: Returning 'my' device ID = " + str(device['id']))
-        return device['id']
+    # get from local volume
+    device_id = vol.read_device_id()
+    if not device_id:
+        LOG.debug("USRMNGT: Data: get_device_id: (LOCAL VOLUME) device_id = " + device_id)
+        return device_id
+    # TODO get from AGENT resource
     else:
-        return -1
+        device = cimi.get_current_device_info()
+        LOG.debug("USRMNGT: Data: get_device_id: device = " + str(device))
+        if not device is None and device != -1:
+            LOG.info("USRMNGT: Data: get_device_id: Returning 'my' device ID = " + str(device['id']))
+            return device['id']
+        else:
+            return -1
 
 
 # exist_user: check if 'user id' exists
@@ -144,12 +151,15 @@ def delete_sharing_model(user_id, device_id):
 # Get user profile
 def get_current_sharing_model():
     LOG.debug("USRMNGT: Data: get_current_sharing_model: Getting information about current user and device...")
-    # get 'my' device_id
-    device_id = get_current_device_id()
-    if device_id == -1:
+
+    user_id = vol.read_user_id()
+    device_id = get_current_device_id()  # get 'my' device_id
+
+    if not user_id or device_id == -1:
         return None
     else:
-        return cimi.get_sharing_model_by_device(device_id)
+        return cimi.get_sharing_model(user_id, device_id)
+        # return cimi.get_sharing_model_by_device(device_id)
         # sharing_model = cimi.get_sharing_model_by_device(device_id)
         # if sharing_model is None or sharing_model == -1:
         #     return None
@@ -258,12 +268,15 @@ def setAPPS_RUNNING(apps=0):
 # Get user profile
 def get_current_user_profile():
     LOG.debug("USRMNGT: Data: get_current_user_profile: Getting information about current user and device...")
-    # get 'my' device_id
-    device_id = get_current_device_id()
-    if device_id == -1:
+
+    user_id = vol.read_user_id()
+    device_id = get_current_device_id() # get 'my' device_id
+
+    if not user_id or device_id == -1:
         return None
     else:
-        return cimi.get_user_profile_by_device(device_id)
+        return cimi.get_user_profile(user_id, device_id)
+        # return cimi.get_user_profile_by_device(device_id)
         # user_profile = cimi.get_user_profile_by_device(device_id)
         # if user_profile is None or user_profile == -1:
         #     return None
@@ -284,8 +297,7 @@ def get_total_services_running():
 # TODO
 # Get battery level
 def get_power():
-    # get 'my' device_id
-    device_id = get_current_device_id()
+    device_id = get_current_device_id() # get 'my' device_id
     LOG.info("USRMNGT: Data: get_power: Getting power status from device [" + device_id + "] ...")
     return cimi.get_power(device_id)
 
@@ -293,7 +305,30 @@ def get_power():
 # TODO
 # Get parent
 def get_parent():
-    # get 'my' device_id
-    device_id = get_current_device_id()
+    device_id = get_current_device_id() # get 'my' device_id
     LOG.info("USRMNGT: Data: get_parent: Getting LEADER ID from device [" + device_id + "] ...")
     return cimi.get_parent(device_id)
+
+
+
+###############################################################################
+## LOCAL VOLUME
+
+# save_device_id
+def save_device_id(device_id):
+    vol.save_device_id(device_id)
+
+
+# read_device_id
+def read_device_id():
+    vol.read_device_id()
+
+
+# save_user_id
+def save_user_id(user_id):
+    vol.save_user_id(user_id)
+
+
+# read_user_id
+def read_user_id():
+    vol.read_user_id()

@@ -25,11 +25,13 @@ def init():
         # HOST IP from environment values:
         common.set_value_env('HOST_IP')
 
+
         LOG.info('USRMNGT: [SERVER_PORT=' + str(config.dic['SERVER_PORT']) + ']')
         LOG.info('USRMNGT: [API_DOC_URL=' + config.dic['API_DOC_URL'] + ']')
         LOG.info('USRMNGT: [CERT_CRT=' + config.dic['CERT_CRT'] + ']')
         LOG.info('USRMNGT: [CERT_KEY=' + config.dic['CERT_KEY'] + ']')
         LOG.info('USRMNGT: [HOST_IP=' + config.dic['HOST_IP'] + ']')
+        LOG.info('USRMNGT: [UM_WORKING_DIR_VOLUME=' + config.dic['UM_WORKING_DIR_VOLUME'] + ']')
 
         # CIMI
         LOG.info('USRMNGT: [CIMI_URL=' + config.dic['CIMI_URL'] + ']')
@@ -42,6 +44,8 @@ def init():
         common.set_value_env('CIMI_COOKIES_PATH')
         common.set_value_env('CIMI_USER')
         common.set_value_env('CIMI_PASSWORD')
+        # UM_WORKING_DIR_VOLUME from environment values:
+        common.set_value_env('UM_WORKING_DIR_VOLUME')
 
         # CIMI URL
         common.set_value_env('CIMI_URL')
@@ -62,5 +66,6 @@ def init():
         LOG.info('USRMNGT: [CIMI_COOKIES_PATH=' + config.dic['CIMI_COOKIES_PATH'] + ']')
         LOG.info('USRMNGT: [CIMI_USER=' + config.dic['CIMI_USER'] + ']')
         LOG.info('USRMNGT: [CIMI_PASSWORD=' + config.dic['CIMI_PASSWORD'] + ']')
+        LOG.info('USRMNGT: [UM_WORKING_DIR_VOLUME=' + config.dic['UM_WORKING_DIR_VOLUME'] + ']')
     except:
         LOG.error('USRMNGT: init_config: Exception: Error while initializing application')

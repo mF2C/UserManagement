@@ -12,10 +12,10 @@ Created on 27 sept. 2017
 """
 
 
-import requests
-import datetime
+import requests, datetime
 import config
 from common.logs import LOG
+import usermgnt.mF2C.volume as vol
 
 
 # CIMI initialization
@@ -101,6 +101,9 @@ def exist_user(user_id):
 # exist_device: check if 'device id' exists
 def exist_device(device_id):
     try:
+        if not device_id:
+            return False
+
         device_id = device_id.replace('device/', '')
         res = requests.get(config.dic['CIMI_URL'] + "/device/" + device_id,
                            headers={CIMI_HEADER_PROPERTY: CIMI_HEADER_VALUE},
