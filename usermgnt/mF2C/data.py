@@ -27,7 +27,7 @@ def get_current_device_id():
 
     # get from local volume
     device_id = vol.read_device_id()
-    if not device_id:
+    if device_id is not None:
         LOG.debug("USRMNGT: Data: get_device_id: (LOCAL VOLUME) device_id = " + device_id)
         return device_id
     # TODO get from AGENT resource
