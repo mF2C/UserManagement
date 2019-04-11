@@ -19,6 +19,7 @@ import usermgnt.init_config as um_init_config
 import usermgnt.modules.um_profiling as um_profiling
 import usermgnt.modules.um_sharing_model as um_sharing_model
 import usermgnt.modules.um_assesment as um_assesment
+import usermgnt.modules.current as current
 import usermgnt.modules.policies as policies
 # common
 from common.logs import LOG
@@ -42,6 +43,10 @@ REST API
                 /um/user
                         GET     get my personal data (user cimi resource)
                         DELETE  remove user (user cimi resource)
+                        
+                /um/current/<string:val>
+                        GET     val=user => get current user
+                        GET     val=device => get current device
                         
                 /um/user-profile/
                         GET:    get "current" profile
@@ -210,6 +215,43 @@ class UserModule(Resource):
         return resp
 
 api.add_resource(UserModule, '/api/v2/um/user')
+
+
+
+########################################################################################################################
+### CURRENT USER
+### CURRENT DEVICE
+########################################################################################################################
+#
+# CurrentModule route:
+#
+#   /um/current/<string:val>
+#            GET     get current user
+#            GET     get current device
+#
+class CurrentModule(Resource):
+    # GET
+    @swagger.operation(
+        summary="gets current user / device",
+        notes="gets current user / device",
+        produces=["application/json"],
+        authorizations=[],
+        parameters=[{
+                "name": "val",
+                "description": "user / device",
+                "required": True,
+                "paramType": "path",
+                "type": "string"
+            }],
+        responseMessages=[{
+            "code": 500,
+            "message": "Exception processing request"
+        }])
+    def get(self, val):
+        return current.getCurrent(val)
+
+
+api.add_resource(CurrentModule, '/api/v2/um/current/<string:val>')
 
 
 ########################################################################################################################
