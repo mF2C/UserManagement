@@ -21,12 +21,15 @@ def init():
     try:
         # get CIMI from environment values:
         LOG.info('USRMNGT: Reading values from ENVIRONMENT...')
+
         common.set_value_env('HOST_IP')
         common.set_value_env('CIMI_COOKIES_PATH')
         common.set_value_env('CIMI_USER')
         common.set_value_env('CIMI_PASSWORD')
         common.set_value_env('UM_WORKING_DIR_VOLUME') # UM_WORKING_DIR_VOLUME from environment values:
         common.set_value_env('CIMI_URL')
+
+        LOG.info('USRMNGT: Checking configuration...')
 
         # CIMI URL
         if "/api" not in config.dic['CIMI_URL'] and not config.dic['CIMI_URL'].endswith("/api"):
@@ -39,8 +42,6 @@ def init():
         else:
             LOG.debug("USRMNGT: CIMI_URL ... " + config.dic['CIMI_URL'])
 
-        # CIMI
-        LOG.debug('USRMNGT: Checking configuration...')
         LOG.info('USRMNGT: [CIMI_URL=' + config.dic['CIMI_URL'] + ']')
         LOG.info('USRMNGT: [CIMI_COOKIES_PATH=' + config.dic['CIMI_COOKIES_PATH'] + ']')
         LOG.info('USRMNGT: [CIMI_USER=' + config.dic['CIMI_USER'] + ']')
