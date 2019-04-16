@@ -13,7 +13,7 @@ Created on 18 oct. 2018
 
 #!/usr/bin/python
 
-dic = { "VERSION":                      "1.1.4",
+dic = { "VERSION":                      "1.1.5",
 
         # SERVER - REST API
         "SERVER_PORT":                  46300,
@@ -32,8 +32,8 @@ dic = { "VERSION":                      "1.1.4",
         "ENABLE_ASSESSMENT":            True,
 
         # CIMI RESOURCES managed by this component
-        "CIMI_PROFILES": "user-profile",  # "userProfiles",
-        "CIMI_SHARING_MODELS": "sharing-model",  # "sharingModels",
+        "CIMI_PROFILES":                "user-profile",  # "userProfiles",
+        "CIMI_SHARING_MODELS":          "sharing-model",  # "sharingModels",
 
         # CIMI
         "CIMI_URL":                     "http://cimi:8201/api",         # https://dashboard.mf2c-project.eu/api
