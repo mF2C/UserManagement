@@ -21,18 +21,6 @@ import config
 # COMMON
 
 # FUNCTION: get_current_device_id
-# {
-#     "authenticated" : true,
-#     "leader_id" : "device_2",
-#     "leaderAddress" : "192.168.252.42",
-#     "connected" : true,
-#     "device_ip" : "192.168.252.41",
-#     "id" : "agent/9a2f5cf5-b885-4c8f-8783-66451f59928d",
-#     "isLeader" : false,
-#     "resourceURI" : "http://schemas.dmtf.org/cimi/2/Agent",
-#     "childrenIPs" : [ "192.168.252.43" ],
-#     "device_id" : "device_1"
-# }
 def get_current_device_id():
     LOG.info("USRMNGT: Data: get_current_device_id: Getting 'my' device ID from 'agent' resource ...")
     # get from local volume
@@ -43,9 +31,9 @@ def get_current_device_id():
     # get from AGENT resource
     else:
         agent = cimi.get_agent_info()
-        LOG.debug("USRMNGT: Data: get_current_device_id: agent = " + str(agent))
+        LOG.debug("USRMNGT: Data: get_current_device_id: agent=" + str(agent))
         if not agent is None and agent != -1:
-            LOG.info("USRMNGT: Data: get_current_device_id: Returning 'my' device ID = " + str(agent['device_id']))
+            LOG.info("USRMNGT: Data: get_current_device_id: Returning 'my' device ID = " + agent['device_id'])
             return agent['device_id']
         else:
             return -1
