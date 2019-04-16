@@ -21,22 +21,33 @@ import config
 # COMMON
 
 # TODO get this information from new RESOURCE: AGENT
-# get_current_device_id
+# FUNCTION: get_current_device_id
+# {
+#     "authenticated" : true,
+#     "leader_id" : "device_2",
+#     "leaderAddress" : "192.168.252.42",
+#     "connected" : true,
+#     "device_ip" : "192.168.252.41",
+#     "id" : "agent/9a2f5cf5-b885-4c8f-8783-66451f59928d",
+#     "isLeader" : false,
+#     "resourceURI" : "http://schemas.dmtf.org/cimi/2/Agent",
+#     "childrenIPs" : [ "192.168.252.43" ],
+#     "device_id" : "device_1"
+# }
 def get_current_device_id():
-    LOG.info("USRMNGT: Data: get_device_id: Getting 'my' device ID ...")
-
+    LOG.info("USRMNGT: Data: get_current_device_id: Getting 'my' device ID from 'agent' resource ...")
     # get from local volume
     device_id = vol.read_device_id()
     if device_id is not None:
-        LOG.debug("USRMNGT: Data: get_device_id: (LOCAL VOLUME) device_id = " + device_id)
+        LOG.debug("USRMNGT: Data: get_current_device_id: (LOCAL VOLUME) device_id = " + device_id)
         return device_id
-    # TODO get from AGENT resource
+    # get from AGENT resource
     else:
-        device = cimi.get_current_device_info()
-        LOG.debug("USRMNGT: Data: get_device_id: device = " + str(device))
-        if not device is None and device != -1:
-            LOG.info("USRMNGT: Data: get_device_id: Returning 'my' device ID = " + str(device['id']))
-            return device['id']
+        agent = cimi.get_agent_info()
+        LOG.debug("USRMNGT: Data: get_current_device_id: agent = " + str(agent))
+        if not agent is None and agent != -1:
+            LOG.info("USRMNGT: Data: get_current_device_id: Returning 'my' device ID = " + str(agent['device_id']))
+            return agent['device_id']
         else:
             return -1
 
@@ -65,7 +76,7 @@ def exist_device(device_id):
 # 	    "battery_limit": integer
 # }
 
-# get_user_profile_by_id
+# FUNCTION: get_user_profile_by_id
 def get_sharing_model_by_id(sharing_model_id):
     sharing_model_id = sharing_model_id.replace('sharing-model/', '')
     LOG.debug("USRMNGT: Data: get_sharing_model_by_id: " + sharing_model_id)
@@ -144,28 +155,19 @@ def delete_sharing_model(user_id, device_id):
     return None
 
 
-###############################################################################
-## Current SHARING-MODEL
-
-# TODO get this information from new RESOURCE: AGENT
-# Get user profile
+# FUNCTION: get_current_sharing_model: Get current SHARING-MODEL
 def get_current_sharing_model():
-    LOG.debug("USRMNGT: Data: get_current_sharing_model: Getting information about current user and device...")
+    LOG.debug("USRMNGT: Data: get_current_sharing_model: Getting information about current user and device ...")
 
     user_id = vol.read_user_id()
-    device_id = get_current_device_id()  # get 'my' device_id
+    device_id = get_current_device_id()  # get 'my' device_id from 'agent' resource
+    LOG.debug("USRMNGT: Data: get_current_sharing_model: user_id=" + user_id + ", device_id=" + device_id)
 
     if not user_id or device_id == -1:
+        LOG.warning("USRMNGT: Data: get_current_sharing_model: No user or device found; Returning None ...")
         return None
     else:
         return cimi.get_sharing_model(user_id, device_id)
-        # return cimi.get_sharing_model_by_device(device_id)
-        # sharing_model = cimi.get_sharing_model_by_device(device_id)
-        # if sharing_model is None or sharing_model == -1:
-        #     return None
-        # else:
-        #     user_id = sharing_model['user_id']
-        #     LOG.debug("USRMNGT: Data: get_current_sharing_model: Get Sharing Model for user [" + user_id + "] and device [" + device_id + "]")  #    return cimi.get_sharing_model(user_id, device_id)
 
 
 ###############################################################################
@@ -261,74 +263,58 @@ def setAPPS_RUNNING(apps=0):
         config.APPS_RUNNING = 0
 
 
-###############################################################################
-## Current USER-PROFILE
-
-# TODO get this information from new RESOURCE: AGENT
-# Get user profile
+# FUNCTION: get_current_user_profile: Get Current USER-PROFILE
 def get_current_user_profile():
-    LOG.debug("USRMNGT: Data: get_current_user_profile: Getting information about current user and device...")
+    LOG.debug("USRMNGT: Data: get_current_user_profile: Getting information about current user and device ...")
 
     user_id = vol.read_user_id()
-    device_id = get_current_device_id() # get 'my' device_id
+    device_id = get_current_device_id() # get 'my' device_id from 'agent' resource
+    LOG.debug("USRMNGT: Data: get_current_user_profile: user_id=" + user_id + ", device_id=" + device_id)
 
     if not user_id or device_id == -1:
+        LOG.warning("USRMNGT: Data: get_current_user_profile: No user or device found; Returning None ...")
         return None
     else:
         return cimi.get_user_profile(user_id, device_id)
-        # return cimi.get_user_profile_by_device(device_id)
-        # user_profile = cimi.get_user_profile_by_device(device_id)
-        # if user_profile is None or user_profile == -1:
-        #     return None
-        # else:
-        #     user_id = user_profile['user_id']
-        #     LOG.debug("USRMNGT: Data: get_current_user_profile: Get Profile from user [" + user_id + "] and device [" + device_id + "]")  #    return cimi.get_user_profile(user_id, device_id)
 
 
 ###############################################################################
+## AGENT INFO
+## power, apps running ...
 
 # TODO
-# get_total_services_running: Get services running
+# FUNCTION: get_total_services_running: Get services running
 def get_total_services_running():
     LOG.debug("USRMNGT: Data: get_total_services_running: Total of services running in device = " + str(config.APPS_RUNNING))
     return config.APPS_RUNNING
 
 
-# TODO
-# Get battery level
+# FUNCTION: get_power: Get battery level from DEVICE
 def get_power():
     device_id = get_current_device_id() # get 'my' device_id
     LOG.info("USRMNGT: Data: get_power: Getting power status from device [" + device_id + "] ...")
     return cimi.get_power(device_id)
 
 
-# TODO
-# Get parent
-def get_parent():
-    device_id = get_current_device_id() # get 'my' device_id
-    LOG.info("USRMNGT: Data: get_parent: Getting LEADER ID from device [" + device_id + "] ...")
-    return cimi.get_parent(device_id)
-
-
-
 ###############################################################################
 ## LOCAL VOLUME
+## Used to store / read 'user_id' and 'device_id'
 
-# save_device_id
+# FUNCTION: save_device_id
 def save_device_id(device_id):
     vol.save_device_id(device_id)
 
 
-# read_device_id
+# FUNCTION: read_device_id
 def read_device_id():
     vol.read_device_id()
 
 
-# save_user_id
+# FUNCTION: save_user_id
 def save_user_id(user_id):
     vol.save_user_id(user_id)
 
 
-# read_user_id
+# FUNCTION: read_user_id
 def read_user_id():
     vol.read_user_id()

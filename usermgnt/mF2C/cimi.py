@@ -15,7 +15,7 @@ Created on 27 sept. 2017
 import requests, datetime
 import config
 from common.logs import LOG
-import usermgnt.mF2C.volume as vol
+
 
 '''
 AGENT
@@ -23,64 +23,34 @@ AGENT
     "authenticated" : true,
     "leader_id" : "device_2",
     "leaderAddress" : "192.168.252.42",
-    "updated" : "2019-04-16T09:28:52.077Z",
     "connected" : true,
-    "created" : "2019-04-16T09:28:52.077Z",
     "device_ip" : "192.168.252.41",
     "id" : "agent/9a2f5cf5-b885-4c8f-8783-66451f59928d",
     "isLeader" : false,
-    "acl" : {
-      "owner" : {
-        "principal" : "ADMIN",
-        "type" : "ROLE"
-      }
-    },
-    "operations" : [ {
-      "rel" : "edit",
-      "href" : "agent/9a2f5cf5-b885-4c8f-8783-66451f59928d"
-    }, {
-      "rel" : "delete",
-      "href" : "agent/9a2f5cf5-b885-4c8f-8783-66451f59928d"
-    } ],
     "resourceURI" : "http://schemas.dmtf.org/cimi/2/Agent",
     "childrenIPs" : [ "192.168.252.43" ],
     "device_id" : "device_1"
-  }
+}
   
 DEVICE
 {
-    "updated" : "2019-04-16T09:28:22.727Z",
     "cpuinfo" : "<rawCPUinfo>",
     "memory" : 7874.211,
     "logicalCores" : 8,
     "cpuManufacturer" : "Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz",
     "arch" : "x86_64",
     "physicalCores" : 4,
-    "created" : "2019-04-16T09:28:22.727Z",
     "networkingStandards" : "[eth0, lo]",
     "id" : "device/4cdf8b30-3c6b-4663-be0a-8e911ba12b93",
     "isLeader" : false,
     "deviceID" : "agent_1",
-    "acl" : {
-      "owner" : {
-        "principal" : "ADMIN",
-        "type" : "ROLE"
-      }
-    },
-    "operations" : [ {
-      "rel" : "edit",
-      "href" : "device/4cdf8b30-3c6b-4663-be0a-8e911ba12b93"
-    }, {
-      "rel" : "delete",
-      "href" : "device/4cdf8b30-3c6b-4663-be0a-8e911ba12b93"
-    } ],
     "storage" : 234549.5,
     "hwloc" : "<xmlString>",
     "resourceURI" : "http://schemas.dmtf.org/cimi/2/Device",
     "os" : "Linux-4.13.0-38-generic-x86_64-with-debian-8.10",
     "cpuClockSpeed" : "1.8000 GHz",
     "agentType" : "<agentType>"
-  } 
+} 
   
 DEVICE_DYNAMIC
 {
@@ -88,27 +58,12 @@ DEVICE_DYNAMIC
     "wifiAddress" : "Empty",
     "ramFree" : 4795.1523,
     "ethernetAddress" : "192.168.252.41",
-    "updated" : "2019-04-16T09:28:39.874Z",
-    "created" : "2019-04-16T09:28:39.874Z",
     "storageFreePercent" : 93.6,
     "wifiThroughputInfo" : [ "a" ],
     "id" : "device-dynamic/89bafd65-e2a1-4e18-9f05-7e939246719a",
     "ethernetThroughputInfo" : [ "E", "m", "p", "t", "y" ],
     "powerRemainingStatus" : "60.75885328836425",
     "cpuFreePercent" : 93.5,
-    "acl" : {
-      "owner" : {
-        "principal" : "ADMIN",
-        "type" : "ROLE"
-      }
-    },
-    "operations" : [ {
-      "rel" : "edit",
-      "href" : "device-dynamic/89bafd65-e2a1-4e18-9f05-7e939246719a"
-    }, {
-      "rel" : "delete",
-      "href" : "device-dynamic/89bafd65-e2a1-4e18-9f05-7e939246719a"
-    } ],
     "actuatorInfo" : "<actuatorInfo>",
     "resourceURI" : "http://schemas.dmtf.org/cimi/2/DeviceDynamic",
     "device" : {
@@ -117,12 +72,9 @@ DEVICE_DYNAMIC
     "ramFreePercent" : 60.9,
     "powerRemainingStatusSeconds" : "3817",
     "storageFree" : 208409.25
-  }
+}
 
 '''
-
-
-
 
 
 # CIMI initialization
@@ -166,25 +118,36 @@ def common_update_map_fields():
 ###############################################################################
 # COMMON
 
-# TODO get this information from new RESOURCE: AGENT
-# get_current_device_info
-def get_current_device_info():
+# FUNCTION: get_current_device_info
+# {
+#     "authenticated" : true,
+#     "leader_id" : "device_2",
+#     "leaderAddress" : "192.168.252.42",
+#     "connected" : true,
+#     "device_ip" : "192.168.252.41",
+#     "id" : "agent/9a2f5cf5-b885-4c8f-8783-66451f59928d",
+#     "isLeader" : false,
+#     "resourceURI" : "http://schemas.dmtf.org/cimi/2/Agent",
+#     "childrenIPs" : [ "192.168.252.43" ],
+#     "device_id" : "device_1"
+# }
+def get_agent_info():
     try:
-        res = requests.get(config.dic['CIMI_URL'] + "/device",
+        res = requests.get(config.dic['CIMI_URL'] + "/agent",
                            headers={CIMI_HEADER_PROPERTY: CIMI_HEADER_VALUE},
                            verify=False)
-        LOG.debug("USRMNGT: cimi: get_current_device_info: response: " + str(res) + ", " + str(res.json()))
+        LOG.debug("USRMNGT: cimi: get_agent_info: response: " + str(res) + ", " + str(res.json()))
 
         if res.status_code == 200 and res.json()['count'] == 0:
-            LOG.warning("USRMNGT: cimi: get_current_device_info: 'device' not found")
+            LOG.warning("USRMNGT: cimi: get_agent_info: 'agent' not found")
             return -1
         elif res.status_code == 200:
             return res.json()['devices'][0]
 
-        LOG.warning("USRMNGT: cimi: get_current_device_info: 'device' not found; Returning -1 ...")
+        LOG.warning("USRMNGT: cimi: get_agent_info: 'agent' not found; Returning -1 ...")
         return -1
     except:
-        LOG.exception("USRMNGT: cimi: get_current_device_info: Exception; Returning None ...")
+        LOG.exception("USRMNGT: cimi: get_agent_info: Exception; Returning None ...")
         return None
 
 
@@ -265,29 +228,6 @@ def get_user_profile(user_id, device_id):
         return None
 
 
-# TODO get this information from new RESOURCE: AGENT
-# get_user_profile_by_device: get profile from device
-def get_user_profile_by_device(device_id):
-    try:
-        device_id = device_id.replace('device/', '')
-
-        res = requests.get(config.dic['CIMI_URL'] + "/user-profile?$filter=device_id=\"device/" + device_id + "\"",
-                           headers={CIMI_HEADER_PROPERTY: CIMI_HEADER_VALUE},
-                           verify=False)
-        LOG.debug("USRMNGT: cimi: get_user_profile_by_device: response: " + str(res) + ", " + str(res.json()))
-
-        if res.status_code == 200 and len(res.json()['userProfiles']) > 0:
-            res_user_profile = res.json()['userProfiles'][0]
-            res_user_profile['apps_running'] = config.APPS_RUNNING
-            return res_user_profile
-        else:
-            LOG.warning("USRMNGT: cimi: get_user_profile_by_device: User's profile not found [device_id=" + device_id + "]; Returning -1 ...")
-            return -1
-    except:
-        LOG.exception("USRMNGT: cimi: get_user_profile_by_device: Exception; Returning None ...")
-        return None
-
-
 # get_sharing_model: get sharing model from user
 def get_sharing_model(user_id, device_id):
     try:
@@ -305,26 +245,6 @@ def get_sharing_model(user_id, device_id):
             return -1
     except:
         LOG.exception("USRMNGT: cimi: get_sharing_model: Exception; Returning None ...")
-        return None
-
-
-# TODO get this information from new RESOURCE: AGENT
-# get_sharing_model_by_device: get sharing model from device
-def get_sharing_model_by_device(device_id):
-    try:
-        device_id = device_id.replace('device/', '')
-        res = requests.get(config.dic['CIMI_URL'] + "/sharing-model?$filter=device_id=\"device/" + device_id + "\"",
-                           headers={CIMI_HEADER_PROPERTY: CIMI_HEADER_VALUE},
-                           verify=False)
-        LOG.debug("USRMNGT: cimi: get_sharing_model_by_device: response: " + str(res) + ", " + str(res.json()))
-
-        if res.status_code == 200 and len(res.json()['sharingModels']) > 0:
-            return res.json()['sharingModels'][0]
-        else:
-            LOG.warning("USRMNGT: cimi: get_sharing_model_by_device: Sharing-model not found [device_id=" + device_id + "]; Returning -1 ...")
-            return -1
-    except:
-        LOG.exception("USRMNGT: cimi: get_sharing_model_by_device: Exception; Returning None ...")
         return None
 
 
