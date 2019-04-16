@@ -18,7 +18,28 @@ from common.logs import LOG
 
 
 '''
-AGENT
+CIMI RESOURCES USED / MANAGED:
+
+* USER-PROFILE
+{
+    "user_id": "user/0000000000u",
+    "device_id": "device/11111111d",
+ 	"max_apps": 1,
+  	"service_consumer": boolean,
+	"resource_contributor": boolean
+}
+* SHARING-MODEL
+{
+    "user_id": "user/0000000000u",
+    "device_id": "device/11111111d",
+ 	"gps_allowed": boolean,
+	"max_cpu_usage": integer,
+	"max_memory_usage": integer,
+	"max_storage_usage": integer,
+	"max_bandwidth_usage": integer,
+ 	"battery_limit": integer
+}
+* AGENT
 {
     "authenticated" : true,
     "leader_id" : "device_2",
@@ -31,8 +52,7 @@ AGENT
     "childrenIPs" : [ "192.168.252.43" ],
     "device_id" : "device_1"
 }
-  
-DEVICE
+* DEVICE
 {
     "cpuinfo" : "<rawCPUinfo>",
     "memory" : 7874.211,
@@ -51,8 +71,7 @@ DEVICE
     "cpuClockSpeed" : "1.8000 GHz",
     "agentType" : "<agentType>"
 } 
-  
-DEVICE_DYNAMIC
+* DEVICE_DYNAMIC
 {
     "powerPlugged" : true,
     "wifiAddress" : "Empty",
@@ -73,7 +92,6 @@ DEVICE_DYNAMIC
     "powerRemainingStatusSeconds" : "3817",
     "storageFree" : 208409.25
 }
-
 '''
 
 
@@ -118,7 +136,7 @@ def common_update_map_fields():
 ###############################################################################
 # COMMON
 
-# FUNCTION: get_current_device_info
+# FUNCTION: get_current_device_info: get 'agent' resource content
 # {
 #     "authenticated" : true,
 #     "leader_id" : "device_2",
@@ -142,7 +160,7 @@ def get_agent_info():
             LOG.warning("USRMNGT: cimi: get_agent_info: 'agent' not found")
             return -1
         elif res.status_code == 200:
-            return res.json()['devices'][0]
+            return res.json()['agents'][0]
 
         LOG.warning("USRMNGT: cimi: get_agent_info: 'agent' not found; Returning -1 ...")
         return -1
@@ -151,7 +169,7 @@ def get_agent_info():
         return None
 
 
-# exist_user: check if 'user id' exists
+# FUNCTION: exist_user: check if 'user id' exists
 def exist_user(user_id):
     try:
         user_id = user_id.replace('user/', '')
@@ -168,7 +186,7 @@ def exist_user(user_id):
     return False
 
 
-# exist_device: check if 'device id' exists
+# FUNCTION: exist_device: check if 'device id' exists
 def exist_device(device_id):
     try:
         if not device_id:
@@ -188,9 +206,7 @@ def exist_device(device_id):
     return False
 
 
-###############################################################################
-
-# get_resource_by_id: get resource by id
+# FUNCTION: get_resource_by_id: get resource by id
 def get_resource_by_id(resource_id):
     try:
         res = requests.get(config.dic['CIMI_URL'] + "/" + resource_id,
@@ -206,6 +222,69 @@ def get_resource_by_id(resource_id):
         LOG.exception("USRMNGT: cimi: get_resource_by_id: Exception; Returning None ...")
     return None
 
+
+# FUNCTION: add_resource: add resource to cimi
+# RETURNS: resource
+def add_resource(resource_name, content):
+    try:
+        LOG.debug("USRMNGT: cimi: add_resource: Adding new resource to [" + resource_name + "] with content [" + str(content) + "] ... ")
+        # complete map and update resource
+        content.update(common_new_map_fields())
+        #content.pop("user_id", None)
+        res = requests.post(config.dic['CIMI_URL'] + '/' + resource_name,
+                            headers={CIMI_HEADER_PROPERTY: CIMI_HEADER_VALUE},
+                            verify=False,
+                            json=content)
+        LOG.debug("USRMNGT: cimi: add_resource: response: " + str(res) + ", " + str(res.json()))
+
+        if res.status_code == 201:
+            return get_resource_by_id(res.json()['resource-id'])
+
+        LOG.error("USRMNGT: cimi: add_resource: Request failed: " + str(res.status_code) + "; Returning None ...")
+    except:
+        LOG.exception("USRMNGT: cimi: add_resource: Exception; Returning None ...")
+    return None
+
+
+# FUNCTION: add_resource: add resource to cimi
+def update_resource(resource_id, content):
+    try:
+        LOG.debug("USRMNGT: cimi: update_resource: Updating resource [" + resource_id + "] with content [" + str(content) + "] ... ")
+        # complete map and update resource
+        content.update(common_update_map_fields())
+        res = requests.put(config.dic['CIMI_URL'] + '/' + resource_id,
+                           headers={CIMI_HEADER_PROPERTY: CIMI_HEADER_VALUE},
+                           verify=False,
+                           json=content)
+        LOG.debug("USRMNGT: cimi: update_resource: response: " + str(res) + ", " + str(res.json()))
+
+        if res.status_code == 200:
+            return get_resource_by_id(resource_id)
+
+        LOG.error("USRMNGT: cimi: update_resource: Request failed: " + str(res.status_code) + "; Returning None ...")
+    except:
+        LOG.exception("USRMNGT: cimi: update_resource: Exception; Returning None ...")
+    return None
+
+
+# FUNCTION: delete_resource: delete resource by id
+def delete_resource(resource_id):
+    try:
+        res = requests.delete(config.dic['CIMI_URL'] + '/' + resource_id,
+                              headers={CIMI_HEADER_PROPERTY: CIMI_HEADER_VALUE},
+                              verify=False)
+        LOG.debug("USRMNGT: cimi: delete_resource: response: " + str(res) + ", " + str(res.json()))
+
+        if res.status_code == 200:
+            return res.json()
+    except:
+        LOG.exception("USRMNGT: cimi: delete_resource: Exception; Returning None ...")
+    return None
+
+
+###############################################################################
+# DEVICE DYNAMIC
+# DEVICE
 
 # get_user_profile: get profile from user and device
 def get_user_profile(user_id, device_id):
@@ -246,65 +325,6 @@ def get_sharing_model(user_id, device_id):
     except:
         LOG.exception("USRMNGT: cimi: get_sharing_model: Exception; Returning None ...")
         return None
-
-
-# FUNCTION: add_resource: add resource to cimi
-# RETURNS: resource
-def add_resource(resource_name, content):
-    try:
-        LOG.debug("USRMNGT: cimi: add_resource: Adding new resource to [" + resource_name + "] with content [" + str(content) + "] ... ")
-        # complete map and update resource
-        content.update(common_new_map_fields())
-        #content.pop("user_id", None)
-        res = requests.post(config.dic['CIMI_URL'] + '/' + resource_name,
-                            headers={CIMI_HEADER_PROPERTY: CIMI_HEADER_VALUE},
-                            verify=False,
-                            json=content)
-        LOG.debug("USRMNGT: cimi: add_resource: response: " + str(res) + ", " + str(res.json()))
-
-        if res.status_code == 201:
-            return get_resource_by_id(res.json()['resource-id'])
-
-        LOG.error("USRMNGT: cimi: add_resource: Request failed: " + str(res.status_code) + "; Returning None ...")
-    except:
-        LOG.exception("USRMNGT: cimi: add_resource: Exception; Returning None ...")
-    return None
-
-
-# add_resource: add resource to cimi
-def update_resource(resource_id, content):
-    try:
-        LOG.debug("USRMNGT: cimi: update_resource: Updating resource [" + resource_id + "] with content [" + str(content) + "] ... ")
-        # complete map and update resource
-        content.update(common_update_map_fields())
-        res = requests.put(config.dic['CIMI_URL'] + '/' + resource_id,
-                           headers={CIMI_HEADER_PROPERTY: CIMI_HEADER_VALUE},
-                           verify=False,
-                           json=content)
-        LOG.debug("USRMNGT: cimi: update_resource: response: " + str(res) + ", " + str(res.json()))
-
-        if res.status_code == 200:
-            return get_resource_by_id(resource_id)
-
-        LOG.error("USRMNGT: cimi: update_resource: Request failed: " + str(res.status_code) + "; Returning None ...")
-    except:
-        LOG.exception("USRMNGT: cimi: update_resource: Exception; Returning None ...")
-    return None
-
-
-# delete_resource: delete resource by id
-def delete_resource(resource_id):
-    try:
-        res = requests.delete(config.dic['CIMI_URL'] + '/' + resource_id,
-                              headers={CIMI_HEADER_PROPERTY: CIMI_HEADER_VALUE},
-                              verify=False)
-        LOG.debug("USRMNGT: cimi: delete_resource: response: " + str(res) + ", " + str(res.json()))
-
-        if res.status_code == 200:
-            return res.json()
-    except:
-        LOG.exception("USRMNGT: cimi: delete_resource: Exception; Returning None ...")
-    return None
 
 
 # TODO!!!

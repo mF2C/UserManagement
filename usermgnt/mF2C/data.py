@@ -20,7 +20,6 @@ import config
 ###############################################################################
 # COMMON
 
-# TODO get this information from new RESOURCE: AGENT
 # FUNCTION: get_current_device_id
 # {
 #     "authenticated" : true,
@@ -52,29 +51,56 @@ def get_current_device_id():
             return -1
 
 
-# exist_user: check if 'user id' exists
+# FUNCTION: get_current_device_ip
+def get_current_device_ip():
+    LOG.info("USRMNGT: Data: get_current_device_ip: Getting 'my' device IP address from 'agent' resource ...")
+    # get from AGENT resource
+    agent = cimi.get_agent_info()
+    LOG.debug("USRMNGT: Data: get_current_device_ip: agent = " + str(agent))
+    if not agent is None and agent != -1:
+        LOG.info("USRMNGT: Data: get_current_device_ip: Returning 'my' device IP address = " + str(agent['device_ip']))
+        return agent['device_ip']
+    else:
+        return -1
+
+
+# FUNCTION: get_leader_device_ip
+def get_leader_device_ip():
+    LOG.info("USRMNGT: Data: get_leader_device_ip: Getting 'leader' ID from 'agent' resource ...")
+    # get from AGENT resource
+    agent = cimi.get_agent_info()
+    LOG.debug("USRMNGT: Data: get_leader_device_ip: agent = " + str(agent))
+    if not agent is None and agent != -1:
+        LOG.info("USRMNGT: Data: get_leader_device_ip: Returning 'leader' ID = " + str(agent['leader_id']))
+        return agent['leader_id']
+    else:
+        return -1
+
+
+# FUNCTION: get_agent_info
+def get_agent_info():
+    LOG.info("USRMNGT: Data: get_agent_info: Getting 'agent' resource ...")
+    # get from AGENT resource
+    agent = cimi.get_agent_info()
+    LOG.debug("USRMNGT: Data: get_agent_info: agent = " + str(agent))
+    if not agent is None and agent != -1:
+        return agent
+    else:
+        return -1
+
+
+# FUNCTION: exist_user: check if 'user id' exists
 def exist_user(user_id):
     return cimi.exist_user(user_id)
 
 
-# exist_device: check if 'device id' exists
+# FUNCTION: exist_device: check if 'device id' exists
 def exist_device(device_id):
     return cimi.exist_device(device_id)
 
 
 ###############################################################################
 # SHARING MODEL
-#
-# {
-#       "user_id": "user/0000000000u",
-#       "device_id": "device/11111111d",
-# 	    "gps_allowed": boolean,
-# 	    "max_cpu_usage": integer,
-# 	    "max_memory_usage": integer,
-# 	    "max_storage_usage": integer,
-# 	    "max_bandwidth_usage": integer,
-# 	    "battery_limit": integer
-# }
 
 # FUNCTION: get_user_profile_by_id
 def get_sharing_model_by_id(sharing_model_id):
@@ -172,24 +198,12 @@ def get_current_sharing_model():
 
 ###############################################################################
 # USER-PROFILE
-#
-#  {
-#       "user_id": "user/0000000000u",
-#       "device_id": "device/11111111d",
-#  	    "max_apps": 1,
-#  	    "service_consumer": boolean,
-#  	    "resource_contributor": boolean
-#  }
 
 # get_user_profile_by_id
 def get_user_profile_by_id(profile_id):
     profile_id = profile_id.replace('user-profile/', '')
     LOG.debug("USRMNGT: Data: get_user_profile_by_id: " + profile_id)
-
-    profile = cimi.get_resource_by_id("user-profile/" + profile_id)
-    #if not profile['status'] is None and profile['status'] == 404:
-    #    return -1
-    return profile # cimi.get_resource_by_id("user-profile/" + profile_id)
+    return cimi.get_resource_by_id("user-profile/" + profile_id)
 
 
 # get_user_profile: Get user profile
@@ -239,7 +253,6 @@ def delete_user_profile_by_id(profile_id):
 # Deletes users profile
 def delete_user_profile(user_id, device_id):
     LOG.debug("USRMNGT: Data: delete_user_profile: Delete Profile from user [" + user_id + "] and device [" + device_id + "]")
-
     resp = cimi.get_user_profile(user_id, device_id)
     if resp and resp == -1:
         return None
@@ -251,8 +264,7 @@ def delete_user_profile(user_id, device_id):
 
 # Initializes users profile
 def register_user(data):
-    LOG.debug("USRMNGT: Data: register_user: " + str(data))
-    LOG.debug("USRMNGT: Data: register_user: Creating new Profile for user [" + data['user_id'] + "] and device [" + data['device_id'] + "] ...")
+    LOG.debug("USRMNGT: Data: register_user: Creating new Profile for user [data=" + str(data) + "] ...")
     return cimi.add_resource(config.dic['CIMI_PROFILES'], data)
 
 
@@ -289,7 +301,7 @@ def get_total_services_running():
     return config.APPS_RUNNING
 
 
-# FUNCTION: get_power: Get battery level from DEVICE
+# FUNCTION: get_power: Get battery level from DEVICE_DYNAMIC
 def get_power():
     device_id = get_current_device_id() # get 'my' device_id
     LOG.info("USRMNGT: Data: get_power: Getting power status from device [" + device_id + "] ...")
