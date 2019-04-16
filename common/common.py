@@ -60,6 +60,6 @@ def gen_response_ko(message, key, value, key2=None, value2=None):
 # set_value_env: set value (in config dict) from environment
 def set_value_env(env_name):
     res = os.getenv(env_name, default='not-defined')
-    LOG.debug('USRMNGT: [' + env_name + '=' + res + ']')
+    #LOG.debug('USRMNGT: [' + env_name + '=' + res + ']')
     if res != 'not-defined':
         config.dic[env_name] = res

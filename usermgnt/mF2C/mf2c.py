@@ -43,11 +43,12 @@ def send_warning(user_id, device_id, user_profile, sharing_model, result):
                         "sharing_model": sharing_model,
                         "result": result}}
             r = requests.post(config.dic['URL_PM_LIFECYCLE'], json=body, verify=config.dic['VERIFY_SSL'])
+            LOG.debug("USRMNGT: Dependencies: send_warning: response: " + str(r) + ", " + str(r.json()))
+
             if r.status_code == 200:
-                LOG.debug('USRMNGT: Dependencies: send_warning: status_code=' + r.status_code + '; response: ' + r.text)
                 return True
-            else:
-                LOG.error('USRMNGT: Dependencies: send_warning: Error: status_code=' + r.status_code)
+
+            LOG.error("USRMNGT: Dependencies: send_warning: Error: status_code=" + r.status_code + "; Returning False ...")
     except:
-        LOG.exception('USRMNGT: Dependencies: send_warning: Exception')
+        LOG.exception("USRMNGT: Dependencies: send_warning: Exception; Returning False ...")
     return False

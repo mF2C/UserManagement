@@ -17,6 +17,113 @@ import config
 from common.logs import LOG
 import usermgnt.mF2C.volume as vol
 
+'''
+AGENT
+{
+    "authenticated" : true,
+    "leader_id" : "device_2",
+    "leaderAddress" : "192.168.252.42",
+    "updated" : "2019-04-16T09:28:52.077Z",
+    "connected" : true,
+    "created" : "2019-04-16T09:28:52.077Z",
+    "device_ip" : "192.168.252.41",
+    "id" : "agent/9a2f5cf5-b885-4c8f-8783-66451f59928d",
+    "isLeader" : false,
+    "acl" : {
+      "owner" : {
+        "principal" : "ADMIN",
+        "type" : "ROLE"
+      }
+    },
+    "operations" : [ {
+      "rel" : "edit",
+      "href" : "agent/9a2f5cf5-b885-4c8f-8783-66451f59928d"
+    }, {
+      "rel" : "delete",
+      "href" : "agent/9a2f5cf5-b885-4c8f-8783-66451f59928d"
+    } ],
+    "resourceURI" : "http://schemas.dmtf.org/cimi/2/Agent",
+    "childrenIPs" : [ "192.168.252.43" ],
+    "device_id" : "device_1"
+  }
+  
+DEVICE
+{
+    "updated" : "2019-04-16T09:28:22.727Z",
+    "cpuinfo" : "<rawCPUinfo>",
+    "memory" : 7874.211,
+    "logicalCores" : 8,
+    "cpuManufacturer" : "Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz",
+    "arch" : "x86_64",
+    "physicalCores" : 4,
+    "created" : "2019-04-16T09:28:22.727Z",
+    "networkingStandards" : "[eth0, lo]",
+    "id" : "device/4cdf8b30-3c6b-4663-be0a-8e911ba12b93",
+    "isLeader" : false,
+    "deviceID" : "agent_1",
+    "acl" : {
+      "owner" : {
+        "principal" : "ADMIN",
+        "type" : "ROLE"
+      }
+    },
+    "operations" : [ {
+      "rel" : "edit",
+      "href" : "device/4cdf8b30-3c6b-4663-be0a-8e911ba12b93"
+    }, {
+      "rel" : "delete",
+      "href" : "device/4cdf8b30-3c6b-4663-be0a-8e911ba12b93"
+    } ],
+    "storage" : 234549.5,
+    "hwloc" : "<xmlString>",
+    "resourceURI" : "http://schemas.dmtf.org/cimi/2/Device",
+    "os" : "Linux-4.13.0-38-generic-x86_64-with-debian-8.10",
+    "cpuClockSpeed" : "1.8000 GHz",
+    "agentType" : "<agentType>"
+  } 
+  
+DEVICE_DYNAMIC
+{
+    "powerPlugged" : true,
+    "wifiAddress" : "Empty",
+    "ramFree" : 4795.1523,
+    "ethernetAddress" : "192.168.252.41",
+    "updated" : "2019-04-16T09:28:39.874Z",
+    "created" : "2019-04-16T09:28:39.874Z",
+    "storageFreePercent" : 93.6,
+    "wifiThroughputInfo" : [ "a" ],
+    "id" : "device-dynamic/89bafd65-e2a1-4e18-9f05-7e939246719a",
+    "ethernetThroughputInfo" : [ "E", "m", "p", "t", "y" ],
+    "powerRemainingStatus" : "60.75885328836425",
+    "cpuFreePercent" : 93.5,
+    "acl" : {
+      "owner" : {
+        "principal" : "ADMIN",
+        "type" : "ROLE"
+      }
+    },
+    "operations" : [ {
+      "rel" : "edit",
+      "href" : "device-dynamic/89bafd65-e2a1-4e18-9f05-7e939246719a"
+    }, {
+      "rel" : "delete",
+      "href" : "device-dynamic/89bafd65-e2a1-4e18-9f05-7e939246719a"
+    } ],
+    "actuatorInfo" : "<actuatorInfo>",
+    "resourceURI" : "http://schemas.dmtf.org/cimi/2/DeviceDynamic",
+    "device" : {
+      "href" : "device/4cdf8b30-3c6b-4663-be0a-8e911ba12b93"
+    },
+    "ramFreePercent" : 60.9,
+    "powerRemainingStatusSeconds" : "3817",
+    "storageFree" : 208409.25
+  }
+
+'''
+
+
+
+
 
 # CIMI initialization
 CIMI_HEADER_PROPERTY = "slipstream-authn-info"
@@ -66,7 +173,7 @@ def get_current_device_info():
         res = requests.get(config.dic['CIMI_URL'] + "/device",
                            headers={CIMI_HEADER_PROPERTY: CIMI_HEADER_VALUE},
                            verify=False)
-        LOG.info("USRMNGT: cimi: get_current_device_info: Response: " + str(res.json()))
+        LOG.debug("USRMNGT: cimi: get_current_device_info: response: " + str(res) + ", " + str(res.json()))
 
         if res.status_code == 200 and res.json()['count'] == 0:
             LOG.warning("USRMNGT: cimi: get_current_device_info: 'device' not found")
@@ -74,10 +181,10 @@ def get_current_device_info():
         elif res.status_code == 200:
             return res.json()['devices'][0]
 
-        LOG.warning("USRMNGT: cimi: get_current_device_info: 'device' not found")
+        LOG.warning("USRMNGT: cimi: get_current_device_info: 'device' not found; Returning -1 ...")
         return -1
     except:
-        LOG.exception('USRMNGT: cimi: get_current_device_info: Exception')
+        LOG.exception("USRMNGT: cimi: get_current_device_info: Exception; Returning None ...")
         return None
 
 
@@ -88,13 +195,13 @@ def exist_user(user_id):
         res = requests.get(config.dic['CIMI_URL'] + "/user/" + user_id,
                            headers={CIMI_HEADER_PROPERTY: CIMI_HEADER_VALUE},
                            verify=False)
-        LOG.debug("USRMNGT: cimi: exist_user: Response: " + str(res.json()))
+        LOG.debug("USRMNGT: cimi: exist_user: response: " + str(res) + ", " + str(res.json()))
 
         if res.status_code == 200 and not res.json()['id'] is None:
             return True
     except:
         LOG.warning("LIFECYCLE: cimi: exist_user: controlled exception")
-    LOG.warning("USRMNGT: cimi: exist_user: 'user' not found / error getting user")
+    LOG.warning("USRMNGT: cimi: exist_user: 'user' not found / error getting user; Returning False ...")
     return False
 
 
@@ -108,13 +215,13 @@ def exist_device(device_id):
         res = requests.get(config.dic['CIMI_URL'] + "/device/" + device_id,
                            headers={CIMI_HEADER_PROPERTY: CIMI_HEADER_VALUE},
                            verify=False)
-        LOG.debug("USRMNGT: cimi: exist_device: Response: " + str(res.json()))
+        LOG.debug("USRMNGT: cimi: exist_device: response: " + str(res) + ", " + str(res.json()))
 
         if res.status_code == 200 and not res.json()['id'] is None:
             return True
     except:
         LOG.warning("LIFECYCLE: cimi: exist_device: controlled exception")
-    LOG.warning("USRMNGT: cimi: exist_device: 'device' not found / error getting device")
+    LOG.warning("USRMNGT: cimi: exist_device: 'device' not found / error getting device; Returning False ...")
     return False
 
 
@@ -126,16 +233,15 @@ def get_resource_by_id(resource_id):
         res = requests.get(config.dic['CIMI_URL'] + "/" + resource_id,
                            headers={CIMI_HEADER_PROPERTY: CIMI_HEADER_VALUE},
                            verify=False)
+        LOG.debug("USRMNGT: cimi: get_resource_by_id: response: " + str(res) + ", " + str(res.json()))
 
         if res.status_code == 200:
             return res.json()
 
-        LOG.error("USRMNGT: cimi: get_resource_by_id: Request failed: " + res.status_code)
-        LOG.error("USRMNGT: cimi: get_resource_by_id: Response: " + str(res.json()))
-        return None
+        LOG.error("USRMNGT: cimi: get_resource_by_id: Request failed: " + res.status_code + "; Returning None ...")
     except:
-        LOG.exception('USRMNGT: cimi: get_resource_by_id: Exception')
-        return None
+        LOG.exception("USRMNGT: cimi: get_resource_by_id: Exception; Returning None ...")
+    return None
 
 
 # get_user_profile: get profile from user and device
@@ -147,17 +253,15 @@ def get_user_profile(user_id, device_id):
         res = requests.get(config.dic['CIMI_URL'] + "/user-profile?$filter=user_id=\"user/" + user_id + "\" and device_id=\"device/" + device_id + "\"",
                            headers={CIMI_HEADER_PROPERTY: CIMI_HEADER_VALUE},
                            verify=False)
-
-        LOG.debug("USRMNGT: cimi: get_user_profile: response: " + str(res))
-        LOG.debug("USRMNGT: cimi: get_user_profile: response: " + str(res.json()))
+        LOG.debug("USRMNGT: cimi: get_user_profile: response: " + str(res) + ", " + str(res.json()))
 
         if res.status_code == 200 and len(res.json()['userProfiles']) > 0:
             return res.json()['userProfiles'][0]
         else:
-            LOG.warning("USRMNGT: cimi: get_user_profile: User's profile not found [user_id=" + user_id + ", device_id=" + device_id + "]")
+            LOG.warning("USRMNGT: cimi: get_user_profile: User's profile not found [user_id=" + user_id + ", device_id=" + device_id + "]; Returning -1 ...")
             return -1
     except:
-        LOG.exception('USRMNGT: cimi: get_user_profile: Exception')
+        LOG.exception("USRMNGT: cimi: get_user_profile: Exception; Returning None ...")
         return None
 
 
@@ -170,19 +274,17 @@ def get_user_profile_by_device(device_id):
         res = requests.get(config.dic['CIMI_URL'] + "/user-profile?$filter=device_id=\"device/" + device_id + "\"",
                            headers={CIMI_HEADER_PROPERTY: CIMI_HEADER_VALUE},
                            verify=False)
-
-        LOG.debug("USRMNGT: cimi: get_user_profile_by_device: response: " + str(res))
-        LOG.debug("USRMNGT: cimi: get_user_profile_by_device: response: " + str(res.json()))
+        LOG.debug("USRMNGT: cimi: get_user_profile_by_device: response: " + str(res) + ", " + str(res.json()))
 
         if res.status_code == 200 and len(res.json()['userProfiles']) > 0:
             res_user_profile = res.json()['userProfiles'][0]
             res_user_profile['apps_running'] = config.APPS_RUNNING
             return res_user_profile
         else:
-            LOG.warning("USRMNGT: cimi: get_user_profile_by_device: User's profile not found [device_id=" + device_id + "]")
+            LOG.warning("USRMNGT: cimi: get_user_profile_by_device: User's profile not found [device_id=" + device_id + "]; Returning -1 ...")
             return -1
     except:
-        LOG.exception('USRMNGT: cimi: get_user_profile_by_device: Exception')
+        LOG.exception("USRMNGT: cimi: get_user_profile_by_device: Exception; Returning None ...")
         return None
 
 
@@ -191,21 +293,18 @@ def get_sharing_model(user_id, device_id):
     try:
         user_id = user_id.replace('user/', '')
         device_id = device_id.replace('device/', '')
-
         res = requests.get(config.dic['CIMI_URL'] + "/sharing-model?$filter=user_id=\"user/" + user_id + "\" and device_id=\"device/" + device_id + "\"",
                            headers={CIMI_HEADER_PROPERTY: CIMI_HEADER_VALUE},
                            verify=False)
-
-        LOG.debug("USRMNGT: cimi: get_sharing_model: response: " + str(res))
-        LOG.debug("USRMNGT: cimi: get_sharing_model: response: " + str(res.json()))
+        LOG.debug("USRMNGT: cimi: get_sharing_model: response: " + str(res) + ", " + str(res.json()))
 
         if res.status_code == 200 and len(res.json()['sharingModels']) > 0:
             return res.json()['sharingModels'][0]
         else:
-            LOG.warning("USRMNGT: cimi: get_sharing_model: Sharing-model not found [user_id=" + user_id + ", device_id=" + device_id + "]")
+            LOG.warning("USRMNGT: cimi: get_sharing_model: Sharing-model not found [user_id=" + user_id + ", device_id=" + device_id + "]; Returning -1 ...")
             return -1
     except:
-        LOG.exception('USRMNGT: cimi: get_sharing_model: Exception')
+        LOG.exception("USRMNGT: cimi: get_sharing_model: Exception; Returning None ...")
         return None
 
 
@@ -214,21 +313,18 @@ def get_sharing_model(user_id, device_id):
 def get_sharing_model_by_device(device_id):
     try:
         device_id = device_id.replace('device/', '')
-
         res = requests.get(config.dic['CIMI_URL'] + "/sharing-model?$filter=device_id=\"device/" + device_id + "\"",
                            headers={CIMI_HEADER_PROPERTY: CIMI_HEADER_VALUE},
                            verify=False)
-
-        LOG.debug("USRMNGT: cimi: get_sharing_model_by_device: response: " + str(res))
-        LOG.debug("USRMNGT: cimi: get_sharing_model_by_device: response: " + str(res.json()))
+        LOG.debug("USRMNGT: cimi: get_sharing_model_by_device: response: " + str(res) + ", " + str(res.json()))
 
         if res.status_code == 200 and len(res.json()['sharingModels']) > 0:
             return res.json()['sharingModels'][0]
         else:
-            LOG.warning("USRMNGT: cimi: get_sharing_model_by_device: Sharing-model not found [device_id=" + device_id + "]")
+            LOG.warning("USRMNGT: cimi: get_sharing_model_by_device: Sharing-model not found [device_id=" + device_id + "]; Returning -1 ...")
             return -1
     except:
-        LOG.exception('USRMNGT: cimi: get_sharing_model_by_device: Exception')
+        LOG.exception("USRMNGT: cimi: get_sharing_model_by_device: Exception; Returning None ...")
         return None
 
 
@@ -237,55 +333,43 @@ def get_sharing_model_by_device(device_id):
 def add_resource(resource_name, content):
     try:
         LOG.debug("USRMNGT: cimi: add_resource: Adding new resource to [" + resource_name + "] with content [" + str(content) + "] ... ")
-
         # complete map and update resource
         content.update(common_new_map_fields())
         #content.pop("user_id", None)
-
         res = requests.post(config.dic['CIMI_URL'] + '/' + resource_name,
                             headers={CIMI_HEADER_PROPERTY: CIMI_HEADER_VALUE},
                             verify=False,
                             json=content)
-
-        LOG.debug("USRMNGT: cimi: add_resource: response: " + str(res))
-        LOG.debug("USRMNGT: cimi: add_resource: response: " + str(res.json()))
+        LOG.debug("USRMNGT: cimi: add_resource: response: " + str(res) + ", " + str(res.json()))
 
         if res.status_code == 201:
             return get_resource_by_id(res.json()['resource-id'])
 
-        LOG.error("USRMNGT: cimi: add_resource: Request failed: " + res.status_code)
-        LOG.error("USRMNGT: cimi: add_resource: Response: " + str(res.json()))
-        return None
+        LOG.error("USRMNGT: cimi: add_resource: Request failed: " + str(res.status_code) + "; Returning None ...")
     except:
-        LOG.exception('USRMNGT: cimi: add_resource: Exception')
-        return None
+        LOG.exception("USRMNGT: cimi: add_resource: Exception; Returning None ...")
+    return None
 
 
 # add_resource: add resource to cimi
 def update_resource(resource_id, content):
     try:
         LOG.debug("USRMNGT: cimi: update_resource: Updating resource [" + resource_id + "] with content [" + str(content) + "] ... ")
-
         # complete map and update resource
         content.update(common_update_map_fields())
-
         res = requests.put(config.dic['CIMI_URL'] + '/' + resource_id,
                            headers={CIMI_HEADER_PROPERTY: CIMI_HEADER_VALUE},
                            verify=False,
                            json=content)
-
-        LOG.debug("USRMNGT: cimi: update_resource: response: " + str(res))
-        LOG.debug("USRMNGT: cimi: update_resource: response: " + str(res.text))
+        LOG.debug("USRMNGT: cimi: update_resource: response: " + str(res) + ", " + str(res.json()))
 
         if res.status_code == 200:
             return get_resource_by_id(resource_id)
 
-        LOG.error("USRMNGT: cimi: update_resource: Request failed: " + res.status_code)
-        LOG.error("USRMNGT: cimi: update_resource: Response: " + str(res.json()))
-        return None
+        LOG.error("USRMNGT: cimi: update_resource: Request failed: " + str(res.status_code) + "; Returning None ...")
     except:
-        LOG.exception('USRMNGT: cimi: update_resource: Exception')
-        return None
+        LOG.exception("USRMNGT: cimi: update_resource: Exception; Returning None ...")
+    return None
 
 
 # delete_resource: delete resource by id
@@ -294,65 +378,19 @@ def delete_resource(resource_id):
         res = requests.delete(config.dic['CIMI_URL'] + '/' + resource_id,
                               headers={CIMI_HEADER_PROPERTY: CIMI_HEADER_VALUE},
                               verify=False)
-
-        LOG.debug("USRMNGT: cimi: delete_resource: response: " + str(res))
-        LOG.debug("USRMNGT: cimi: delete_resource: response: " + str(res.json()))
+        LOG.debug("USRMNGT: cimi: delete_resource: response: " + str(res) + ", " + str(res.json()))
 
         if res.status_code == 200:
             return res.json()
-        return None
     except:
-        LOG.exception('USRMNGT: cimi: delete_resource: Exception')
-        return None
+        LOG.exception("USRMNGT: cimi: delete_resource: Exception; Returning None ...")
+    return None
 
 
 # TODO!!!
 ###############################################################################
 # DEVICE DYNAMIC
-#
-#{
-#  "device_id":x
-#  "updated_on": x
-#  "available_RAM_size_in_MB": long,
-#  "available_RAM_in_percentage": float,
-#  "available_Storage_size_in_MB": long,
-#  "available_Storage_in_percentage": float,
-#  "available_CPU_percentage": float,
-#  "power_remaining_status": string,
-#  "remaining_power_info_in_seconds": string,
-#  "ethernet_address": string,
-#  "wifi_address": string,
-#  "throughput_info_ethernet": string,
-#  "throughput_info_wifi": string
-#  "inclinometer": x,                  The information about the sensors and actuators will be provided
-#  "temperature": x,
-#  "jammer": x,
-#  "location": x,
-#  "ambulance": x,
-#  "fire_car": x,
-#  "traffic_light": x,
-#  "street_light": x
-# }
-###############################################################################
 # DEVICE
-#
-#{
-#  "device_id" : string,
-#  "created_on": x,
-#  "isleader": "False",
-#  "os":  string,
-#  "arch": string,
-#  "cpu_manufacturer": string,
-#  "physical_cpu_cores": int,
-#  "logical_cpu_cores": int,
-#  "cpu_clock_speed": string,
-#  "RAM_size_in_MB": long,
-#  "Storage_size_in_MB": long,
-#  "power_plugged_information": boolean,
-#  "networking_standards": string,
-#  "ethernet_address": string,
-#  "wifi_address": string
-# }
 
 # get_power
 def get_power(device_id):
@@ -361,15 +399,16 @@ def get_power(device_id):
         res = requests.get(config.dic['CIMI_URL'] + "/device-dynamic?$filter=device/href='device/" + device_id + "'",
                            headers={CIMI_HEADER_PROPERTY: CIMI_HEADER_VALUE},
                            verify=False)
+        LOG.debug("USRMNGT: cimi: get_power: response: " + str(res) + ", " + str(res.json()))
 
         if res.status_code == 200 and res.json()['count'] > 0:
             power = float(res.json()['deviceDynamics'][0]['powerRemainingStatus'])
             return int(power)
         else:
-            LOG.warning("USRMNGT: cimi: 'device-dynamic' not found [device_id=" + device_id + "]")
+            LOG.warning("USRMNGT: cimi: 'device-dynamic' not found [device_id=" + device_id + "]; Returning -1 ...")
             return -1
     except:
-        LOG.exception('USRMNGT: cimi: get_power: Exception')
+        LOG.exception("USRMNGT: cimi: get_power: Exception; Returning None ...")
         return None
 
 
@@ -380,12 +419,13 @@ def get_parent(device_id):
         res = requests.get(config.dic['CIMI_URL'] + "/device-dynamic?$filter=myLeaderID/href='device/" + device_id + "'",
                            headers={CIMI_HEADER_PROPERTY: CIMI_HEADER_VALUE},
                            verify=False)
+        LOG.debug("USRMNGT: cimi: get_parent: response: " + str(res) + ", " + str(res.json()))
 
-        if res.status_code == 200:
+        if res.status_code == 200 and len(res.json()['deviceDynamics']) > 0:
             return res.json()['deviceDynamics'][0]
         else:
-            LOG.warning("USRMNGT: cimi: get_parent: 'device-dynamic' not found [device_id=" + device_id + "]")
+            LOG.warning("USRMNGT: cimi: get_parent: 'device-dynamic' not found [device_id=" + device_id + "]; Returning -1 ...")
             return -1
     except:
-        LOG.exception('USRMNGT: cimi: get_parent: Exception')
+        LOG.exception("USRMNGT: cimi: get_parent: Exception; Returning None ...")
         return None
