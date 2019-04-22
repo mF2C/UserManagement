@@ -20,7 +20,7 @@ from common.logs import LOG
 def init():
     try:
         # get CIMI from environment values:
-        LOG.info('USRMNGT: Reading values from ENVIRONMENT...')
+        LOG.info('USRMNGT: config: Reading values from ENVIRONMENT...')
 
         common.set_value_env('HOST_IP')
         common.set_value_env('CIMI_COOKIES_PATH')
@@ -29,7 +29,7 @@ def init():
         common.set_value_env('UM_WORKING_DIR_VOLUME') # UM_WORKING_DIR_VOLUME from environment values:
         common.set_value_env('CIMI_URL')
 
-        LOG.info('USRMNGT: Checking configuration...')
+        LOG.info('USRMNGT: config: Checking configuration...')
 
         # CIMI URL
         if "/api" not in config.dic['CIMI_URL'] and not config.dic['CIMI_URL'].endswith("/api"):
@@ -53,4 +53,4 @@ def init():
         LOG.info('USRMNGT: [CERT_KEY=' + config.dic['CERT_KEY'] + ']')
         LOG.info('USRMNGT: [HOST_IP=' + config.dic['HOST_IP'] + ']')
     except:
-        LOG.error('USRMNGT: init_config: Exception: Error while initializing application')
+        LOG.exception('USRMNGT: init_config: Exception: Error while initializing application')
