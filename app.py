@@ -19,6 +19,7 @@ import usermgnt.init_config as um_init_config
 import usermgnt.modules.um_profiling as um_profiling
 import usermgnt.modules.um_sharing_model as um_sharing_model
 import usermgnt.modules.um_assesment as um_assesment
+import usermgnt.modules.um_user as um_user
 import usermgnt.modules.current as current
 import usermgnt.modules.policies as policies
 # common
@@ -171,19 +172,23 @@ class UserModule(Resource):
         notes="gets 'my personal data' (from user cimi resource)",
         produces=["application/json"],
         authorizations=[],
-        parameters=[],
+        parameters=[{
+                "name": "user_id",
+                "description": "username",
+                "required": True,
+                "paramType": "path",
+                "type": "string"
+            }],
         responseMessages=[{
+            "code": 403,
+            "message": "Forbidden"
+        }, {
             "code": 500,
             "message": "Exception processing request"
         }])
-    def get(self):
-        data = {
-            'app': 'User Management modules REST API',
-            'method': 'GET /um/user get my personal data (user cimi resource)',
-            'status': 'Not Implemented'
-        }
-        resp = Response(json.dumps(data), status=200, mimetype='application/json')
-        return resp
+    def get(self, user_id):
+        return um_user.get_user(user_id)
+
 
     # DELETE Deletes a user
     @swagger.operation(
@@ -198,21 +203,16 @@ class UserModule(Resource):
                 "paramType": "body",
                 "type": "string"
             }],
-        responseMessages=[
-            {
-                "code": 406, "message": "User ID parameter not found"
+        responseMessages=[{
+                "code": 403, "message": "Forbidden"
+            }, {
+                "code": 405, "message": "User IDparameter not found"
             }, {
                 "code": 500, "message": "Exception processing request"
             }])
     def delete(self):
-        data = {
-            'app': 'User Management modules REST API',
-            'method': 'DELETE /um/user get my personal data (user cimi resource)',
-            'body': str(request.get_json()),
-            'status': 'Not Implemented'
-        }
-        resp = Response(json.dumps(data), status=200, mimetype='application/json')
-        return resp
+        return um_user.delete_user(request.get_json())
+
 
 api.add_resource(UserModule, '/api/v2/um/user')
 

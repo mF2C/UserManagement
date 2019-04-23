@@ -88,6 +88,40 @@ def exist_device(device_id):
 
 
 ###############################################################################
+# USER
+
+
+# FUNCTION: get_user_info: gets user info
+def get_user_info(user_id):
+    user_id = user_id.replace('user/', '')
+    LOG.debug("USRMNGT: Data: get_user_info: " + user_id)
+    # check user's permissions on current device
+    current_user_id = vol.read_user_id()
+    current_user_id = current_user_id.replace('user/', '')
+    if current_user_id == user_id:
+        return cimi.get_resource_by_id("user/" + user_id)
+    else:
+        return -1
+
+
+# FUNCTION: delete_user: deletes user
+def delete_user(user_id):
+    user_id = user_id.replace('user/', '')
+    LOG.debug("USRMNGT: Data: delete_user: " + user_id)
+
+    # 1. check user's permissions on current device
+    current_user_id = vol.read_user_id()
+    current_user_id = current_user_id.replace('user/', '')
+    if current_user_id == user_id:
+        # TODO 2. delete profiles and sharing models from devices
+
+        # 3. delete user
+        return cimi.delete_resource("user/" + user_id)
+    else:
+        return -1
+
+
+###############################################################################
 # SHARING MODEL
 
 # FUNCTION: get_user_profile_by_id
