@@ -17,7 +17,7 @@ dic = { "VERSION":                      "1.2.0",
 
         # SERVER - REST API
         "SERVER_PORT":                  46300,
-        "HOST_IP":                      "",                       # if possible, read from env values
+        "HOST_IP":                      "localhost",                       # if possible, read from env values
         "API_DOC_URL":                  "/api/v2/um",
         "CERT_CRT":                     "cert/ia.crt",
         "CERT_KEY":                     "cert/ia.key",
