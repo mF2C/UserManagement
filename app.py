@@ -108,46 +108,17 @@ except ValueError:
 #     '/api/v2/'
 #         GET:    get rest api service status
 #
+@app.route('/api/v2', methods=['GET'])
 @app.route('/api/v2/', methods=['GET'])
 def default_route():
     data = {
-        'app': "User Management module REST API", 'status': "Running", 'api_doc_json': "http://" + config.dic['HOST_IP'] + ":" + str(config.dic['SERVER_PORT']) + config.dic['API_DOC_URL'],
+        'app': "User Management module REST API",
+        'status': "Running",
+        'api_doc_json': "http://" + config.dic['HOST_IP'] + ":" + str(config.dic['SERVER_PORT']) + config.dic['API_DOC_URL'],
         'api_doc_html': "http://" + config.dic['HOST_IP'] + ":" + str(config.dic['SERVER_PORT']) + config.dic['API_DOC_URL'] + ".html#!/spec"
     }
     resp = Response(json.dumps(data), status=200, mimetype='application/json')
     return resp
-
-
-#
-# UserManagementModule route:
-#
-#   '/api/v2/um/'
-#            GET:    check initialization values
-#
-class UserManagementModule(Resource):
-    # GET
-    @swagger.operation(
-        summary="Checks initialization values",
-        notes="Checks initialization values",
-        produces=["application/json"],
-        authorizations=[],
-        parameters=[],
-        responseMessages=[{
-            "code": 500,
-            "message": "Exception processing request"
-        }])
-    def get(self):
-        data = {
-            'app': 'User Management modules REST API',
-            'status': 'Running',
-            'api_doc_json': 'https://localhost:' + str(config.dic['SERVER_PORT']) + config.dic['API_DOC_URL'],
-            'api_doc_html': 'https://localhost:' + str(config.dic['SERVER_PORT']) + config.dic[
-                'API_DOC_URL'] + '.html#!/spec'
-        }
-        resp = Response(json.dumps(data), status=200, mimetype='application/json')
-        return resp
-
-api.add_resource(UserManagementModule, '/api/v2/um')
 
 
 ########################################################################################################################
@@ -362,30 +333,6 @@ class Profile(Resource):
     def get(self):
         return um_profiling.get_current_user_profile()
 
-'''
-    # POST Initializes the users profile - User registration
-    @swagger.operation(
-        summary="Initializes a user's profile.",
-        notes="Initializes a user's profile.",
-        produces=["application/json"],
-        authorizations=[],
-        parameters=[{
-                "name": "body",
-                "description": "Parameters in JSON format.<br/>Example: <br/>{""\"service_consumer\":true, \"resource_contributor\":false}",
-                "required": True,
-                "paramType": "body",
-                "type": "string"
-            }],
-        responseMessages=[{
-                "code": 405,
-                "message": "Parameter not found: user_id / service_consumer / resource_contributor"
-            },{
-                "code": 500,
-                "message": "Exception processing request"
-            }])
-    def post(self):
-        return um_profiling.create_user_profile( request.get_json() )
-'''
 
 api.add_resource(Profile, '/api/v2/um/user-profile')
 
@@ -530,39 +477,6 @@ class SharingModel(Resource):
     def put(self):
         return um_sharing_model.updateUM(request.get_json())
 
-'''
-    # POST Initializes sharing model
-    @swagger.operation(
-        summary="Initializes the user's sharing model information",
-        notes="Initializes the user's sharing model information",
-        produces=["application/json"],
-        authorizations=[],
-        parameters=[{
-                "name": "body",
-                "description": "Parameters in JSON format.<br/>Example: <br/>"
-                               "{\"user_id\":\"user/testuser\", "
-                               "\"device_id\":\"device/50b12ccc-76fb-45a6-af7f-634312bc7ca5\", "
-                               "\"gps_allowed\": false, "
-                               "\"max_cpu_usage\": 1, "
-                               "\"max_memory_usage\": 1, "
-                               "\"max_storage_usage\": 1, "
-                               "\"max_bandwidth_usage\": 1, "
-                               "\"max_apps\":2 , "
-                               "\"battery_limit\": 55 }",
-                "required": True,
-                "paramType": "body",
-                "type": "string"
-            }],
-        responseMessages=[{
-                "code": 406,
-                "message": "User ID / Device ID parameters not found not found"
-            },{
-                "code": 500,
-                "message": "Exception processing request"
-            }])
-    def post(self):
-        return um_sharing_model.init_sharing_model( request.get_json() )
-'''
 
 api.add_resource(SharingModel, '/api/v2/um/sharing-model')
 
@@ -627,7 +541,7 @@ api.add_resource(Assessment, '/api/v2/um/assesment')
 ########################################################################################################################
 
 '''
- Assessment route:
+ Policies route:
 
         '/um/check'
                 GET:    checks if device can run more apps - UP & SM policies

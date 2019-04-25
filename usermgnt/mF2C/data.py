@@ -36,6 +36,7 @@ def get_current_device_id():
             LOG.info("USRMNGT: Data: get_current_device_id: Returning 'my' device ID = " + agent['device_id'])
             return agent['device_id']
         else:
+            LOG.warning("USRMNGT: Data: get_current_device_id: Agent information not found. Returning -1 ...")
             return -1
 
 
