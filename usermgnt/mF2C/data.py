@@ -109,7 +109,7 @@ def delete_user(user_id):
     current_user_id = vol.read_user_id()
     current_user_id = current_user_id.replace('user/', '')
     if current_user_id == user_id:
-        # TODO 2. delete profiles and sharing models from devices
+        # TODO 2. delete profiles and sharing models from devices??
 
         # 3. delete user
         return cimi.delete_resource("user/" + user_id)
@@ -124,11 +124,7 @@ def delete_user(user_id):
 def get_sharing_model_by_id(sharing_model_id):
     sharing_model_id = sharing_model_id.replace('sharing-model/', '')
     LOG.debug("USRMNGT: Data: get_sharing_model_by_id: " + sharing_model_id)
-
-    sharing_model = cimi.get_resource_by_id("sharing-model/" + sharing_model_id)
-    #if not sharing_model['status'] is None and sharing_model['status'] == 404:
-    #    return -1
-    return sharing_model  # cimi.get_resource_by_id("sharing-model/" + sharing_model_id)
+    return cimi.get_resource_by_id("sharing-model/" + sharing_model_id)
 
 
 # Get shared resources

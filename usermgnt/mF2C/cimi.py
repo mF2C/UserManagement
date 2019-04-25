@@ -306,7 +306,6 @@ def get_sharing_model(device_id):
         return None
 
 
-# TODO!!!
 ###############################################################################
 # DEVICE DYNAMIC
 # DEVICE
@@ -328,23 +327,4 @@ def get_power(device_id):
             return -1
     except:
         LOG.exception("USRMNGT: cimi: get_power: Exception; Returning None ...")
-        return None
-
-
-# get_parent
-def get_parent(device_id):
-    try:
-        device_id = device_id.replace('device/', '')
-        res = requests.get(config.dic['CIMI_URL'] + "/device-dynamic?$filter=myLeaderID/href='device/" + device_id + "'",
-                           headers={CIMI_HEADER_PROPERTY: CIMI_HEADER_VALUE},
-                           verify=False)
-        LOG.debug("USRMNGT: cimi: get_parent: response: " + str(res) + ", " + str(res.json()))
-
-        if res.status_code == 200 and len(res.json()['deviceDynamics']) > 0:
-            return res.json()['deviceDynamics'][0]
-        else:
-            LOG.warning("USRMNGT: cimi: get_parent: 'device-dynamic' not found [device_id=" + device_id + "]; Returning -1 ...")
-            return -1
-    except:
-        LOG.exception("USRMNGT: cimi: get_parent: Exception; Returning None ...")
         return None
