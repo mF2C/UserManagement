@@ -38,9 +38,6 @@ REST API
             /api/v2
                         GET:    get rest api service status
             User Management:
-                /um/
-                        GET:    check initialization values
-                
                 /um/user
                         GET     get my personal data (user cimi resource)
                         DELETE  remove user (user cimi resource)
@@ -51,7 +48,6 @@ REST API
                         
                 /um/user-profile/
                         GET:    get "current" profile
-                        POST:   create a new profile
                 /um/user-profile/<string:user_profile_id>
                         GET:    get profile by profile ID
                         PUT:    updates profile
@@ -60,7 +56,6 @@ REST API
                 /um/sharing-model
                         GET:    get current sharing model
                         PUT:    updates User Management global properties (num apps running)
-                        POST:   create new sharing model
                 /um/sharing-model/<string:sharing_model_id>
                         GET:    get a sharing model
                         PUT:    updates a sharing model
