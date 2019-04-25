@@ -21,9 +21,13 @@ import config
 
 # save_device_id
 def save_device_id(device_id):
-    LOG.info("USRMNGT: Volume: save_device_id: Storing device_id [" + device_id + "] value in local VOLUME [" + config.dic['UM_WORKING_DIR_VOLUME'] + "] ...")
-    with open(config.dic['UM_WORKING_DIR_VOLUME'] + "device_id.txt", "w") as file:
-        file.write(device_id)
+    try:
+        LOG.info("USRMNGT: Volume: save_device_id: Storing device_id [" + device_id + "] value in local VOLUME [" + config.dic['UM_WORKING_DIR_VOLUME'] + "] ...")
+        with open(config.dic['UM_WORKING_DIR_VOLUME'] + "device_id.txt", "w") as file:
+            file.write(device_id)
+    except:
+        LOG.error('USRMNGT: Volume: save_device_id: Error storing device_id')
+        return None
 
 
 # read_device_id
@@ -33,15 +37,19 @@ def read_device_id():
         with open(config.dic['UM_WORKING_DIR_VOLUME'] + "device_id.txt", "r") as file:
             return file.readline()
     except:
-        LOG.exception('USRMNGT: Data: read_device_id: Exception')
+        LOG.error('USRMNGT: Data: read_device_id: Error getting device_id')
         return None
 
 
 # save_user_id
 def save_user_id(user_id):
-    LOG.info("USRMNGT: Volume: save_user_id: Storing user_id [" + user_id + "] value in local VOLUME [" + config.dic['UM_WORKING_DIR_VOLUME'] + "] ...")
-    with open(config.dic['UM_WORKING_DIR_VOLUME'] + "user_id.txt", "w") as file:
-        file.write(user_id)
+    try:
+        LOG.info("USRMNGT: Volume: save_user_id: Storing user_id [" + user_id + "] value in local VOLUME [" + config.dic['UM_WORKING_DIR_VOLUME'] + "] ...")
+        with open(config.dic['UM_WORKING_DIR_VOLUME'] + "user_id.txt", "w") as file:
+            file.write(user_id)
+    except:
+        LOG.error('USRMNGT: Volume: save_user_id: Error storing user_id')
+        return None
 
 
 # read_user_id
@@ -51,5 +59,5 @@ def read_user_id():
         with open(config.dic['UM_WORKING_DIR_VOLUME'] + "user_id.txt", "r") as file:
             return file.readline()
     except:
-        LOG.exception('USRMNGT: Data: read_user_id: Exception')
+        LOG.error('USRMNGT: Data: read_user_id: Error getting user_id')
         return None

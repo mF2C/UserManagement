@@ -22,21 +22,19 @@ CIMI RESOURCES USED / MANAGED:
 
 * USER-PROFILE
 {
-    "user_id": "user/0000000000u",
     "device_id": "device/11111111d",
- 	"max_apps": 1,
   	"service_consumer": boolean,
 	"resource_contributor": boolean
 }
 * SHARING-MODEL
 {
-    "user_id": "user/0000000000u",
     "device_id": "device/11111111d",
  	"gps_allowed": boolean,
 	"max_cpu_usage": integer,
 	"max_memory_usage": integer,
 	"max_storage_usage": integer,
 	"max_bandwidth_usage": integer,
+	"max_apps": 1,
  	"battery_limit": integer
 }
 * AGENT
@@ -165,25 +163,8 @@ def get_agent_info():
         LOG.warning("USRMNGT: cimi: get_agent_info: 'agent' not found; Returning -1 ...")
         return -1
     except:
-        LOG.exception("USRMNGT: cimi: get_agent_info: Exception; Returning None ...")
+        LOG.error("USRMNGT: cimi: get_agent_info: Exception; Returning None ...")
         return None
-
-
-# FUNCTION: exist_user: check if 'user id' exists
-def exist_user(user_id):
-    try:
-        user_id = user_id.replace('user/', '')
-        res = requests.get(config.dic['CIMI_URL'] + "/user/" + user_id,
-                           headers={CIMI_HEADER_PROPERTY: CIMI_HEADER_VALUE},
-                           verify=False)
-        LOG.debug("USRMNGT: cimi: exist_user: response: " + str(res) + ", " + str(res.json()))
-
-        if res.status_code == 200 and not res.json()['id'] is None:
-            return True
-    except:
-        LOG.warning("LIFECYCLE: cimi: exist_user: controlled exception")
-    LOG.warning("USRMNGT: cimi: exist_user: 'user' not found / error getting user; Returning False ...")
-    return False
 
 
 # FUNCTION: exist_device: check if 'device id' exists
@@ -287,12 +268,11 @@ def delete_resource(resource_id):
 # DEVICE
 
 # get_user_profile: get profile from user and device
-def get_user_profile(user_id, device_id):
+def get_user_profile(device_id):
     try:
-        user_id = user_id.replace('user/', '')
         device_id = device_id.replace('device/', '')
 
-        res = requests.get(config.dic['CIMI_URL'] + "/user-profile?$filter=user_id=\"user/" + user_id + "\" and device_id=\"device/" + device_id + "\"",
+        res = requests.get(config.dic['CIMI_URL'] + "/user-profile?$filter=device_id=\"device/" + device_id + "\"",
                            headers={CIMI_HEADER_PROPERTY: CIMI_HEADER_VALUE},
                            verify=False)
         LOG.debug("USRMNGT: cimi: get_user_profile: response: " + str(res) + ", " + str(res.json()))
@@ -300,7 +280,7 @@ def get_user_profile(user_id, device_id):
         if res.status_code == 200 and len(res.json()['userProfiles']) > 0:
             return res.json()['userProfiles'][0]
         else:
-            LOG.warning("USRMNGT: cimi: get_user_profile: User's profile not found [user_id=" + user_id + ", device_id=" + device_id + "]; Returning -1 ...")
+            LOG.warning("USRMNGT: cimi: get_user_profile: User's profile not found [device_id=" + device_id + "]; Returning -1 ...")
             return -1
     except:
         LOG.exception("USRMNGT: cimi: get_user_profile: Exception; Returning None ...")
@@ -308,11 +288,10 @@ def get_user_profile(user_id, device_id):
 
 
 # get_sharing_model: get sharing model from user
-def get_sharing_model(user_id, device_id):
+def get_sharing_model(device_id):
     try:
-        user_id = user_id.replace('user/', '')
         device_id = device_id.replace('device/', '')
-        res = requests.get(config.dic['CIMI_URL'] + "/sharing-model?$filter=user_id=\"user/" + user_id + "\" and device_id=\"device/" + device_id + "\"",
+        res = requests.get(config.dic['CIMI_URL'] + "/sharing-model?$filter=device_id=\"device/" + device_id + "\"",
                            headers={CIMI_HEADER_PROPERTY: CIMI_HEADER_VALUE},
                            verify=False)
         LOG.debug("USRMNGT: cimi: get_sharing_model: response: " + str(res) + ", " + str(res.json()))
@@ -320,7 +299,7 @@ def get_sharing_model(user_id, device_id):
         if res.status_code == 200 and len(res.json()['sharingModels']) > 0:
             return res.json()['sharingModels'][0]
         else:
-            LOG.warning("USRMNGT: cimi: get_sharing_model: Sharing-model not found [user_id=" + user_id + ", device_id=" + device_id + "]; Returning -1 ...")
+            LOG.warning("USRMNGT: cimi: get_sharing_model: Sharing-model not found [device_id=" + device_id + "]; Returning -1 ...")
             return -1
     except:
         LOG.exception("USRMNGT: cimi: get_sharing_model: Exception; Returning None ...")
