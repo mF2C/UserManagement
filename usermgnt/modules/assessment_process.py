@@ -36,7 +36,7 @@ def check_resources_used(user_profile, sharing_model, battery_level, total_servi
         if not user_profile['resource_contributor'] and total_services > 0:
             result['resource_contributor_violation'] = True
 
-        if total_services > user_profile['max_apps']:
+        if total_services > sharing_model['max_apps']:
             result['max_apps_violation'] = True
     except:
         LOG.exception('USRMNGT: << Assessment Process: check_resources_used >> check_resources_used >> Exception')
