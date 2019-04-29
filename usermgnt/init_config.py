@@ -14,8 +14,7 @@ Created on 02 may 2018
 
 import config
 import common.common as common
-import threading
-import time
+import threading, time, os
 from common.logs import LOG
 import usermgnt.modules.um_profiling as um_profiling
 import usermgnt.modules.um_sharing_model as um_sharing_model
@@ -36,15 +35,15 @@ def init():
         common.set_value_env('CIMI_URL')
 
         LOG.info('USRMNGT: init_config: init: Reading User-Profile and Sharing-Model values from ENVIRONMENT...')
-        common.set_value_env('SERVICE_CONSUMER')
-        common.set_value_env('RESOURCE_CONTRIBUTOR')
-        common.set_value_env('MAX_APPS')
-        common.set_value_env('BATTERY_LIMIT')
-        common.set_value_env('GPS_ALLOWED')
-        common.set_value_env('MAX_CPU_USAGE')
-        common.set_value_env('MAX_MEM_USAGE')
-        common.set_value_env('MAX_STO_USAGE')
-        common.set_value_env('MAX_BANDWITH_USAGE')
+        common.set_value_env_bool('SERVICE_CONSUMER', config.dic['SERVICE_CONSUMER'])
+        common.set_value_env_bool('RESOURCE_CONTRIBUTOR', config.dic['RESOURCE_CONTRIBUTOR'])
+        common.set_value_env_int('MAX_APPS', config.dic['MAX_APPS'])
+        common.set_value_env_int('BATTERY_LIMIT', config.dic['BATTERY_LIMIT'])
+        common.set_value_env_bool('GPS_ALLOWED', config.dic['GPS_ALLOWED'])
+        common.set_value_env_int('MAX_CPU_USAGE', config.dic['MAX_CPU_USAGE'])
+        common.set_value_env_int('MAX_MEM_USAGE', config.dic['MAX_MEM_USAGE'])
+        common.set_value_env_int('MAX_STO_USAGE', config.dic['MAX_STO_USAGE'])
+        common.set_value_env_int('MAX_BANDWITH_USAGE', config.dic['MAX_BANDWITH_USAGE'])
 
         LOG.info('USRMNGT: init_config: init: Checking configuration...')
 
@@ -80,12 +79,26 @@ def init():
         LOG.info('USRMNGT: [MAX_MEM_USAGE=' + str(config.dic['MAX_MEM_USAGE']) + ']')
         LOG.info('USRMNGT: [MAX_STO_USAGE=' + str(config.dic['MAX_STO_USAGE']) + ']')
         LOG.info('USRMNGT: [MAX_BANDWITH_USAGE=' + str(config.dic['MAX_BANDWITH_USAGE']) + ']')
+
+        LOG.info('USRMNGT: init_config: init: Checking volume files ...')
+        if os.path.exists(config.dic['UM_WORKING_DIR_VOLUME'] + "device_id.txt"):
+            os.remove(config.dic['UM_WORKING_DIR_VOLUME'] + "device_id.txt")
+            LOG.info("'USRMNGT: File deleted: " + config.dic['UM_WORKING_DIR_VOLUME'] + "device_id.txt")
+        else:
+            LOG.info("'USRMNGT: The file does not exist: " + config.dic['UM_WORKING_DIR_VOLUME'] + "device_id.txt")
+
+        if os.path.exists(config.dic['UM_WORKING_DIR_VOLUME'] + "user_id.txt"):
+            os.remove(config.dic['UM_WORKING_DIR_VOLUME'] + "user_id.txt")
+            LOG.info("'USRMNGT: File deleted: " + config.dic['UM_WORKING_DIR_VOLUME'] + "user_id.txt")
+        else:
+            LOG.info("'USRMNGT: The file does not exist: " + config.dic['UM_WORKING_DIR_VOLUME'] + "user_id.txt")
     except:
         LOG.exception('USRMNGT: init_config: init: Exception: Error while initializing application')
 
 
 # THREAD: create_user_profile: (thread) create a default user-profile based on environment variables or default values
 def __thr_create_user_profile(data):
+    time.sleep(15)
     try:
         LOG.info("USRMNGT: init_config: (thread) thr_create_user_profile: Creating USER-PROFILE [" + str(data) + "] in current device ...")
         created = False
@@ -95,6 +108,7 @@ def __thr_create_user_profile(data):
             # get device_id
             device_id = datamgmt.get_current_device_id()
             if device_id == -1:
+                LOG.info('USRMNGT: init_config: << thr_create_user_profile: daemon >> trying again in 30s ...')
                 time.sleep(30)
             else:
                 # create user-profile
@@ -104,7 +118,9 @@ def __thr_create_user_profile(data):
                     LOG.info('USRMNGT: init_config: << thr_create_user_profile: daemon >> user-profile created! ...')
                     created = True
                 else:
-                    LOG.error('USRMNGT: init_config: << thr_create_user_profile: daemon >> user-profile not created! ')
+                    LOG.error('USRMNGT: init_config: << thr_create_user_profile: daemon >> user-profile not created! Trying again in 60s ...')
+                    time.sleep(60)
+        LOG.info('USRMNGT: init_config: << thr_create_user_profile: daemon >> thread finishes')
     except:
         LOG.exception('USRMNGT: init_config: (thread) thr_create_user_profile: Exception: Error while initializing application')
 
@@ -127,6 +143,7 @@ def create_user_profile():
 
 # THREAD: create_sharing_model: (thread) create a default usharing-model based on environment variables or default values
 def __thr_create_sharing_model(data):
+    time.sleep(25)
     try:
         LOG.info("USRMNGT: init_config: (thread) thr_create_sharing_model: Creating SHARING-MODEL [" + str(data) + "] in current device ...")
         created = False
@@ -136,6 +153,7 @@ def __thr_create_sharing_model(data):
             # get device_id
             device_id = datamgmt.get_current_device_id()
             if device_id == -1:
+                LOG.info('USRMNGT: init_config: << thr_create_sharing_model: daemon >> trying again in 30s ...')
                 time.sleep(30)
             else:
                 # create sharing-model
@@ -145,8 +163,9 @@ def __thr_create_sharing_model(data):
                     LOG.info('USRMNGT: init_config: << thr_create_sharing_model: daemon >> sharing-model created! ...')
                     created = True
                 else:
-                    LOG.error('USRMNGT: init_config: << thr_create_sharing_model: daemon >> sharing-model not created! ')
-
+                    LOG.error('USRMNGT: init_config: << thr_create_sharing_model: daemon >> sharing-model not created! Trying again in 60s ...')
+                    time.sleep(60)
+        LOG.info('USRMNGT: init_config: << thr_create_sharing_model: daemon >> thread finishes')
     except:
         LOG.exception('USRMNGT: init_config: (thread) thr_create_sharing_model: Exception: Error while initializing application')
 

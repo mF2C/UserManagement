@@ -25,7 +25,7 @@ def get_current_device_id():
     LOG.info("USRMNGT: Data: get_current_device_id: Getting 'my' device ID from 'agent' resource ...")
     # get from local volume
     device_id = vol.read_device_id()
-    if device_id is not None:
+    if device_id is not None and not device_id == "" and len(device_id) > 0:
         LOG.debug("USRMNGT: Data: get_current_device_id: (LOCAL VOLUME) device_id = " + device_id)
         return device_id
     # get from AGENT resource
