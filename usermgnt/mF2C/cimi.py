@@ -101,7 +101,7 @@ CIMI_HEADER_VALUE = "super ADMIN"
 acl = {"owner":
            {"principal": config.dic['CIMI_USER'], #"ADMIN",
             "type": "ROLE"},
-       "rules": [{"principal": config.dic['CIMI_USER'], #"ADMIN",
+       "rules": [{"principal": "ADMIN",
                   "type": "ROLE",
                   "right": "ALL"},
                  {"principal": "ANON",
@@ -230,9 +230,10 @@ def add_resource(resource_name, content):
 # FUNCTION: add_resource: add resource to cimi
 def update_resource(resource_id, content):
     try:
-        LOG.debug("USRMNGT: cimi: update_resource: Updating resource [" + resource_id + "] with content [" + str(content) + "] ... ")
+        LOG.debug("USRMNGT: cimi: update_resource: (1) Updating resource [" + resource_id + "] with content [" + str(content) + "] ... ")
         # complete map and update resource
         content.update(common_update_map_fields())
+        LOG.debug("USRMNGT: cimi: update_resource: (2) Updating resource [" + resource_id + "] with content [" + str(content) + "] ... ")
         res = requests.put(config.dic['CIMI_URL'] + '/' + resource_id,
                            headers={CIMI_HEADER_PROPERTY: CIMI_HEADER_VALUE},
                            verify=False,
@@ -320,8 +321,11 @@ def get_power(device_id):
         LOG.debug("USRMNGT: cimi: get_power: response: " + str(res) + ", " + str(res.json()))
 
         if res.status_code == 200 and res.json()['count'] > 0:
-            power = float(res.json()['deviceDynamics'][0]['powerRemainingStatus'])
-            return int(power)
+            power_value = res.json()['deviceDynamics'][0]['powerRemainingStatus']
+            if str(power_value).lower() == "unlimited":
+                return 100
+            else:
+                return int(power_value)
         else:
             LOG.warning("USRMNGT: cimi: 'device-dynamic' not found [device_id=" + device_id + "]; Returning -1 ...")
             return -1

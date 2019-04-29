@@ -203,6 +203,11 @@ def update_user_profile_by_id(profile_id, data):
     if resp and resp == -1:
         return -1
     elif resp:
+        #resp['service_consumer'] = data['service_consumer']
+        #resp['resource_contributor'] = data['resource_contributor']
+        #now = datetime.datetime.now()
+        #resp['updated'] = now.strftime('%Y-%m-%dT%H:%M:%S.%fZ')
+        #resp = cimi.update_resource(resp['id'], resp)
         resp = cimi.update_resource(resp['id'], data)
         return resp
     return None

@@ -33,14 +33,9 @@ def up_policies():
             LOG.warning('USRMNGT: Policies: up_policies: user_profile not found')
         else:
             LOG.debug('USRMNGT: Policies: up_policies: user_profile found. checking values ...')
-            # check... TODO
             if user_profile['resource_contributor']:
-                apps_running = datamgmt.get_total_services_running() # total services running
-                if apps_running >= user_profile['max_apps']:
-                    message = message + "NOT ALLOWED: apps_running >= max_apps"
-                    return False
+                message = message + "ALLOWED: resource_contributor is set to TRUE"
                 return True
-
             message = message + "NOT ALLOWED: resource_contributor is set to FALSE"
     except:
         LOG.exception('USRMNGT: Policies: up_policies: Exception')
@@ -61,14 +56,22 @@ def sm_policies():
             LOG.warning('USRMNGT: Policies: sm_policies: sharing_model not found')
         else:
             LOG.debug('USRMNGT: Policies: sm_policies: sharing_model found. checking values ...')
-            # check ... TODO
+            # 1. battery_level
             battery_level = datamgmt.get_power()
-            LOG.debug("USRMNGT: Policies: sm_policies: [battery_level=" + str(battery_level) + "] ... [sharing_model('battery_limit')=" +
+            LOG.debug("USRMNGT: Policies: sm_policies: 1. [battery_level=" + str(battery_level) + "] ... [sharing_model('battery_limit')=" +
                       str(sharing_model['battery_limit']) + "]")
-            #battery_level = 50  # TODO
             if battery_level is None or battery_level == -1 or battery_level > sharing_model['battery_limit']:
+                # 2. total services running
+                apps_running = datamgmt.get_total_services_running()
+                LOG.debug("USRMNGT: Policies: sm_policies: 2. [apps_running=" + str(apps_running) + "] ... [sharing_model('max_apps')=" +
+                          str(sharing_model['max_apps']) + "]")
+                if apps_running >= sharing_model['max_apps']:
+                    message = message + "NOT ALLOWED: apps_running >= max_apps"
+                    return False
                 return True
-
+            else:
+                message = message + "NOT ALLOWED: battery_level < battery_limit"
+                return False
     except:
         LOG.exception('USRMNGT: Policies: sm_policies: Exception')
     return False

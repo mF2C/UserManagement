@@ -98,7 +98,7 @@ def init():
 
 # THREAD: create_user_profile: (thread) create a default user-profile based on environment variables or default values
 def __thr_create_user_profile(data):
-    time.sleep(15)
+    time.sleep(75)
     try:
         LOG.info("USRMNGT: init_config: (thread) thr_create_user_profile: Creating USER-PROFILE [" + str(data) + "] in current device ...")
         created = False
@@ -108,8 +108,8 @@ def __thr_create_user_profile(data):
             # get device_id
             device_id = datamgmt.get_current_device_id()
             if device_id == -1:
-                LOG.info('USRMNGT: init_config: << thr_create_user_profile: daemon >> trying again in 30s ...')
-                time.sleep(30)
+                LOG.info('USRMNGT: init_config: << thr_create_user_profile: daemon >> trying again in 60s ...')
+                time.sleep(60)
             else:
                 # create user-profile
                 data['device_id'] = device_id
@@ -143,7 +143,7 @@ def create_user_profile():
 
 # THREAD: create_sharing_model: (thread) create a default usharing-model based on environment variables or default values
 def __thr_create_sharing_model(data):
-    time.sleep(25)
+    time.sleep(65)
     try:
         LOG.info("USRMNGT: init_config: (thread) thr_create_sharing_model: Creating SHARING-MODEL [" + str(data) + "] in current device ...")
         created = False
@@ -153,8 +153,8 @@ def __thr_create_sharing_model(data):
             # get device_id
             device_id = datamgmt.get_current_device_id()
             if device_id == -1:
-                LOG.info('USRMNGT: init_config: << thr_create_sharing_model: daemon >> trying again in 30s ...')
-                time.sleep(30)
+                LOG.info('USRMNGT: init_config: << thr_create_sharing_model: daemon >> trying again in 60s ...')
+                time.sleep(60)
             else:
                 # create sharing-model
                 data['device_id'] = device_id
