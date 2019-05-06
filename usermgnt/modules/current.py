@@ -26,7 +26,7 @@ def __getCurrentUser():
     elif user_profile == -1:
         return common.gen_response_ko('Warning: User profile not found', 'cause', 'not found / error', 'user', '')
     else:
-        return common.gen_response_ok('User found', 'user_profile (current)', user_profile, 'user', user_profile['user_id'])
+        return common.gen_response_ok('User found', 'user_profile (current)', user_profile)
 
 
 # FUNCTION: __getCurrent:
