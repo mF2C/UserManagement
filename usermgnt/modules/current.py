@@ -26,7 +26,7 @@ def __getCurrentUser():
     elif user_profile == -1:
         return common.gen_response_ko('Warning: User profile not found', 'cause', 'not found / error', 'user', '')
     else:
-        return common.gen_response_ok('User found', 'user_profile (current)', user_profile)
+        return common.gen_response_ok('User found', 'user_profile', user_profile, 'user_id', user_profile['acl']['owner']['principal'])
 
 
 # FUNCTION: __getCurrent:
@@ -38,7 +38,7 @@ def __getCurrentDevice():
     elif user_profile == -1:
         return common.gen_response_ko('Warning: User profile not found', 'cause', 'not found / error', 'device', '')
     else:
-        return common.gen_response_ok('User found', 'user_profile (current)', user_profile, 'device', user_profile['device_id'])
+        return common.gen_response_ok('User found', 'user_profile', user_profile, 'device', user_profile['device_id'])
 
 
 # FUNCTION: __getCurrentAll:
