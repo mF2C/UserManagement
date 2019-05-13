@@ -11,11 +11,10 @@ Created on 09 feb. 2018
 @author: Roi Sucasas - ATOS
 """
 
-
 import os
 import config
 from flask import Response, json
-from common.logs import LOG
+from usermgnt.common.logs import LOG
 
 
 ###############################################################################

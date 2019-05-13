@@ -11,12 +11,10 @@ Created on 27 sept. 2017
 @author: Roi Sucasas - ATOS
 """
 
-
-import time
-import threading
-import usermgnt.mF2C.mf2c as mf2c
-import usermgnt.mF2C.data as datamgmt
-from common.logs import LOG
+import time, threading
+from usermgnt.mF2C import mf2c as mf2c
+from usermgnt.mF2C import data as datamgmt
+from usermgnt.common.logs import LOG
 
 
 execute = False

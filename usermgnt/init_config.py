@@ -11,14 +11,13 @@ Created on 02 may 2018
 @author: Roi Sucasas - ATOS
 """
 
-
 import config
-import common.common as common
+from usermgnt.common import common as common
 import threading, time, os
-from common.logs import LOG
-import usermgnt.modules.um_profiling as um_profiling
-import usermgnt.modules.um_sharing_model as um_sharing_model
-import usermgnt.mF2C.data as datamgmt
+from usermgnt.common.logs import LOG
+from usermgnt.modules import um_profiling as um_profiling
+from usermgnt.modules import um_sharing_model as um_sharing_model
+from usermgnt.mF2C import data as datamgmt
 
 
 # FUNCTION: init: initializes all global properties from config file and environment variables

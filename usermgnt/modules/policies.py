@@ -11,10 +11,9 @@ Created on 28 march 2019
 @author: Roi Sucasas - ATOS
 """
 
-
-from common.logs import LOG
-import common.common as common
-import usermgnt.mF2C.data as datamgmt
+from usermgnt.common.logs import LOG
+from usermgnt.common import common as common
+from usermgnt.mF2C import data as datamgmt
 
 
 message = ""

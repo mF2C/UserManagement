@@ -11,10 +11,9 @@ Created on 27 sept. 2017
 @author: Roi Sucasas - ATOS
 """
 
-
-import usermgnt.modules.assessment_process as process
-from common.logs import LOG
-import common.common as common
+from usermgnt.modules import assessment_process as process
+from usermgnt.common.logs import LOG
+from usermgnt.common import common as common
 
 
 # start process

@@ -11,10 +11,9 @@ Created on 23 sept. 2019
 @author: Roi Sucasas - ATOS
 """
 
-
-import usermgnt.mF2C.data as datamgmt
-import common.common as common
-from common.logs import LOG
+from usermgnt.mF2C import data as datamgmt
+from usermgnt.common import common as common
+from usermgnt.common.logs import LOG
 
 
 # FUNCTION: get_user: Get user

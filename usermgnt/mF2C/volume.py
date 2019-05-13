@@ -11,8 +11,7 @@ Created on 09 april 2019
 @author: Roi Sucasas - ATOS
 """
 
-
-from common.logs import LOG
+from usermgnt.common.logs import LOG
 import config
 
 

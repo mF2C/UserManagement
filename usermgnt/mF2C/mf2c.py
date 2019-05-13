@@ -13,7 +13,7 @@ Created on 27 sept. 2017
 
 import config
 import requests
-from common.logs import LOG
+from usermgnt.common.logs import LOG
 
 
 # CALL TO LIFECYCLE MGMT

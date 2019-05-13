@@ -13,17 +13,17 @@ Created on 18 oct. 2018
 @author: Roi Sucasas - ATOS
 """
 
-import config as config
+import config as cfg
 # um
-import usermgnt.init_config as um_init_config
-import usermgnt.modules.um_profiling as um_profiling
-import usermgnt.modules.um_sharing_model as um_sharing_model
-import usermgnt.modules.um_assesment as um_assesment
-import usermgnt.modules.um_user as um_user
-import usermgnt.modules.current as current
-import usermgnt.modules.policies as policies
+from usermgnt import init_config as um_init_config
+from usermgnt.modules import um_profiling as um_profiling
+from usermgnt.modules import um_sharing_model as um_sharing_model
+from usermgnt.modules import um_assesment as um_assesment
+from usermgnt.modules import um_user as um_user
+from usermgnt.modules import current as current
+from usermgnt.modules import policies as policies
 # common
-from common.logs import LOG
+from usermgnt.common.logs import LOG
 # ext
 from flask_cors import CORS
 from flask import Flask, request, Response, json
@@ -82,12 +82,12 @@ try:
 
     # API DOC
     api = swagger.docs(Api(app),
-                       apiVersion=config.dic['VERSION'],
-                       api_spec_url=config.dic['API_DOC_URL'],
+                       apiVersion=cfg.dic['VERSION'],
+                       api_spec_url=cfg.dic['API_DOC_URL'],
                        produces=["application/json", "text/html"],
                        swaggerVersion="1.2",
-                       description='mF2C - User Management REST API - version ' + config.dic['VERSION'],
-                       basePath='http://localhost:' + str(config.dic['SERVER_PORT']),
+                       description='mF2C - User Management REST API - version ' + cfg.dic['VERSION'],
+                       basePath='http://localhost:' + str(cfg.dic['SERVER_PORT']),
                        resourcePath='/')
 except ValueError:
     LOG.error('[app] Exception: Error while initializing app / api')
@@ -109,8 +109,8 @@ def default_route():
     data = {
         'app': "User Management module REST API",
         'status': "Running",
-        'api_doc_json': "http://" + config.dic['HOST_IP'] + ":" + str(config.dic['SERVER_PORT']) + config.dic['API_DOC_URL'],
-        'api_doc_html': "http://" + config.dic['HOST_IP'] + ":" + str(config.dic['SERVER_PORT']) + config.dic['API_DOC_URL'] + ".html#!/spec"
+        'api_doc_json': "http://" + cfg.dic['HOST_IP'] + ":" + str(cfg.dic['SERVER_PORT']) + cfg.dic['API_DOC_URL'],
+        'api_doc_html': "http://" + cfg.dic['HOST_IP'] + ":" + str(cfg.dic['SERVER_PORT']) + cfg.dic['API_DOC_URL'] + ".html#!/spec"
     }
     resp = Response(json.dumps(data), status=200, mimetype='application/json')
     return resp
@@ -561,16 +561,16 @@ api.add_resource(Policies, '/api/v2/um/check')
 ########################################################################################################################
 # MAIN
 def main():
-    LOG.info("[app] Starting User Management application [version=" + str(config.dic['VERSION']) + "] ...")
-    LOG.info("[app] Swagger running on http://" + config.dic['HOST_IP'] + ":" + str(config.dic['SERVER_PORT']) + config.dic['API_DOC_URL'] + ".html")
-    LOG.info("[app] REST API running on http://" + config.dic['HOST_IP'] + ":" + str(config.dic['SERVER_PORT']) + config.dic['API_DOC_URL'])
+    LOG.info("[app] Starting User Management application [version=" + str(cfg.dic['VERSION']) + "] ...")
+    LOG.info("[app] Swagger running on http://" + cfg.dic['HOST_IP'] + ":" + str(cfg.dic['SERVER_PORT']) + cfg.dic['API_DOC_URL'] + ".html")
+    LOG.info("[app] REST API running on http://" + cfg.dic['HOST_IP'] + ":" + str(cfg.dic['SERVER_PORT']) + cfg.dic['API_DOC_URL'])
 
     # START (SSL) SERVER
     # context = (config.dic['CERT_CRT'], config.dic['CERT_KEY'])
     # app.run(host='0.0.0.0', port=config.dic['SERVER_PORT'], ssl_context=context, threaded=True, debug=False)
 
     # START SERVER
-    app.run(host='0.0.0.0', port=config.dic['SERVER_PORT'], threaded=True, debug=False)
+    app.run(host='0.0.0.0', port=cfg.dic['SERVER_PORT'], threaded=True, debug=False)
 
 
 if __name__ == "__main__":

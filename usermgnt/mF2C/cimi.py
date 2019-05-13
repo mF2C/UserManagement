@@ -11,10 +11,9 @@ Created on 27 sept. 2017
 @author: Roi Sucasas - ATOS
 """
 
-
 import requests, datetime
 import config
-from common.logs import LOG
+from usermgnt.common.logs import LOG
 
 
 '''
