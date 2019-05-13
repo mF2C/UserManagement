@@ -19,8 +19,6 @@ dic = { "VERSION":                      "1.2.2",
         "SERVER_PORT":                  46300,
         "HOST_IP":                      "localhost",                       # if possible, read from env values
         "API_DOC_URL":                  "/api/v2/um",
-        "CERT_CRT":                     "cert/ia.crt",
-        "CERT_KEY":                     "cert/ia.key",
 
         # working dir
         "UM_WORKING_DIR_VOLUME":        "/tmp/um/",

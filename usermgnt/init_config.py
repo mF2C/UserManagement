@@ -64,8 +64,6 @@ def init():
         LOG.info('[usermgnt.init_config] [init] [UM_WORKING_DIR_VOLUME=' + config.dic['UM_WORKING_DIR_VOLUME'] + ']')
         LOG.info('[usermgnt.init_config] [init] [SERVER_PORT=' + str(config.dic['SERVER_PORT']) + ']')
         LOG.info('[usermgnt.init_config] [init] [API_DOC_URL=' + config.dic['API_DOC_URL'] + ']')
-        LOG.info('[usermgnt.init_config] [init] [CERT_CRT=' + config.dic['CERT_CRT'] + ']')
-        LOG.info('[usermgnt.init_config] [init] [CERT_KEY=' + config.dic['CERT_KEY'] + ']')
         LOG.info('[usermgnt.init_config] [init] [HOST_IP=' + config.dic['HOST_IP'] + ']')
 
         LOG.info('[usermgnt.init_config] [init] User-Profile and Sharing-Model configuration...')
