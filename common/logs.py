@@ -21,6 +21,6 @@ LOG.setLevel(logging.DEBUG)
 consoleHandler = logging.StreamHandler()
 
 # create a logging format
-formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+formatter = logging.Formatter('UM %(asctime)s %(levelname)s %(message)s')
 consoleHandler.setFormatter(formatter)
 LOG.addHandler(consoleHandler)

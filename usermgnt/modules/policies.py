@@ -23,22 +23,22 @@ message = ""
 def up_policies():
     global message
     try:
-        LOG.debug("USRMNGT: Policies: up_policies: Checking policies ...")
+        LOG.debug("Policies: up_policies: Checking policies ...")
 
         # get current profile
         user_profile = datamgmt.get_current_user_profile()
         if user_profile is None:
-            LOG.error('USRMNGT: Policies: up_policies: user_profile not found / error')
+            LOG.error('Policies: up_policies: user_profile not found / error')
         elif user_profile == -1:
-            LOG.warning('USRMNGT: Policies: up_policies: user_profile not found')
+            LOG.warning('Policies: up_policies: user_profile not found')
         else:
-            LOG.debug('USRMNGT: Policies: up_policies: user_profile found. checking values ...')
+            LOG.debug('Policies: up_policies: user_profile found. checking values ...')
             if user_profile['resource_contributor']:
                 message = message + "ALLOWED: resource_contributor is set to TRUE"
                 return True
             message = message + "NOT ALLOWED: resource_contributor is set to FALSE"
     except:
-        LOG.exception('USRMNGT: Policies: up_policies: Exception')
+        LOG.exception('Policies: up_policies: Exception')
     return False
 
 
@@ -46,24 +46,24 @@ def up_policies():
 def sm_policies():
     global message
     try:
-        LOG.debug("USRMNGT: Policies: sm_policies: Checking policies ...")
+        LOG.debug("Policies: sm_policies: Checking policies ...")
 
         # get current sharing model
         sharing_model = datamgmt.get_current_sharing_model()
         if sharing_model is None:
-            LOG.error('USRMNGT: Policies: sm_policies: sharing_model not found / error')
+            LOG.error('Policies: sm_policies: sharing_model not found / error')
         elif sharing_model == -1:
-            LOG.warning('USRMNGT: Policies: sm_policies: sharing_model not found')
+            LOG.warning('Policies: sm_policies: sharing_model not found')
         else:
-            LOG.debug('USRMNGT: Policies: sm_policies: sharing_model found. checking values ...')
+            LOG.debug('Policies: sm_policies: sharing_model found. checking values ...')
             # 1. battery_level
             battery_level = datamgmt.get_power()
-            LOG.debug("USRMNGT: Policies: sm_policies: 1. [battery_level=" + str(battery_level) + "] ... [sharing_model('battery_limit')=" +
+            LOG.debug("Policies: sm_policies: 1. [battery_level=" + str(battery_level) + "] ... [sharing_model('battery_limit')=" +
                       str(sharing_model['battery_limit']) + "]")
             if battery_level is None or battery_level == -1 or battery_level > sharing_model['battery_limit']:
                 # 2. total services running
                 apps_running = datamgmt.get_total_services_running()
-                LOG.debug("USRMNGT: Policies: sm_policies: 2. [apps_running=" + str(apps_running) + "] ... [sharing_model('max_apps')=" +
+                LOG.debug("Policies: sm_policies: 2. [apps_running=" + str(apps_running) + "] ... [sharing_model('max_apps')=" +
                           str(sharing_model['max_apps']) + "]")
                 if apps_running >= sharing_model['max_apps']:
                     message = message + "NOT ALLOWED: apps_running >= max_apps"
@@ -73,7 +73,7 @@ def sm_policies():
                 message = message + "NOT ALLOWED: battery_level < battery_limit"
                 return False
     except:
-        LOG.exception('USRMNGT: Policies: sm_policies: Exception')
+        LOG.exception('Policies: sm_policies: Exception')
     return False
 
 

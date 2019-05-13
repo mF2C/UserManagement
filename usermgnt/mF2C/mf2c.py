@@ -31,10 +31,10 @@ from common.logs import LOG
 #   }
 def send_warning(user_id, device_id, user_profile, sharing_model, result):
     try:
-        LOG.info("USRMNGT: Dependencies: send_warning: " + user_id + ", " + device_id)
+        LOG.info("Dependencies: send_warning: " + user_id + ", " + device_id)
 
         if config.dic['ENABLE_ASSESSMENT']:
-            LOG.debug('USRMNGT: Dependencies: send_warning: sending warning to LIFECYCLE [' + config.dic['URL_PM_LIFECYCLE'] + '] ...')
+            LOG.debug('Dependencies: send_warning: sending warning to LIFECYCLE [' + config.dic['URL_PM_LIFECYCLE'] + '] ...')
             body = {"type": "um_warning",
                     "data": {
                         "user_id": user_id,
@@ -48,7 +48,7 @@ def send_warning(user_id, device_id, user_profile, sharing_model, result):
             if r.status_code == 200:
                 return True
 
-            LOG.error("USRMNGT: Dependencies: send_warning: Error: status_code=" + r.status_code + "; Returning False ...")
+            LOG.error("Dependencies: send_warning: Error: status_code=" + r.status_code + "; Returning False ...")
     except:
-        LOG.exception("USRMNGT: Dependencies: send_warning: Exception; Returning False ...")
+        LOG.exception("Dependencies: send_warning: Exception; Returning False ...")
     return False

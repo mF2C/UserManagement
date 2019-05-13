@@ -90,7 +90,7 @@ try:
                        basePath='http://localhost:' + str(config.dic['SERVER_PORT']),
                        resourcePath='/')
 except ValueError:
-    LOG.error('User-Management: app: Exception: Error while initializing app / api')
+    LOG.error('[app] Exception: Error while initializing app / api')
 
 
 ########################################################################################################################
@@ -561,9 +561,9 @@ api.add_resource(Policies, '/api/v2/um/check')
 ########################################################################################################################
 # MAIN
 def main():
-    LOG.info("USRMNGT: Starting User Management application [version=" + str(config.dic['VERSION']) + "] ...")
-    LOG.info("USRMNGT: Swagger running on http://" + config.dic['HOST_IP'] + ":" + str(config.dic['SERVER_PORT']) + config.dic['API_DOC_URL'] + ".html")
-    LOG.info("USRMNGT: REST API running on http://" + config.dic['HOST_IP'] + ":" + str(config.dic['SERVER_PORT']) + config.dic['API_DOC_URL'])
+    LOG.info("[app] Starting User Management application [version=" + str(config.dic['VERSION']) + "] ...")
+    LOG.info("[app] Swagger running on http://" + config.dic['HOST_IP'] + ":" + str(config.dic['SERVER_PORT']) + config.dic['API_DOC_URL'] + ".html")
+    LOG.info("[app] REST API running on http://" + config.dic['HOST_IP'] + ":" + str(config.dic['SERVER_PORT']) + config.dic['API_DOC_URL'])
 
     # START (SSL) SERVER
     # context = (config.dic['CERT_CRT'], config.dic['CERT_KEY'])

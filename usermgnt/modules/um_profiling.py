@@ -26,7 +26,7 @@ from common.logs import LOG
 
 # get_user_profile_by_id: Get user profile by ID
 def get_user_profile_by_id(profile_id):
-    LOG.debug("USRMNGT: Profiling module: get_user_profile_by_id: " + str(profile_id))
+    LOG.debug("Profiling module: get_user_profile_by_id: " + str(profile_id))
     user_profile = datamgmt.get_user_profile_by_id(profile_id)
     if user_profile is None:
         return common.gen_response(500, 'Error', 'profile_id', profile_id, 'profile', {})
@@ -38,7 +38,7 @@ def get_user_profile_by_id(profile_id):
 
 # get_current_user_profile: Get current user profile
 def get_current_user_profile():
-    LOG.info("USRMNGT: Profiling module: get_current_user_profile: getting current user-device value ...")
+    LOG.info("Profiling module: get_current_user_profile: getting current user-device value ...")
     user_profile = datamgmt.get_current_user_profile()
     if user_profile is None:
         return common.gen_response(500, 'Error', 'user_profile', 'not found / error', 'profile', {})
@@ -50,7 +50,7 @@ def get_current_user_profile():
 
 # Initializes users profile
 def create_user_profile(data):
-    LOG.info("USRMNGT: Profiling module: register_user: " + str(data))
+    LOG.info("Profiling module: register_user: " + str(data))
 
     # check if profile exists
     device_id = data['device_id']
@@ -70,7 +70,7 @@ def create_user_profile(data):
 
 # update_user_profile: Updates users profile
 def update_user_profile_by_id(profile_id, data):
-    LOG.debug("USRMNGT: Profiling module: profile_id: " + str(profile_id) + ", " + str(data))
+    LOG.debug("Profiling module: profile_id: " + str(profile_id) + ", " + str(data))
     # update user
     user_profile = datamgmt.update_user_profile_by_id(profile_id, data)
     if user_profile is None:
@@ -83,7 +83,7 @@ def update_user_profile_by_id(profile_id, data):
 
 # delete_user_profile: Deletes users profile
 def delete_user_profile_by_id(profile_id):
-    LOG.info("USRMNGT: Profiling module: delete_user_profile_by_id: " + profile_id)
+    LOG.info("Profiling module: delete_user_profile_by_id: " + profile_id)
     # delete profile
     if datamgmt.delete_user_profile_by_id(profile_id) is None:
         return common.gen_response(500, 'Error', 'profile_id', profile_id)

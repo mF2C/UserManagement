@@ -19,7 +19,7 @@ import common.common as common
 
 # FUNCTION: __getCurrent:
 def __getCurrentUser():
-    LOG.info("USRMNGT: Current Info module: getCurrentUser: Getting current user ...")
+    LOG.info("Current Info module: getCurrentUser: Getting current user ...")
     user_profile = datamgmt.get_current_user_profile()
     if user_profile is None:
         return common.gen_response(500, 'Error', 'cause', 'not found / error', 'user', '')
@@ -31,7 +31,7 @@ def __getCurrentUser():
 
 # FUNCTION: __getCurrent:
 def __getCurrentDevice():
-    LOG.info("USRMNGT: Current Info module: getCurrentDevice: Getting current device ...")
+    LOG.info("Current Info module: getCurrentDevice: Getting current device ...")
     user_profile = datamgmt.get_current_user_profile()
     if user_profile is None:
         return common.gen_response(500, 'Error', 'cause', 'not found / error', 'device', '')
@@ -43,7 +43,7 @@ def __getCurrentDevice():
 
 # FUNCTION: __getCurrentAll:
 def __getCurrentAll():
-    LOG.info("USRMNGT: Current Info module: getCurrentDevice: Getting current device ...")
+    LOG.info("Current Info module: getCurrentDevice: Getting current device ...")
     user_profile = datamgmt.get_current_user_profile()
     sharing_model = datamgmt.get_current_sharing_model()
     agent = datamgmt.get_agent_info()
@@ -59,7 +59,7 @@ def __getCurrentAll():
 
 # FUNCTION: getCurrent:
 def getCurrent(val):
-    LOG.info("USRMNGT: Current Info module: getCurrent: Getting current " + val + " ...")
+    LOG.info("Current Info module: getCurrent: Getting current " + val + " ...")
     if val == "user":
         return __getCurrentUser()
     elif val == "device":

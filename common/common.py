@@ -32,7 +32,7 @@ def gen_response_ok(message, key, value, key2=None, value2=None):
     dict[key] = value
     if not (key2 is None) and not (value2 is None):
         dict[key2] = value2
-    LOG.debug("USRMNGT: Generate response OK; dict=" + str(dict))
+    LOG.debug("Generate response OK; dict=" + str(dict))
     return dict
 
 
@@ -42,7 +42,7 @@ def gen_response(status, message, key, value, key2=None, value2=None):
     dict[key] = value
     if not (key2 is None) and not (value2 is None):
         dict[key2] = value2
-    LOG.debug('USRMNGT: Generate response ' + str(status) + "; dict=" + str(dict))
+    LOG.debug('Generate response ' + str(status) + "; dict=" + str(dict))
     return Response(json.dumps(dict), status=status, content_type='application/json')
 
 # Generate response 200
@@ -51,7 +51,7 @@ def gen_response_ko(message, key, value, key2=None, value2=None):
     dict[key] = value
     if not (key2 is None) and not (value2 is None):
         dict[key2] = value2
-    LOG.debug("USRMNGT: Generate response KO; dict=" + str(dict))
+    LOG.debug("Generate response KO; dict=" + str(dict))
     return dict
 
 
