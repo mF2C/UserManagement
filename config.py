@@ -21,7 +21,7 @@ dic = { "VERSION":                      "1.2.4",
         "API_DOC_URL":                  "/api/v2/um",
 
         # working dir
-        "UM_WORKING_DIR_VOLUME":        "/tmp/um/",
+        "UM_WORKING_DIR_VOLUME":        "/tmp/mf2c/um/",
 
         # VERIFY_SSL controls whether we verify the server's TLS certificate or not
         "VERIFY_SSL":                   False,
