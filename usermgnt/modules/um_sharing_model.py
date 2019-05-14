@@ -31,14 +31,14 @@ from usermgnt.common.logs import LOG
 
 # setAPPS_RUNNING
 def updateUM(data):
-    LOG.info("Profiling module: register_user: " + str(data))
+    LOG.info("[usermgnt.modules.um_sharing_model] [updateUM] data=" + str(data))
     if 'apps_running' in data:
         datamgmt.setAPPS_RUNNING(data['apps_running'])
 
 
 # get_sharing_model_by_id: Get shared resources
 def get_sharing_model_by_id(sharing_model_id):
-    LOG.info("Sharing-model module: get_sharing_model_by_id: " + sharing_model_id)
+    LOG.info("[usermgnt.modules.um_sharing_model] [get_sharing_model_by_id] sharing_model_id=" + sharing_model_id)
     # get sharing_model
     sharing_model = datamgmt.get_sharing_model_by_id(sharing_model_id)
     if sharing_model is None:
@@ -51,7 +51,7 @@ def get_sharing_model_by_id(sharing_model_id):
 
 # get_current_sharing_model: Get current sharing model
 def get_current_sharing_model():
-    LOG.info("Sharing-model module: get_current_sharing_model: getting current user-device value ...")
+    LOG.info("[usermgnt.modules.um_sharing_model] [get_current_sharing_model] Getting current sharing model ...")
     sharing_model = datamgmt.get_current_sharing_model()
     if sharing_model is None:
         return common.gen_response(500, 'Error', 'sharing_model', 'not found / error', 'sharing_model', {})
@@ -63,7 +63,7 @@ def get_current_sharing_model():
 
 # Initializes shared resources values
 def init_sharing_model(data):
-    LOG.info("Sharing-model module: init_sharing_model: " + str(data))
+    LOG.info("[usermgnt.modules.um_sharing_model] [init_sharing_model] data=" + str(data))
 
     # check if sharing_model exists
     device_id = data['device_id']
@@ -83,7 +83,7 @@ def init_sharing_model(data):
 
 # Updates shared resources values
 def update_sharing_model_by_id(sharing_model_id, data):
-    LOG.info("Sharing-model module: update_sharing_model_by_id: " + sharing_model_id + ", " + str(data))
+    LOG.info("[usermgnt.modules.um_sharing_model] [update_sharing_model_by_id] sharing_model_id=" + sharing_model_id + ", data=" + str(data))
     # updates sharing_model
     sharing_model = datamgmt.update_sharing_model_by_id(sharing_model_id, data)
     if sharing_model is None:
@@ -96,7 +96,7 @@ def update_sharing_model_by_id(sharing_model_id, data):
 
 # delete_sharing_model_by_id: Deletes  shared resources values
 def delete_sharing_model_by_id(sharing_model_id):
-    LOG.info("Sharing-model module: delete_sharing_model_by_id: " + sharing_model_id)
+    LOG.info("[usermgnt.modules.um_sharing_model] [delete_sharing_model_by_id] sharing_model_id=" + sharing_model_id)
     # deletes sharing_model
     res = datamgmt.delete_sharing_model_by_id(sharing_model_id)
     if res is None:

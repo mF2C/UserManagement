@@ -18,7 +18,7 @@ from usermgnt.common.logs import LOG
 
 # FUNCTION: get_user: Get user
 def get_user(user_id):
-    LOG.debug("User module: get_user: " + str(user_id))
+    LOG.debug("[usermgnt.modules.um_user] [get_user] user_id=" + str(user_id))
     user = datamgmt.get_user_info(user_id)
     if user is None:
         return common.gen_response(500, 'Error or User not found', 'user_id', user_id, 'user', {})
@@ -32,11 +32,11 @@ def get_user(user_id):
 # FUNCTION: delete_user: Deletes user
 def delete_user(data):
     if 'user_id' not in data:
-        LOG.warning('User module: delete_user: parameter not found: user_id')
+        LOG.warning('[usermgnt.modules.um_user] [delete_user] parameter not found: user_id')
         return common.gen_response(405, 'parameter not found: user_id', 'data', str(data))
 
     user_id = data['user_id']
-    LOG.debug("User module: delete_user: " + str(user_id))
+    LOG.debug("[usermgnt.modules.um_user] [delete_user] user_id=" + str(user_id))
     user = datamgmt.delete_user(user_id)
     if user is None:
         return common.gen_response(500, 'Error or User not found', 'user_id', user_id, 'user', {})

@@ -18,7 +18,7 @@ import config as cfg
 from usermgnt import init_config as um_init_config
 from usermgnt.modules import um_profiling as um_profiling
 from usermgnt.modules import um_sharing_model as um_sharing_model
-from usermgnt.modules import um_assesment as um_assesment
+from usermgnt.modules import um_assessment as um_assesment
 from usermgnt.modules import um_user as um_user
 from usermgnt.modules import current as current
 from usermgnt.modules import policies as policies

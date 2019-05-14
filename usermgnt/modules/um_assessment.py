@@ -18,32 +18,32 @@ from usermgnt.common import common as common
 
 # start process
 def __start():
-    LOG.info("Assessment module: start process")
+    LOG.info("[usermgnt.modules.um_assessment] [__start] start process")
     try:
         p_status = process.start()
         return common.gen_response_ok('Assessment process started', 'status', p_status)
     except:
-        LOG.exception('Assessment module: start: Exception')
+        LOG.exception('[usermgnt.modules.um_assessment] [__start] Exception')
         return common.gen_response(500, 'Exception when starting the assessment process', 'status', '')
 
 
 # stop process
 def __stop():
-    LOG.info("Assessment module: stop process")
+    LOG.info("[usermgnt.modules.um_assessment] [__stop] stop process")
     try:
         p_status = process.stop()
         return common.gen_response_ok('Assessment process stopped', 'status', p_status)
     except:
-        LOG.exception('Assessment module: stop: Exception')
+        LOG.exception('[usermgnt.modules.um_assessment] [__stop] Exception')
         return common.gen_response(500, 'Exception when stopping the assessment process', 'status', '')
 
 
 # operation
 def operation(data):
-    LOG.info("Assessment module: Execute operation: " + str(data))
+    LOG.info("[usermgnt.modules.um_assessment] [operation] Execute operation: " + str(data))
 
     if 'operation' not in data:
-        LOG.error('Assessment module: operation: Exception - parameter not found')
+        LOG.error('[usermgnt.modules.um_assessment] [operation] Exception - parameter not found')
         return common.gen_response(406, 'parameter not found: operation', 'data', str(data))
 
     if data['operation'] == 'start':
@@ -51,16 +51,16 @@ def operation(data):
     elif data['operation'] == 'stop':
         return __stop()
     else:
-        LOG.error('Assessment module: operation: Operation ' + data['operation'] + ' not defined / implemented')
+        LOG.error('[usermgnt.modules.um_assessment] [operation] Operation ' + data['operation'] + ' not defined / implemented')
         return common.gen_response(500, 'operation not defined / implemented', 'operation', data['operation'])
 
 
 # get process status
 def status():
-    LOG.info("Assessment module: get process status")
+    LOG.info("[usermgnt.modules.um_assessment] [status] get process status")
     try:
         p_status = process.get_status()
         return common.gen_response_ok('Assessment process status', 'status', p_status)
     except:
-        LOG.exception('Assessment module: status: Exception')
+        LOG.exception('[usermgnt.modules.um_assessment] [status] Exception')
         return common.gen_response(500, 'Exception getting the assessment process status', 'status', '')

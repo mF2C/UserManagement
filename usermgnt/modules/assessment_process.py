@@ -22,9 +22,9 @@ d = None
 
 
 # check_resources_used: checks if the resources used by mF2C apps, match the user's profiling and sharing model properties
-def check_resources_used(user_profile, sharing_model, battery_level, total_services):
+def __check_resources_used(user_profile, sharing_model, battery_level, total_services):
     try:
-        LOG.debug("<< Assessment Process: check_resources_used >> [battery_level=" + str(battery_level) + "], "
+        LOG.debug("[usermgnt.modules.assessment] [__check_resources_used] << Assessment Process >> [battery_level=" + str(battery_level) + "], "
                   "[total_services=" + str(total_services) + "]")
 
         result = {}
@@ -37,16 +37,16 @@ def check_resources_used(user_profile, sharing_model, battery_level, total_servi
         if total_services > sharing_model['max_apps']:
             result['max_apps_violation'] = True
     except:
-        LOG.exception('<< Assessment Process: check_resources_used >> check_resources_used >> Exception')
+        LOG.exception('[usermgnt.modules.assessment] [__check_resources_used] << Assessment Process >> check_resources_used >> Exception')
     return result # TODO check if empty
 
 
 # daemon process
-def daemon():
+def __daemon():
     global execute
     try:
         while execute:
-            LOG.debug('<< Assessment Process: daemon >> executing ...')
+            LOG.debug('[usermgnt.modules.assessment] [__daemon] << Assessment Process Thread >> executing ...')
 
             device_id = None
             user_id = None
@@ -54,27 +54,27 @@ def daemon():
             # 1. get current profile
             user_profile = datamgmt.get_current_user_profile()
             if user_profile is None:
-                LOG.error('<< Assessment Process: daemon >> user_profile not found / error')
+                LOG.error('[usermgnt.modules.assessment] [__daemon] << Assessment Process Thread >> user_profile not found / error')
             elif user_profile == -1:
-                LOG.warning('<< Assessment Process: daemon >> user_profile not found')
+                LOG.warning('[usermgnt.modules.assessment] [__daemon] << Assessment Process Thread >> user_profile not found')
             else:
                 user_id = user_profile['user_id']
                 device_id = user_profile['device_id']
-                LOG.debug('<< Assessment Process: daemon >> user_profile found')
+                LOG.debug('[usermgnt.modules.assessment] [__daemon] << Assessment Process Thread >> user_profile found')
 
             # 2. get current sharing model
             sharing_model = datamgmt.get_current_sharing_model()
             if sharing_model is None:
-                LOG.error('<< Assessment Process: daemon >> sharing_model not found / error')
+                LOG.error('[usermgnt.modules.assessment] [__daemon] << Assessment Process Thread >> sharing_model not found / error')
             elif sharing_model == -1:
-                LOG.warning('<< Assessment Process: daemon >> sharing_model not found')
+                LOG.warning('[usermgnt.modules.assessment] [__daemon] << Assessment Process Thread >> sharing_model not found')
             else:
                 user_id = sharing_model['user_id']
                 device_id = sharing_model['device_id']
-                LOG.debug('<< Assessment Process: daemon >> sharing_model found')
+                LOG.debug('[usermgnt.modules.assessment] [__daemon] << Assessment Process Thread >> sharing_model found')
 
             if not user_id is None and not device_id is None:
-                LOG.debug('<< Assessment Process: daemon >> checking values ...')
+                LOG.debug('[usermgnt.modules.assessment] [__daemon] << Assessment Process Thread >> checking values ...')
                 # 3. Get information:
                 #   - battery
                 battery_level = datamgmt.get_power()
@@ -83,20 +83,20 @@ def daemon():
                 total_services = datamgmt.get_total_services_running()
 
                 # 4. check information and send warning to Lifecycle if needed
-                result = check_resources_used(user_profile, sharing_model, battery_level, total_services)
+                result = __check_resources_used(user_profile, sharing_model, battery_level, total_services)
                 if not result:
-                    LOG.debug("<< Assessment Process: daemon >> no violations: result: " + str(result))
+                    LOG.debug("[usermgnt.modules.assessment] [__daemon] << Assessment Process Thread >> no violations: result: " + str(result))
                 else:
-                    LOG.debug("<< Assessment Process: daemon >> violations found: result: " + str(result))
-                    LOG.debug('<< Assessment Process: daemon >> generating warning / sending notification ...')
+                    LOG.debug("[usermgnt.modules.assessment] [__daemon] << Assessment Process Thread >> violations found: result: " + str(result))
+                    LOG.debug('[usermgnt.modules.assessment] [__daemon] << Assessment Process Thread >> generating warning / sending notification ...')
                     mf2c.send_warning(user_id, device_id, user_profile, sharing_model, result)
             else:
-                LOG.warning('<< Assessment Process: daemon >> cannot check values')
+                LOG.warning('[usermgnt.modules.assessment] [__daemon] << Assessment Process Thread >> cannot check values')
 
             # wait 60 seconds
             time.sleep(60)
     except:
-        LOG.exception('<< Assessment Process: daemon >> Exception')
+        LOG.exception('[usermgnt.modules.assessment] [__daemon] << Assessment Process Thread >> Exception')
 
 
 # start process
@@ -104,17 +104,17 @@ def start():
     global execute
     global d
 
-    LOG.debug("<< Assessment Process: start >> Starting assessment process [execute=" + str(execute) + "]")
+    LOG.debug("[usermgnt.modules.assessment] [start] << Assessment Process >> Starting assessment process [execute=" + str(execute) + "]")
 
     if d is None:
-        LOG.debug("<< Assessment Process: start >> [d is None]")
-        d = threading.Thread(target=daemon) #(name='daemon', target=daemon)
+        LOG.debug("[usermgnt.modules.assessment] [start] << Assessment Process >> [d is None]")
+        d = threading.Thread(target=__daemon) #(name='daemon', target=daemon)
         d.setDaemon(True)
         execute = True
         d.start()
         return "started"
     else:
-        LOG.warning("<< Assessment Process: start >> [execute: " + str(execute) + "; d.isAlive(): " + str(d.isAlive()) + "]")
+        LOG.warning("[usermgnt.modules.assessment] [start] << Assessment Process >> [execute: " + str(execute) + "; d.isAlive(): " + str(d.isAlive()) + "]")
         return "???"
 
 
@@ -123,13 +123,13 @@ def stop():
     global execute
     global d
 
-    LOG.debug("<< Assessment Process: stop >> Stopping assessment process [execute=" + str(execute) + "]")
+    LOG.debug("[usermgnt.modules.assessment] [stop] << Assessment Process >> Stopping assessment process [execute=" + str(execute) + "]")
 
     if d is None:
-        LOG.warning('<< Assessment Process: stop >> [execute: ' + str(execute) + '; d.isAlive(): None]')
+        LOG.warning('[usermgnt.modules.assessment] [stop] << Assessment Process >> [execute: ' + str(execute) + '; d.isAlive(): None]')
         return "???"
     else:
-        LOG.debug('<< Assessment Process: stop >> [d.join()]')
+        LOG.debug('[usermgnt.modules.assessment] [stop] << Assessment Process >> [d.join()]')
         execute = False
         d.join()
         d = None
@@ -141,7 +141,7 @@ def get_status():
     global execute
     global d
 
-    LOG.debug("<< Assessment Process: stop >> Getting assessment process status [execute=" + str(execute) + "]")
+    LOG.debug("[usermgnt.modules.assessment] [get_status] << Assessment Process >> Getting assessment process status [execute=" + str(execute) + "]")
 
     if d is None:
         return "Not initialized"
