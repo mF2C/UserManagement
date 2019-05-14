@@ -31,10 +31,10 @@ from usermgnt.common.logs import LOG
 #   }
 def send_warning(user_id, device_id, user_profile, sharing_model, result):
     try:
-        LOG.info("Dependencies: send_warning: " + user_id + ", " + device_id)
+        LOG.info("[usermgnt.mF2C.mf2c] [send_warning] " + user_id + ", " + device_id)
 
         if config.dic['ENABLE_ASSESSMENT']:
-            LOG.debug('Dependencies: send_warning: sending warning to LIFECYCLE [' + config.dic['URL_PM_LIFECYCLE'] + '] ...')
+            LOG.debug('[usermgnt.mF2C.mf2c] [send_warning] sending warning to LIFECYCLE [' + config.dic['URL_PM_LIFECYCLE'] + '] ...')
             body = {"type": "um_warning",
                     "data": {
                         "user_id": user_id,
@@ -43,12 +43,12 @@ def send_warning(user_id, device_id, user_profile, sharing_model, result):
                         "sharing_model": sharing_model,
                         "result": result}}
             r = requests.post(config.dic['URL_PM_LIFECYCLE'], json=body, verify=config.dic['VERIFY_SSL'])
-            LOG.debug("USRMNGT: Dependencies: send_warning: response: " + str(r) + ", " + str(r.json()))
+            LOG.debug("[usermgnt.mF2C.mf2c] [send_warning] response: " + str(r) + ", " + str(r.json()))
 
             if r.status_code == 200:
                 return True
 
-            LOG.error("Dependencies: send_warning: Error: status_code=" + r.status_code + "; Returning False ...")
+            LOG.error("[usermgnt.mF2C.mf2c] [send_warning] Error: status_code=" + r.status_code + "; Returning False ...")
     except:
-        LOG.exception("Dependencies: send_warning: Exception; Returning False ...")
+        LOG.exception("[usermgnt.mF2C.mf2c] [send_warning] Exception; Returning False ...")
     return False

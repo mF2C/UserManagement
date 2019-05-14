@@ -151,18 +151,18 @@ def get_agent_info():
         res = requests.get(config.dic['CIMI_URL'] + "/agent",
                            headers={CIMI_HEADER_PROPERTY: CIMI_HEADER_VALUE},
                            verify=False)
-        LOG.debug("cimi: get_agent_info: response: " + str(res) + ", " + str(res.json()))
+        LOG.debug("[usermgnt.mF2C.cimi] [get_agent_info] response: " + str(res) + ", " + str(res.json()))
 
         if res.status_code == 200 and res.json()['count'] == 0:
-            LOG.warning("cimi: get_agent_info: 'agent' not found")
+            LOG.warning("[usermgnt.mF2C.cimi] [get_agent_info] 'agent' not found")
             return -1
         elif res.status_code == 200:
             return res.json()['agents'][0]
 
-        LOG.warning("cimi: get_agent_info: 'agent' not found; Returning -1 ...")
+        LOG.warning("[usermgnt.mF2C.cimi] [get_agent_info] 'agent' not found; Returning -1 ...")
         return -1
     except:
-        LOG.error("cimi: get_agent_info: Exception; Returning None ...")
+        LOG.error("[usermgnt.mF2C.cimi] [get_agent_info] Exception; Returning None ...")
         return None
 
 
