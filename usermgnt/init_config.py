@@ -97,29 +97,29 @@ def init():
 def __thr_create_user_profile(data):
     time.sleep(75)
     try:
-        LOG.info("[usermgnt.init_config] [__thr_create_user_profile] Creating USER-PROFILE [" + str(data) + "] in current device ...")
+        LOG.info("[usermgnt.init_config] [__thr_create_user_profile] << User Profile Creation Thread >> Creating USER-PROFILE [" + str(data) + "] in current device ...")
         created = False
         while not created:
-            LOG.debug('[usermgnt.init_config] [__thr_create_user_profile] << daemon >> executing ...')
+            LOG.debug('[usermgnt.init_config] [__thr_create_user_profile] << User Profile Creation Thread >> executing ...')
 
             # get device_id
             device_id = datamgmt.get_current_device_id()
             if device_id == -1:
-                LOG.info('[usermgnt.init_config] [__thr_create_user_profile] << daemon >> trying again in 60s ...')
+                LOG.info('[usermgnt.init_config] [__thr_create_user_profile] << User Profile Creation Thread >> trying again in 60s ...')
                 time.sleep(60)
             else:
                 # create user-profile
                 data['device_id'] = device_id
                 up = um_profiling.create_user_profile(data)
                 if up is not None:
-                    LOG.info('[usermgnt.init_config] [__thr_create_user_profile] << daemon >> user-profile created! ...')
+                    LOG.info('[usermgnt.init_config] [__thr_create_user_profile] << User Profile Creation Thread >> user-profile created! ...')
                     created = True
                 else:
-                    LOG.error('[usermgnt.init_config] [__thr_create_user_profile] << daemon >> user-profile not created! Trying again in 60s ...')
+                    LOG.error('[usermgnt.init_config] [__thr_create_user_profile] << User Profile Creation Thread >> user-profile not created! Trying again in 60s ...')
                     time.sleep(60)
-        LOG.info('[usermgnt.init_config] [__thr_create_user_profile] << daemon >> thread finishes')
+        LOG.info('[usermgnt.init_config] [__thr_create_user_profile] << User Profile Creation Thread >> thread finishes')
     except:
-        LOG.exception('[usermgnt.init_config] [__thr_create_user_profile] Exception: Error while initializing application')
+        LOG.exception('[usermgnt.init_config] [__thr_create_user_profile] << User Profile Creation Thread >> Exception: Error while initializing application')
 
 
 # FUNCTION: create_user_profile: create a default user-profile based on environment variables or default values
@@ -142,29 +142,29 @@ def create_user_profile():
 def __thr_create_sharing_model(data):
     time.sleep(65)
     try:
-        LOG.info("[usermgnt.init_config] [__thr_create_sharing_model] Creating SHARING-MODEL [" + str(data) + "] in current device ...")
+        LOG.info("[usermgnt.init_config] [__thr_create_sharing_model] << Sharing Model Creation Thread >> Creating SHARING-MODEL [" + str(data) + "] in current device ...")
         created = False
         while not created:
-            LOG.debug('[usermgnt.init_config] [__thr_create_sharing_model] << daemon >> executing ...')
+            LOG.debug('[usermgnt.init_config] [__thr_create_sharing_model] << Sharing Model Creation Thread >> executing ...')
 
             # get device_id
             device_id = datamgmt.get_current_device_id()
             if device_id == -1:
-                LOG.info('[usermgnt.init_config] [__thr_create_sharing_model] << daemon >> trying again in 60s ...')
+                LOG.info('[usermgnt.init_config] [__thr_create_sharing_model] << Sharing Model Creation Thread >> trying again in 60s ...')
                 time.sleep(60)
             else:
                 # create sharing-model
                 data['device_id'] = device_id
                 up = um_sharing_model.init_sharing_model(data)
                 if up is not None:
-                    LOG.info('[usermgnt.init_config] [__thr_create_sharing_model] << daemon >> sharing-model created! ...')
+                    LOG.info('[usermgnt.init_config] [__thr_create_sharing_model] << Sharing Model Creation Thread >> sharing-model created! ...')
                     created = True
                 else:
-                    LOG.error('[usermgnt.init_config] [__thr_create_sharing_model] << daemon >> sharing-model not created! Trying again in 60s ...')
+                    LOG.error('[usermgnt.init_config] [__thr_create_sharing_model] << Sharing Model Creation Thread >> sharing-model not created! Trying again in 60s ...')
                     time.sleep(60)
-        LOG.info('[usermgnt.init_config] [__thr_create_sharing_model] << daemon >> thread finishes')
+        LOG.info('[usermgnt.init_config] [__thr_create_sharing_model] << Sharing Model Creation Thread >> thread finishes')
     except:
-        LOG.exception('[usermgnt.init_config] [__thr_create_sharing_model] Exception: Error while initializing application')
+        LOG.exception('[usermgnt.init_config] [__thr_create_sharing_model] << Sharing Model Creation Thread >> Exception: Error while initializing application')
 
 
 # THREAD: create_sharing_model: (thread) create a default usharing-model based on environment variables or default values
