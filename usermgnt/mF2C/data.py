@@ -33,8 +33,14 @@ def get_current_device_id():
         agent = cimi.get_agent_info()
         LOG.debug("[usermgnt.mF2C.data] [get_current_device_id] agent=" + str(agent))
         if not agent is None and agent != -1:
-            LOG.info("[usermgnt.mF2C.data] [get_current_device_id] Returning 'my' device ID = " + agent['device_id'])
-            return agent['device_id']
+            LOG.info("[usermgnt.mF2C.data] [get_current_device_id] Getting device 'id' by 'deviceID'=" + agent['device_id'])
+            id = cimi.get_id_from_device(agent['device_id'])
+            if not id is None and id != -1:
+                LOG.info("[usermgnt.mF2C.data] [get_current_device_id] Returning 'my' device ID = " + id)
+                return id
+            else:
+                LOG.warning("[usermgnt.mF2C.data] [get_current_device_id] Device information not found. Returning -1 ...")
+                return -1
         else:
             LOG.warning("[usermgnt.mF2C.data] [get_current_device_id] Agent information not found. Returning -1 ...")
             return -1
@@ -76,11 +82,6 @@ def get_agent_info():
         return agent
     else:
         return -1
-
-
-# FUNCTION: exist_device: check if 'device id' exists
-def exist_device(device_id):
-    return cimi.exist_device(device_id)
 
 
 ###############################################################################

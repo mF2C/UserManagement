@@ -166,24 +166,22 @@ def get_agent_info():
         return None
 
 
-# FUNCTION: exist_device: check if 'device id' exists
-def exist_device(device_id):
+# FUNCTION: get_id_from_device: get 'id' from device by 'deviceID'
+def get_id_from_device(deviceID):
     try:
-        if not device_id:
-            return False
-
-        device_id = device_id.replace('device/', '')
-        res = requests.get(config.dic['CIMI_URL'] + "/device/" + device_id,
+        res = requests.get(config.dic['CIMI_URL'] + "/device?$filter=deviceID=\"" + deviceID + "\"",
                            headers={CIMI_HEADER_PROPERTY: CIMI_HEADER_VALUE},
                            verify=False)
-        LOG.debug("[usermgnt.mF2C.cimi] [exist_device] response: " + str(res) + ", " + str(res.json()))
+        LOG.debug("[usermgnt.mF2C.cimi] [get_id_from_device] response: " + str(res) + ", " + str(res.json()))
 
-        if res.status_code == 200 and not res.json()['id'] is None:
-            return True
+        if res.status_code == 200 and len(res.json()['devices']) > 0:
+            return res.json()['devices'][0]['id']
+        else:
+            LOG.warning("[usermgnt.mF2C.cimi] [get_id_from_device] No device found; Returning -1 ...")
+            return -1
     except:
-        LOG.warning("[usermgnt.mF2C.cimi] [exist_device] controlled exception")
-    LOG.warning("[usermgnt.mF2C.cimi] [exist_device] 'device' not found / error getting device; Returning False ...")
-    return False
+        LOG.exception("[usermgnt.mF2C.cimi] [get_id_from_device] Exception; Returning None ...")
+        return None
 
 
 # FUNCTION: get_resource_by_id: get resource by id
