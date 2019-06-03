@@ -105,8 +105,8 @@ def __thr_create_user_profile(data):
             # get device_id
             device_id = datamgmt.get_current_device_id()
             if device_id == -1:
-                LOG.info('[usermgnt.init_config] [__thr_create_user_profile] << User Profile Creation Thread >> trying again in 60s ...')
-                time.sleep(60)
+                LOG.info('[usermgnt.init_config] [__thr_create_user_profile] << User Profile Creation Thread >> trying again in 15s ...')
+                time.sleep(15)
             else:
                 # create user-profile
                 data['device_id'] = device_id
@@ -150,8 +150,8 @@ def __thr_create_sharing_model(data):
             # get device_id
             device_id = datamgmt.get_current_device_id()
             if device_id == -1:
-                LOG.info('[usermgnt.init_config] [__thr_create_sharing_model] << Sharing Model Creation Thread >> trying again in 60s ...')
-                time.sleep(60)
+                LOG.info('[usermgnt.init_config] [__thr_create_sharing_model] << Sharing Model Creation Thread >> trying again in 15s ...')
+                time.sleep(15)
             else:
                 # create sharing-model
                 data['device_id'] = device_id
