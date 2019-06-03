@@ -171,7 +171,7 @@ def get_id_from_device(deviceID):
         res = requests.get(config.dic['CIMI_URL'] + "/device?$filter=deviceID=\"" + deviceID + "\"",
                            headers=CIMI_HEADER,
                            verify=False)
-        LOG.debug("[usermgnt.mF2C.cimi] [get_id_from_device] response: " + str(res) + ", " + str(res.json()))
+        LOG.debug("[usermgnt.mF2C.cimi] [get_id_from_device] response: " + str(res)) # + ", " + str(res.json()))
 
         if res.status_code == 200 and len(res.json()['devices']) > 0:
             return res.json()['devices'][0]['id']
