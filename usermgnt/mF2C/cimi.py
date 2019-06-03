@@ -93,8 +93,7 @@ CIMI RESOURCES USED / MANAGED:
 
 
 # CIMI initialization
-CIMI_HEADER_PROPERTY = "slipstream-authn-info"
-CIMI_HEADER_VALUE = "super ADMIN"
+CIMI_HEADER = {'slipstream-authn-info': 'super ADMIN'}
 
 # ACL
 acl = {"owner":
@@ -149,7 +148,7 @@ def common_update_map_fields():
 def get_agent_info():
     try:
         res = requests.get(config.dic['CIMI_URL'] + "/agent",
-                           headers={CIMI_HEADER_PROPERTY: CIMI_HEADER_VALUE},
+                           headers=CIMI_HEADER,
                            verify=False)
         LOG.debug("[usermgnt.mF2C.cimi] [get_agent_info] response: " + str(res) + ", " + str(res.json()))
 
@@ -170,7 +169,7 @@ def get_agent_info():
 def get_id_from_device(deviceID):
     try:
         res = requests.get(config.dic['CIMI_URL'] + "/device?$filter=deviceID=\"" + deviceID + "\"",
-                           headers={CIMI_HEADER_PROPERTY: CIMI_HEADER_VALUE},
+                           headers=CIMI_HEADER,
                            verify=False)
         LOG.debug("[usermgnt.mF2C.cimi] [get_id_from_device] response: " + str(res) + ", " + str(res.json()))
 
@@ -188,7 +187,7 @@ def get_id_from_device(deviceID):
 def get_resource_by_id(resource_id):
     try:
         res = requests.get(config.dic['CIMI_URL'] + "/" + resource_id,
-                           headers={CIMI_HEADER_PROPERTY: CIMI_HEADER_VALUE},
+                           headers=CIMI_HEADER,
                            verify=False)
         LOG.debug("[usermgnt.mF2C.cimi] [get_resource_by_id] response: " + str(res) + ", " + str(res.json()))
 
@@ -210,7 +209,7 @@ def add_resource(resource_name, content):
         content.update(common_new_map_fields())
         #content.pop("user_id", None)
         res = requests.post(config.dic['CIMI_URL'] + '/' + resource_name,
-                            headers={CIMI_HEADER_PROPERTY: CIMI_HEADER_VALUE},
+                            headers=CIMI_HEADER,
                             verify=False,
                             json=content)
         LOG.debug("[usermgnt.mF2C.cimi] [add_resource] response: " + str(res) + ", " + str(res.json()))
@@ -232,7 +231,7 @@ def update_resource(resource_id, content):
         content.update(common_update_map_fields())
         LOG.debug("[usermgnt.mF2C.cimi] [update_resource] (2) Updating resource [" + resource_id + "] with content [" + str(content) + "] ... ")
         res = requests.put(config.dic['CIMI_URL'] + '/' + resource_id,
-                           headers={CIMI_HEADER_PROPERTY: CIMI_HEADER_VALUE},
+                           headers=CIMI_HEADER,
                            verify=False,
                            json=content)
         LOG.debug("[usermgnt.mF2C.cimi] [update_resource] response: " + str(res) + ", " + str(res.json()))
@@ -250,7 +249,7 @@ def update_resource(resource_id, content):
 def delete_resource(resource_id):
     try:
         res = requests.delete(config.dic['CIMI_URL'] + '/' + resource_id,
-                              headers={CIMI_HEADER_PROPERTY: CIMI_HEADER_VALUE},
+                              headers=CIMI_HEADER,
                               verify=False)
         LOG.debug("[usermgnt.mF2C.cimi] [delete_resource] response: " + str(res) + ", " + str(res.json()))
 
@@ -271,7 +270,7 @@ def get_user_profile(device_id):
         device_id = device_id.replace('device/', '')
 
         res = requests.get(config.dic['CIMI_URL'] + "/user-profile?$filter=device_id=\"device/" + device_id + "\"",
-                           headers={CIMI_HEADER_PROPERTY: CIMI_HEADER_VALUE},
+                           headers=CIMI_HEADER,
                            verify=False)
         LOG.debug("[usermgnt.mF2C.cimi] [get_user_profile] response: " + str(res) + ", " + str(res.json()))
 
@@ -290,7 +289,7 @@ def get_sharing_model(device_id):
     try:
         device_id = device_id.replace('device/', '')
         res = requests.get(config.dic['CIMI_URL'] + "/sharing-model?$filter=device_id=\"device/" + device_id + "\"",
-                           headers={CIMI_HEADER_PROPERTY: CIMI_HEADER_VALUE},
+                           headers=CIMI_HEADER,
                            verify=False)
         LOG.debug("[usermgnt.mF2C.cimi] [get_sharing_model] response: " + str(res) + ", " + str(res.json()))
 
@@ -313,7 +312,7 @@ def get_power(device_id):
     try:
         device_id = device_id.replace('device/', '')
         res = requests.get(config.dic['CIMI_URL'] + "/device-dynamic?$filter=device/href='device/" + device_id + "'",
-                           headers={CIMI_HEADER_PROPERTY: CIMI_HEADER_VALUE},
+                           headers=CIMI_HEADER,
                            verify=False)
         LOG.debug("[usermgnt.mF2C.cimi] [get_power] response: " + str(res) + ", " + str(res.json()))
 
