@@ -2,6 +2,7 @@
 Agent Controller - User Management module
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![version](https://img.shields.io/badge/version-1.2.6-blue.svg)]()
 
 &copy; Atos Spain S.A. 2017
 
@@ -117,7 +118,7 @@ Example:
 sudo docker run --env CIMI_URL=https://192.192.192.192 --env CIMI_USER="testuser" --env CIMI_PASSWORD="testuserpassword" -p 46300:46300 um-app
 ```
 
-3. Methods exposed by the REST API 
+3. Methods exposed by the REST API
 
 - List of methods:
   - **/api/v2**
