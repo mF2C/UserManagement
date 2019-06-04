@@ -6,7 +6,7 @@ Agent Controller - User Management module
 
 &copy; Atos Spain S.A. 2017
 
-The User Management module is a component of the European Project mF2C.
+The User Management module is a component of the European Project [mF2C](https://www.mf2c-project.eu/).
 
 -----------------------
 
@@ -29,7 +29,7 @@ The User Management module is a component of the European Project mF2C.
 ### Description
 
 The User Management module is responsible for managing the user’s profile and the definition of the user’s device resources that will be shared in mF2C.
-It is also responsible for checking that the mF2C applications act according to these sharing model and profile properties.
+It is also responsible for checking that the mF2C applications act according to these sharing model and user profile properties.
 
 -----------------------
 
@@ -48,77 +48,66 @@ This module is composed of three components:
 
 ### Installation Guide
 
-This component is part of the mF2C Agent Controller and it requires all the other components to work properly.
-
 #### 1. Requirements
 
-1. [Docker](https://docs.docker.com/install/)
+1. Install [Docker](https://docs.docker.com/install/)
 
-**Dockerfile** content:
 
-```
-FROM python:3.4-alpine
-ADD . /code
-WORKDIR /code
-RUN pip install -r requirements.txt
-EXPOSE 46000
-CMD ["python", "app.py"]
-```
+#### 2. Install and Run
 
-To install as part of mF2C see **mF2C/mF2C** [repository](https://github.com/mF2C/mF2C)
+This component can be installed as a standalone component, or as part of mF2C. To install it as a standalone component you just need the following:
 
-To run the component without Docker, you will need the following:
-
-1. Python 3.4
-
-#### 2. Install
-
-1. Clone / download repository
+- Clone repository
 
 ```bash
-git clone https://github.com/mF2C/UserManagement.git
+      git clone https://github.com/mF2C/UserManagement.git
+      cd UserManagement
 ```
 
-2. Go to UserManagement folder
+- Build the docker image:
 
 ```bash
-cd UserManagement
+      sudo docker build -t usermanagement .
 ```
 
-3. Build application:
+The docker image can also be downloaded from docker hub (this image includes the [Lifecycle module](https://github.com/mF2C/LifecycleManagement)):
 
 ```bash
-sudo docker build -t um-app .
+      sudo docker pull mf2c lifecycle-usermngt:latest
 ```
 
-4. Run application and expose port `46300`:
+To install it as part of mF2C see **mF2C/mF2C** [repository](https://github.com/mF2C/mF2C)
+
+Finally, to run the component without Docker, you will need **Python 3.4**.
+
+###### 2.1. Launch the User Management
+
+Run application and expose port `46300`:
 
 ```bash
-sudo docker run -p 46300:46300 um-app
+sudo docker run -p 46300:46300 usermanagement
 ```
 
-<p style="color:red; font-weight: bold">NOTE: Read next section to see how to properly start the component.</p>
+Available environment variables:
+- CIMI_USER
+- CIMI_PASSWORD
+- CIMI_URL
+
+Example:
+
+```bash
+sudo docker run --env CIMI_URL=https://192.192.192.192 --env CIMI_USER="testuser" --env CIMI_PASSWORD="testuserpassword" -p 46300:46300 usermanagement
+```
+
+After installing the User Management module, the REST API services can be accessed at port 46300:
+- List of services (json): _https://192.192.192.192:46300/api/v2/um_
+- List of services (swagger ui): _https://192.192.192.192:46300/api/v2/um.html_
 
 -----------------------
 
 ### Usage Guide
 
-1. See the user guide that can be found in https://github.com/mF2C/Documentation/blob/master/documentation/user_guide/api.rst (TO BE DONE !!)
-
-2. Environment variables that can be defined (in the [docker-compose](https://github.com/mF2C/mF2C) file) when launching the service:
-
-  - Available environment variables:
-    - CIMI_USER
-    - CIMI_PASSWORD
-    - CIMI_COOKIES_PATH
-
-Example:
-
-```bash
-sudo docker run --env CIMI_URL=https://192.192.192.192 --env CIMI_USER="testuser" --env CIMI_PASSWORD="testuserpassword" -p 46300:46300 um-app
-```
-
-3. Methods exposed by the REST API
+Methods exposed by the REST API
 
 - List of methods:
   - **/api/v2**
@@ -127,7 +116,6 @@ sudo docker run --env CIMI_URL=https://192.192.192.192 --env CIMI_USER="testuser
     - GET:    check initialization values
   - **/api/v2/um/user-profile/**
     - GET:    get "current" profile
-    - POST:   create a new profile
   - **/api/v2/um/user-profile/<string:user_profile_id>**
     - GET:    get profile by profile ID
     - PUT:    updates profile
@@ -138,7 +126,6 @@ sudo docker run --env CIMI_URL=https://192.192.192.192 --env CIMI_USER="testuser
     - DELETE: deletes profile
   - **/api/v2/um/sharing-model**
     - GET:    get current sharing model
-    - POST:   create new sharing model
   - **/api/v2/um/sharing-model/<string:sharing_model_id>**
     - GET:    get a sharing model
     - PUT:    updates a sharing model
@@ -152,11 +139,7 @@ sudo docker run --env CIMI_URL=https://192.192.192.192 --env CIMI_USER="testuser
     - PUT:    start / stop assessment
 
 
-4. After installing the User Management module, the REST API services can be accessed at port 46300:
-
-     - List of services (json): _https://192.192.192.192:46300/api/v2/um_
-
-     - List of services (swagger ui): _https://192.192.192.192:46300/api/v2/um.html_
+See the user guide that can be found in https://github.com/mF2C/Documentation/blob/master/documentation/user_guide/api.rst (TO BE DONE !!)
 
 -----------------------
 
@@ -175,16 +158,13 @@ The User Management module is connected with the following mF2C components:
 ### Resources managed by this component
 
 
-
 **user_profile**
 
 ```json
 {
-  "user_id": "user/1230958abdef",
   "device_id": string,
   "service_consumer": boolean,
-  "resource_contributor": boolean,
-  "max_apps": integer
+  "resource_contributor": boolean
 }
 ```
 
@@ -192,14 +172,14 @@ The User Management module is connected with the following mF2C components:
 
 ```json
 {
-  "user_id": {:href "user/1230958abdef"},
   "device_id": string,
   "GPS_allowed": boolean,
   "max_CPU_usage": integer,
   "max_memory_usage": integer,
   "max_storage_usage": integer,
   "max_bandwidth_usage": integer,
-  "battery_limit": integer
+  "battery_limit": integer,
+  "max_apps": integer
 }
 ```
 
