@@ -33,9 +33,9 @@ def __up_policies():
         else:
             LOG.debug('[usermgnt.modules.policies] [__up_policies] user_profile found. checking values ...')
             if user_profile['resource_contributor']:
-                message = message + "ALLOWED: resource_contributor is set to TRUE"
+                message = message + "ALLOWED: resource_contributor is set to TRUE; "
                 return True
-            message = message + "NOT ALLOWED: resource_contributor is set to FALSE"
+            message = message + "NOT ALLOWED: resource_contributor is set to FALSE; "
     except:
         LOG.exception('[usermgnt.modules.policies] [__up_policies] Exception')
     return False
@@ -65,11 +65,11 @@ def __sm_policies():
                 LOG.debug("[usermgnt.modules.policies] [__sm_policies] 2. [apps_running=" + str(apps_running) + "] ... [sharing_model('max_apps')=" +
                           str(sharing_model['max_apps']) + "]")
                 if apps_running >= sharing_model['max_apps']:
-                    message = message + "NOT ALLOWED: apps_running >= max_apps"
+                    message = message + "NOT ALLOWED: apps_running >= max_apps; "
                     return False
                 return True
             else:
-                message = message + "NOT ALLOWED: battery_level < battery_limit"
+                message = message + "NOT ALLOWED: battery_level < battery_limit; "
                 return False
     except:
         LOG.exception('[usermgnt.modules.policies] [__sm_policies] Exception')
