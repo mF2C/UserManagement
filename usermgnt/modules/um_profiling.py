@@ -11,7 +11,7 @@ Created on 27 sept. 2017
 @author: Roi Sucasas - ATOS
 """
 
-from usermgnt.data.mF2C import data as datamgmt
+from usermgnt.data import data_adapter as data_adapter
 from usermgnt.common import common as common
 from usermgnt.common.logs import LOG
 
@@ -26,7 +26,7 @@ from usermgnt.common.logs import LOG
 # get_user_profile_by_id: Get user profile by ID
 def get_user_profile_by_id(profile_id):
     LOG.debug("[usermgnt.modules.um_profiling] [get_user_profile_by_id] profile_id=" + profile_id)
-    user_profile = datamgmt.get_user_profile_by_id(profile_id)
+    user_profile = data_adapter.get_user_profile_by_id(profile_id)
     if user_profile is None:
         return common.gen_response(500, 'Error', 'profile_id', profile_id, 'profile', {})
     elif user_profile == -1:
@@ -38,7 +38,7 @@ def get_user_profile_by_id(profile_id):
 # get_current_user_profile: Get current user profile
 def get_current_user_profile():
     LOG.info("[usermgnt.modules.um_profiling] [get_current_user_profile] Getting current user-profile value ...")
-    user_profile = datamgmt.get_current_user_profile()
+    user_profile = data_adapter.get_current_user_profile()
     if user_profile is None:
         return common.gen_response(500, 'Error', 'user_profile', 'not found / error', 'profile', {})
     elif user_profile == -1:
@@ -53,12 +53,12 @@ def create_user_profile(data):
 
     # check if profile exists
     device_id = data['device_id']
-    user_profile = datamgmt.get_user_profile(device_id)
-    datamgmt.save_device_id(device_id)
+    user_profile = data_adapter.get_user_profile(device_id)
+    data_adapter.save_device_id(device_id)
 
     if user_profile == -1 or user_profile is None:
         # register user/profile
-        user_profile = datamgmt.register_user(data)
+        user_profile = data_adapter.register_user(data)
         if user_profile is None:
             return None
         else:
@@ -71,7 +71,7 @@ def create_user_profile(data):
 def update_user_profile_by_id(profile_id, data):
     LOG.debug("[usermgnt.modules.um_profiling] [update_user_profile_by_id] profile_id=" + profile_id + ", data=" + str(data))
     # update user
-    user_profile = datamgmt.update_user_profile_by_id(profile_id, data)
+    user_profile = data_adapter.update_user_profile_by_id(profile_id, data)
     if user_profile is None:
         return common.gen_response(500, 'Error', 'profile_id', profile_id, 'profile', {})
     elif user_profile == -1:
@@ -84,7 +84,7 @@ def update_user_profile_by_id(profile_id, data):
 def delete_user_profile_by_id(profile_id):
     LOG.info("[usermgnt.modules.um_profiling] [delete_user_profile_by_id] profile_id=" + profile_id)
     # delete profile
-    if datamgmt.delete_user_profile_by_id(profile_id) is None:
+    if data_adapter.delete_user_profile_by_id(profile_id) is None:
         return common.gen_response(500, 'Error', 'profile_id', profile_id)
     else:
         return common.gen_response_ok('Profile deleted', 'profile_id', profile_id)

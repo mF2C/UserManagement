@@ -11,7 +11,7 @@ Created on 27 sept. 2017
 @author: Roi Sucasas - ATOS
 """
 
-from usermgnt.data.mF2C import data as datamgmt
+from usermgnt.data import data_adapter as data_adapter
 from usermgnt.common import common as common
 from usermgnt.common.logs import LOG
 
@@ -33,14 +33,14 @@ from usermgnt.common.logs import LOG
 def updateUM(data):
     LOG.info("[usermgnt.modules.um_sharing_model] [updateUM] data=" + str(data))
     if 'apps_running' in data:
-        datamgmt.setAPPS_RUNNING(data['apps_running'])
+        data_adapter.setAPPS_RUNNING(data['apps_running'])
 
 
 # get_sharing_model_by_id: Get shared resources
 def get_sharing_model_by_id(sharing_model_id):
     LOG.info("[usermgnt.modules.um_sharing_model] [get_sharing_model_by_id] sharing_model_id=" + sharing_model_id)
     # get sharing_model
-    sharing_model = datamgmt.get_sharing_model_by_id(sharing_model_id)
+    sharing_model = data_adapter.get_sharing_model_by_id(sharing_model_id)
     if sharing_model is None:
         return common.gen_response(500, 'Exception', 'sharing_model_id', sharing_model_id, 'sharing_model', {})
     elif sharing_model == -1:
@@ -52,7 +52,7 @@ def get_sharing_model_by_id(sharing_model_id):
 # get_current_sharing_model: Get current sharing model
 def get_current_sharing_model():
     LOG.info("[usermgnt.modules.um_sharing_model] [get_current_sharing_model] Getting current sharing model ...")
-    sharing_model = datamgmt.get_current_sharing_model()
+    sharing_model = data_adapter.get_current_sharing_model()
     if sharing_model is None:
         return common.gen_response(500, 'Error', 'sharing_model', 'not found / error', 'sharing_model', {})
     elif sharing_model == -1:
@@ -67,12 +67,12 @@ def init_sharing_model(data):
 
     # check if sharing_model exists
     device_id = data['device_id']
-    sharing_model = datamgmt.get_sharing_model(device_id)
-    datamgmt.save_device_id(device_id)
+    sharing_model = data_adapter.get_sharing_model(device_id)
+    data_adapter.save_device_id(device_id)
 
     if sharing_model == -1 or sharing_model is None:
         # initializes sharing_model
-        sharing_model = datamgmt.init_sharing_model(data)
+        sharing_model = data_adapter.init_sharing_model(data)
         if sharing_model is None:
             return None
         else:
@@ -85,7 +85,7 @@ def init_sharing_model(data):
 def update_sharing_model_by_id(sharing_model_id, data):
     LOG.info("[usermgnt.modules.um_sharing_model] [update_sharing_model_by_id] sharing_model_id=" + sharing_model_id + ", data=" + str(data))
     # updates sharing_model
-    sharing_model = datamgmt.update_sharing_model_by_id(sharing_model_id, data)
+    sharing_model = data_adapter.update_sharing_model_by_id(sharing_model_id, data)
     if sharing_model is None:
         return common.gen_response(500, 'Exception', 'data', str(data), 'sharing_model', {})
     elif sharing_model == -1:
@@ -98,7 +98,7 @@ def update_sharing_model_by_id(sharing_model_id, data):
 def delete_sharing_model_by_id(sharing_model_id):
     LOG.info("[usermgnt.modules.um_sharing_model] [delete_sharing_model_by_id] sharing_model_id=" + sharing_model_id)
     # deletes sharing_model
-    res = datamgmt.delete_sharing_model_by_id(sharing_model_id)
+    res = data_adapter.delete_sharing_model_by_id(sharing_model_id)
     if res is None:
         return common.gen_response(500, 'Exception', 'sharing_model_id', sharing_model_id)
     elif res == -1:

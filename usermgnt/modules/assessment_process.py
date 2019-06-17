@@ -12,7 +12,7 @@ Created on 27 sept. 2017
 """
 
 import time, threading
-from usermgnt.data.mF2C import data as datamgmt
+from usermgnt.data import data_adapter as data_adapter
 from usermgnt.data.atos import lifecycle as mf2c
 from usermgnt.common.logs import LOG
 
@@ -52,7 +52,7 @@ def __daemon():
             user_id = None
 
             # 1. get current profile
-            user_profile = datamgmt.get_current_user_profile()
+            user_profile = data_adapter.get_current_user_profile()
             if user_profile is None:
                 LOG.error('[usermgnt.modules.assessment] [__daemon] << Assessment Process Thread >> user_profile not found / error')
             elif user_profile == -1:
@@ -63,7 +63,7 @@ def __daemon():
                 LOG.debug('[usermgnt.modules.assessment] [__daemon] << Assessment Process Thread >> user_profile found')
 
             # 2. get current sharing model
-            sharing_model = datamgmt.get_current_sharing_model()
+            sharing_model = data_adapter.get_current_sharing_model()
             if sharing_model is None:
                 LOG.error('[usermgnt.modules.assessment] [__daemon] << Assessment Process Thread >> sharing_model not found / error')
             elif sharing_model == -1:
@@ -77,10 +77,10 @@ def __daemon():
                 LOG.debug('[usermgnt.modules.assessment] [__daemon] << Assessment Process Thread >> checking values ...')
                 # 3. Get information:
                 #   - battery
-                battery_level = datamgmt.get_power()
+                battery_level = data_adapter.get_power()
                 # battery_level = 50 # TODO
                 #   - total services running
-                total_services = datamgmt.get_total_services_running()
+                total_services = data_adapter.get_total_services_running()
 
                 # 4. check information and send warning to Lifecycle if needed
                 result = __check_resources_used(user_profile, sharing_model, battery_level, total_services)

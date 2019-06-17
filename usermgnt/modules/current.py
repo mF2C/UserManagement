@@ -11,7 +11,7 @@ Created on 11 april 2019
 @author: Roi Sucasas - ATOS
 """
 
-from usermgnt.data.mF2C import data as datamgmt
+from usermgnt.data import data_adapter as data_adapter
 from usermgnt.common.logs import LOG
 from usermgnt.common import common as common
 
@@ -19,7 +19,7 @@ from usermgnt.common import common as common
 # FUNCTION: __getCurrent:
 def __getCurrentUser():
     LOG.info("[usermgnt.modules.current] [__getCurrentUser] Getting current user ...")
-    user_profile = datamgmt.get_current_user_profile()
+    user_profile = data_adapter.get_current_user_profile()
     if user_profile is None:
         return common.gen_response(500, 'Error', 'cause', 'not found / error', 'user', '')
     elif user_profile == -1:
@@ -31,7 +31,7 @@ def __getCurrentUser():
 # FUNCTION: __getCurrent:
 def __getCurrentDevice():
     LOG.info("[usermgnt.modules.current] [__getCurrentDevice] Getting current device ...")
-    user_profile = datamgmt.get_current_user_profile()
+    user_profile = data_adapter.get_current_user_profile()
     if user_profile is None:
         return common.gen_response(500, 'Error', 'cause', 'not found / error', 'device', '')
     elif user_profile == -1:
@@ -43,9 +43,9 @@ def __getCurrentDevice():
 # FUNCTION: __getCurrentAll:
 def __getCurrentAll():
     LOG.info("[usermgnt.modules.current] [__getCurrentAll] Getting current device ...")
-    user_profile = datamgmt.get_current_user_profile()
-    sharing_model = datamgmt.get_current_sharing_model()
-    agent = datamgmt.get_agent_info()
+    user_profile = data_adapter.get_current_user_profile()
+    sharing_model = data_adapter.get_current_sharing_model()
+    agent = data_adapter.get_agent_info()
     if user_profile is None:
         return common.gen_response(500, 'Error', 'cause', 'not found / error', 'info', {})
     elif user_profile == -1:

@@ -17,7 +17,7 @@ import threading, time, os
 from usermgnt.common.logs import LOG
 from usermgnt.modules import um_profiling as um_profiling
 from usermgnt.modules import um_sharing_model as um_sharing_model
-from usermgnt.data.mF2C import data as datamgmt
+from usermgnt.data import data_adapter as data_adapter
 
 
 # FUNCTION: init: initializes all global properties from config file and environment variables
@@ -25,6 +25,9 @@ def init():
     try:
         # get CIMI from environment values:
         LOG.info('[usermgnt.init_config] [init] Reading values from ENVIRONMENT...')
+
+        # UM_MODE
+        common.set_value_env('UM_MODE')
 
         common.set_value_env('HOST_IP')
         common.set_value_env('CIMI_COOKIES_PATH')
@@ -45,6 +48,7 @@ def init():
         common.set_value_env_int('MAX_BANDWITH_USAGE', config.dic['MAX_BANDWITH_USAGE'])
 
         LOG.info('[usermgnt.init_config] [init] Checking configuration...')
+        LOG.info('[usermgnt.init_config] [init] [UM_MODE=' + config.dic['UM_MODE'] + ']')
 
         # CIMI URL
         if "/api" not in config.dic['CIMI_URL'] and not config.dic['CIMI_URL'].endswith("/api"):
@@ -89,6 +93,8 @@ def init():
             LOG.info("[usermgnt.init_config] [init] File deleted: " + config.dic['UM_WORKING_DIR_VOLUME'] + "user_id.txt")
         else:
             LOG.info("[usermgnt.init_config] [init] The file does not exist: " + config.dic['UM_WORKING_DIR_VOLUME'] + "user_id.txt")
+
+        data_adapter.init(config.dic['UM_MODE'])
     except:
         LOG.exception('[usermgnt.init_config] [init] Exception: Error while initializing application')
 
@@ -103,7 +109,7 @@ def __thr_create_user_profile(data):
             LOG.debug('[usermgnt.init_config] [__thr_create_user_profile] << User Profile Creation Thread >> executing ...')
 
             # get device_id
-            device_id = datamgmt.get_current_device_id()
+            device_id = data_adapter.get_current_device_id()
             if device_id == -1:
                 LOG.info('[usermgnt.init_config] [__thr_create_user_profile] << User Profile Creation Thread >> trying again in 45s ...')
                 time.sleep(45)
@@ -148,7 +154,7 @@ def __thr_create_sharing_model(data):
             LOG.debug('[usermgnt.init_config] [__thr_create_sharing_model] << Sharing Model Creation Thread >> executing ...')
 
             # get device_id
-            device_id = datamgmt.get_current_device_id()
+            device_id = data_adapter.get_current_device_id()
             if device_id == -1:
                 LOG.info('[usermgnt.init_config] [__thr_create_sharing_model] << Sharing Model Creation Thread >> trying again in 45s ...')
                 time.sleep(45)

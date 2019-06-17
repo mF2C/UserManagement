@@ -13,7 +13,7 @@ Created on 28 march 2019
 
 from usermgnt.common.logs import LOG
 from usermgnt.common import common as common
-from usermgnt.data.mF2C import data as datamgmt
+from usermgnt.data import data_adapter as data_adapter
 
 
 message = ""
@@ -25,7 +25,7 @@ def __up_policies():
         LOG.debug("[usermgnt.modules.policies] [__up_policies] Checking policies ...")
 
         # get current profile
-        user_profile = datamgmt.get_current_user_profile()
+        user_profile = data_adapter.get_current_user_profile()
         if user_profile is None:
             LOG.error('[usermgnt.modules.policies] [__up_policies] user_profile not found / error')
         elif user_profile == -1:
@@ -48,7 +48,7 @@ def __sm_policies():
         LOG.debug("[usermgnt.modules.policies] [__sm_policies] Checking policies ...")
 
         # get current sharing model
-        sharing_model = datamgmt.get_current_sharing_model()
+        sharing_model = data_adapter.get_current_sharing_model()
         if sharing_model is None:
             LOG.error('[usermgnt.modules.policies] [__sm_policies] sharing_model not found / error')
         elif sharing_model == -1:
@@ -56,12 +56,12 @@ def __sm_policies():
         else:
             LOG.debug('[usermgnt.modules.policies] [__sm_policies] sharing_model found. checking values ...')
             # 1. battery_level
-            battery_level = datamgmt.get_power()
+            battery_level = data_adapter.get_power()
             LOG.debug("[usermgnt.modules.policies] [__sm_policies] 1. [battery_level=" + str(battery_level) + "] ... [sharing_model('battery_limit')=" +
                       str(sharing_model['battery_limit']) + "]")
             if battery_level is None or battery_level == -1 or battery_level > sharing_model['battery_limit']:
                 # 2. total services running
-                apps_running = datamgmt.get_total_services_running()
+                apps_running = data_adapter.get_total_services_running()
                 LOG.debug("[usermgnt.modules.policies] [__sm_policies] 2. [apps_running=" + str(apps_running) + "] ... [sharing_model('max_apps')=" +
                           str(sharing_model['max_apps']) + "]")
                 if apps_running >= sharing_model['max_apps']:
