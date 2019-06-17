@@ -12,7 +12,8 @@ Created on 27 sept. 2017
 """
 
 import time, threading
-from usermgnt.data.mF2C import mf2c as mf2c, data as datamgmt
+from usermgnt.data.mF2C import data as datamgmt
+from usermgnt.data.atos import lifecycle as mf2c
 from usermgnt.common.logs import LOG
 
 
