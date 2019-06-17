@@ -37,8 +37,3 @@ pydblite==3.0.4
 #   https://bitbucket.org/techtonik/python-wget/src
 #   UNLICENSE; https://bitbucket.org/techtonik/python-wget/src/3001fd1b30aca7e5fe162c9193ccbb951dabb4ea/UNLICENSE
 wget==3.2
-
-# kubernetes
-#
-#
-kubernetes==7.0

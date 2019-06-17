@@ -66,6 +66,8 @@ def init():
         LOG.info('[usermgnt.init_config] [init] [CIMI_USER=' + config.dic['CIMI_USER'] + ']')
         LOG.info('[usermgnt.init_config] [init] [CIMI_PASSWORD=' + config.dic['CIMI_PASSWORD'] + ']')
         LOG.info('[usermgnt.init_config] [init] [UM_WORKING_DIR_VOLUME=' + config.dic['UM_WORKING_DIR_VOLUME'] + ']')
+        LOG.info('[usermgnt.init_config] [init] [DB_SHARING_MODEL=' + config.dic['DB_SHARING_MODEL'] + ']')
+        LOG.info('[usermgnt.init_config] [init] [DB_USER_PROFILE=' + config.dic['DB_USER_PROFILE'] + ']')
         LOG.info('[usermgnt.init_config] [init] [SERVER_PORT=' + str(config.dic['SERVER_PORT']) + ']')
         LOG.info('[usermgnt.init_config] [init] [API_DOC_URL=' + config.dic['API_DOC_URL'] + ']')
         LOG.info('[usermgnt.init_config] [init] [HOST_IP=' + config.dic['HOST_IP'] + ']')

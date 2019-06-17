@@ -26,6 +26,10 @@ dic = { "VERSION":                      "1.2.7",
         # working dir
         "UM_WORKING_DIR_VOLUME":        "/tmp/mf2c/um/",
 
+        # db
+        "DB_SHARING_MODEL":             "dbt1",
+        "DB_USER_PROFILE":              "dbt2",
+
         # VERIFY_SSL controls whether we verify the server's TLS certificate or not
         "VERIFY_SSL":                   False,
 
