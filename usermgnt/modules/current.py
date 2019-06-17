@@ -11,7 +11,7 @@ Created on 11 april 2019
 @author: Roi Sucasas - ATOS
 """
 
-from usermgnt.mF2C import data as datamgmt
+from usermgnt.data.mF2C import data as datamgmt
 from usermgnt.common.logs import LOG
 from usermgnt.common import common as common
 

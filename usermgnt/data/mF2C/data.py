@@ -11,8 +11,7 @@ Created on 27 sept. 2017
 @author: Roi Sucasas - ATOS
 """
 
-from usermgnt.mF2C import cimi as cimi
-from usermgnt.mF2C import volume as vol
+from usermgnt.data.mF2C import volume as vol, cimi as cimi
 from usermgnt.common.logs import LOG
 import config
 

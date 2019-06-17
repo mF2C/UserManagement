@@ -13,7 +13,7 @@ Created on 28 march 2019
 
 from usermgnt.common.logs import LOG
 from usermgnt.common import common as common
-from usermgnt.mF2C import data as datamgmt
+from usermgnt.data.mF2C import data as datamgmt
 
 
 message = ""
