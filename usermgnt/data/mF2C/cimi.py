@@ -260,6 +260,29 @@ def delete_resource(resource_id):
     return None
 
 
+# FUNCTION: delete_resource_by_owner: delete resource by owner
+def delete_resource_by_owner(resource, resources, owner_id):
+    try:
+        res = requests.get(config.dic['CIMI_URL'] + "/" + resource + "?$filter=acl/owner/principal='" + owner_id + "'",
+                           headers=CIMI_HEADER,
+                           verify=False)
+        LOG.debug("[usermgnt.data.mF2C.cimi] [delete_resource_by_owner] response: " + str(res)) # + ", " + str(res.json()))
+
+        if res.status_code == 200 and len(res.json()[resources]) > 0:
+            for r in res.json()[resources]:
+                res2 = requests.delete(config.dic['CIMI_URL'] + "/" + r["id"],
+                                       headers=CIMI_HEADER,
+                                       verify=False)
+                LOG.debug("[usermgnt.data.mF2C.cimi] [delete_resource_by_owner] response: " + str(res2) + ", " + str(res2.json()))
+
+                if res2.status_code == 200:
+                    LOG.debug("[usermgnt.data.mF2C.cimi] [delete_resource_by_owner] Resource " + r["id"] + " deleted!")
+        else:
+            LOG.warning("[usermgnt.data.mF2C.cimi] [delete_resource_by_owner] No " + resources + " found.")
+    except:
+        LOG.exception("[usermgnt.data.mF2C.cimi] [delete_resource_by_owner] Exception.")
+
+
 ###############################################################################
 # DEVICE DYNAMIC
 # DEVICE

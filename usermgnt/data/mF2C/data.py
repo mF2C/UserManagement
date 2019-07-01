@@ -109,7 +109,10 @@ def delete_user(user_id):
     current_user_id = vol.read_user_id()
     current_user_id = current_user_id.replace('user/', '')
     if current_user_id == user_id:
-        # TODO 2. delete profiles and sharing models from devices??
+        # 2. delete profiles, sharing models and services from user
+        cimi.delete_resource_by_owner("sharing-model", "sharingModels",user_id)
+        cimi.delete_resource_by_owner("user-profile", "userProfiles", user_id)
+        cimi.delete_resource_by_owner("service", "services", user_id)
 
         # 3. delete user
         return cimi.delete_resource("user/" + user_id)
@@ -257,7 +260,6 @@ def get_current_user_profile():
 ## AGENT INFO
 ## power, apps running ...
 
-# TODO
 # FUNCTION: get_total_services_running: Get services running
 def get_total_services_running():
     LOG.debug("[usermgnt.data.mF2C.data] [get_total_services_running] Total of services running in device = " + str(config.APPS_RUNNING))
