@@ -63,8 +63,8 @@ class Mf2cDataAdapter:
 
 
     # Initializes shared resources values
-    def init_sharing_model(self, data):
-        return data.init_sharing_model(data)
+    def init_sharing_model(self, d):
+        return data.init_sharing_model(d)
 
 
     # Updates shared resources values
@@ -106,8 +106,8 @@ class Mf2cDataAdapter:
 
 
     # Initializes users profile
-    def register_user(self, data):
-        return data.register_user(data)
+    def register_user(self, d):
+        return data.register_user(d)
 
 
     # setAPPS_RUNNING
