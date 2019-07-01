@@ -89,14 +89,13 @@ sudo docker run -p 46300:46300 usermanagement
 ```
 
 Available environment variables:
-- CIMI_USER
-- CIMI_PASSWORD
+- DEVICE_USER
 - CIMI_URL
 
 Example:
 
 ```bash
-sudo docker run --env CIMI_URL=https://192.192.192.192 --env CIMI_USER="testuser" --env CIMI_PASSWORD="testuserpassword" -p 46300:46300 usermanagement
+sudo docker run --env CIMI_URL=https://192.192.192.192 --env DEVICE_USER="testuser" --env -p 46300:46300 usermanagement
 ```
 
 After installing the User Management module, the REST API services can be accessed at port 46300:

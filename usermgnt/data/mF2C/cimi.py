@@ -97,7 +97,7 @@ CIMI_HEADER = {'slipstream-authn-info': 'super ADMIN'}
 
 # ACL
 acl = {"owner":
-           {"principal": config.dic['CIMI_USER'], #"ADMIN",
+           {"principal": config.dic['DEVICE_USER'],
             "type": "ROLE"},
        "rules": [{"principal": "ADMIN",
                   "type": "ROLE",

@@ -30,9 +30,7 @@ def init():
         common.set_value_env('UM_MODE')
 
         common.set_value_env('HOST_IP')
-        common.set_value_env('CIMI_COOKIES_PATH')
-        common.set_value_env('CIMI_USER')
-        common.set_value_env('CIMI_PASSWORD')
+        common.set_value_env('DEVICE_USER')
         common.set_value_env('UM_WORKING_DIR_VOLUME') # UM_WORKING_DIR_VOLUME from environment values:
         common.set_value_env('CIMI_URL')
 
@@ -62,9 +60,7 @@ def init():
             LOG.debug("[usermgnt.init_config] [init] CIMI_URL ... " + config.dic['CIMI_URL'])
 
         LOG.info('[usermgnt.init_config] [init] [CIMI_URL=' + config.dic['CIMI_URL'] + ']')
-        LOG.info('[usermgnt.init_config] [init] [CIMI_COOKIES_PATH=' + config.dic['CIMI_COOKIES_PATH'] + ']')
-        LOG.info('[usermgnt.init_config] [init] [CIMI_USER=' + config.dic['CIMI_USER'] + ']')
-        LOG.info('[usermgnt.init_config] [init] [CIMI_PASSWORD=' + config.dic['CIMI_PASSWORD'] + ']')
+        LOG.info('[usermgnt.init_config] [init] [DEVICE_USER=' + config.dic['DEVICE_USER'] + ']')
         LOG.info('[usermgnt.init_config] [init] [UM_WORKING_DIR_VOLUME=' + config.dic['UM_WORKING_DIR_VOLUME'] + ']')
         LOG.info('[usermgnt.init_config] [init] [DB_SHARING_MODEL=' + config.dic['DB_SHARING_MODEL'] + ']')
         LOG.info('[usermgnt.init_config] [init] [DB_USER_PROFILE=' + config.dic['DB_USER_PROFILE'] + ']')

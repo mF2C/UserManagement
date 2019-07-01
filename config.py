@@ -13,10 +13,14 @@ Created on 18 oct. 2018
 
 #!/usr/bin/python
 
-dic = { "VERSION":                      "1.2.7",
+dic = { "VERSION":                      "1.2.8",
 
         # USER MANAGEMENT MODULE MODE: "DEFAULT", "MF2C" , "STANDALONE"
         "UM_MODE":                      "MF2C",
+
+        # CIMI
+        "CIMI_URL":                     "http://cimi:8201/api",         # https://dashboard.mf2c-project.eu/api
+        "DEVICE_USER":                  "rsucasas",
 
         # SERVER - REST API
         "SERVER_PORT":                  46300,
@@ -48,12 +52,6 @@ dic = { "VERSION":                      "1.2.7",
         "MAX_MEM_USAGE":                50,
         "MAX_STO_USAGE":                50,
         "MAX_BANDWITH_USAGE":           50,
-
-        # CIMI
-        "CIMI_URL":                     "http://cimi:8201/api",         # https://dashboard.mf2c-project.eu/api
-        "CIMI_COOKIES_PATH":            "~./cookies",
-        "CIMI_USER":                    "rsucasas",
-        "CIMI_PASSWORD":                "password",
 
         # URLs / ports from other mF2C components:
         # LIFECYCLE
