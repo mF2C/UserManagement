@@ -127,7 +127,7 @@ def delete_user_profile_by_id(profile_id):
 
 # Initializes users profile
 def register_user(data):
-    return data.register_user(data)
+    return adapter.register_user(data)
 
 
 # setAPPS_RUNNING
