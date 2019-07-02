@@ -36,6 +36,8 @@ def get_current_device_id():
 ###############################################################################
 # USER
 
+# TODO
+
 # FUNCTION: get_user_info: gets user info
 # def get_user_info(user_id):
 

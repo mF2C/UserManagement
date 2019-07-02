@@ -32,6 +32,7 @@ def init(um_mode):
     else:
         LOG.info('[usermgnt.data.data_adapter] [init] UM_MODE = STANDALONE')
         adapter = default_data_adapter.StandaloneDataAdapter()
+        adapter.init()  # init local database
 
 
 ###############################################################################

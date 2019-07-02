@@ -14,10 +14,16 @@ Created on 17 june 2019
 
 from usermgnt.common.logs import LOG
 from usermgnt.data.standalone import data as data
+from usermgnt.data.standalone import db as db
 
 
 # Data adapter class
 class StandaloneDataAdapter:
+
+    # init
+    def init(self):
+        db.init()
+
 
     # FUNCTION: get_current_device_id
     def get_current_device_id(self):
