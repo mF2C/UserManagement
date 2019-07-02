@@ -41,16 +41,6 @@ def get_current_device_id():
     return adapter.get_current_device_id()
 
 
-# FUNCTION: get_current_device_ip
-def get_current_device_ip():
-    return adapter.get_current_device_ip()
-
-
-# FUNCTION: get_leader_device_ip
-def get_leader_device_ip():
-    return adapter.get_leader_device_ip()
-
-
 # FUNCTION: get_agent_info
 def get_agent_info():
     return adapter.get_agent_info()

@@ -95,18 +95,20 @@ CIMI RESOURCES USED / MANAGED:
 # CIMI initialization
 CIMI_HEADER = {'slipstream-authn-info': 'super ADMIN'}
 
-# ACL
-acl = {"owner":
-           {"principal": config.dic['DEVICE_USER'],
-            "type": "ROLE"},
-       "rules": [{"principal": "ADMIN",
-                  "type": "ROLE",
-                  "right": "ALL"},
-                 {"principal": "ANON",
-                  "type": "ROLE",
-                  "right": "ALL"}
-                 ]}
 
+# Generates ACL for a specific user
+def getACLforUser():
+    ACL_USER = {"owner":
+                   {"principal": config.dic['DEVICE_USER'],
+                    "type": "ROLE"},
+                "rules": [{"principal": "ADMIN",
+                          "type": "ROLE",
+                          "right": "ALL"},
+                         {"principal": "ANON",
+                          "type": "ROLE",
+                          "right": "ALL"}
+                         ]}
+    return ACL_USER
 
 # common_new_map_fields: generates a map with time and acl values
 def common_new_map_fields():
@@ -114,7 +116,7 @@ def common_new_map_fields():
     default_map = {
         "created": now.strftime('%Y-%m-%dT%H:%M:%S.%fZ'),
         "updated": now.strftime('%Y-%m-%dT%H:%M:%S.%fZ'),
-        "acl": acl
+        "acl": getACLforUser()
     }
     return default_map
 
@@ -124,7 +126,7 @@ def common_update_map_fields():
     now = datetime.datetime.now()
     default_map = {
         "updated": now.strftime('%Y-%m-%dT%H:%M:%S.%fZ'),
-        "acl": acl
+        "acl": getACLforUser()
     }
     return default_map
 

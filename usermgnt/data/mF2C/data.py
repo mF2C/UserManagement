@@ -11,7 +11,8 @@ Created on 27 sept. 2017
 @author: Roi Sucasas - ATOS
 """
 
-from usermgnt.data.mF2C import volume as vol, cimi as cimi
+from usermgnt.data.mF2C import cimi as cimi
+from usermgnt.data.app import volume as vol
 from usermgnt.common.logs import LOG
 import config
 
@@ -43,32 +44,6 @@ def get_current_device_id():
         else:
             LOG.warning("[usermgnt.data.mF2C.data] [get_current_device_id] Agent information not found. Returning -1 ...")
             return -1
-
-
-# FUNCTION: get_current_device_ip
-def get_current_device_ip():
-    LOG.info("[usermgnt.data.mF2C.data] [get_current_device_ip] Getting 'my' device IP address from 'agent' resource ...")
-    # get from AGENT resource
-    agent = cimi.get_agent_info()
-    LOG.debug("[usermgnt.data.mF2C.data] [get_current_device_ip] agent = " + str(agent))
-    if not agent is None and agent != -1:
-        LOG.info("[usermgnt.data.mF2C.data] [get_current_device_ip] Returning 'my' device IP address = " + str(agent['device_ip']))
-        return agent['device_ip']
-    else:
-        return -1
-
-
-# FUNCTION: get_leader_device_ip
-def get_leader_device_ip():
-    LOG.info("[usermgnt.data.mF2C.data] [get_leader_device_ip] Getting 'leader' ID from 'agent' resource ...")
-    # get from AGENT resource
-    agent = cimi.get_agent_info()
-    LOG.debug("[usermgnt.data.mF2C.data] [get_leader_device_ip] agent = " + str(agent))
-    if not agent is None and agent != -1:
-        LOG.info("[usermgnt.data.mF2C.data] [get_leader_device_ip] Returning 'leader' ID = " + str(agent['leader_id']))
-        return agent['leader_id']
-    else:
-        return -1
 
 
 # FUNCTION: get_agent_info
@@ -103,21 +78,26 @@ def get_user_info(user_id):
 # FUNCTION: delete_user: deletes user
 def delete_user(user_id):
     user_id = user_id.replace('user/', '')
-    LOG.debug("[usermgnt.data.mF2C.data] [delete_user] " + user_id)
+    LOG.debug("[usermgnt.data.mF2C.data] [delete_user] Removing user [" + user_id + "] from mF2C ...")
+
+    cimi.delete_resource_by_owner("sharing-model", "sharingModels", user_id)
+    cimi.delete_resource_by_owner("user-profile", "userProfiles", user_id)
+    cimi.delete_resource_by_owner("service", "services", user_id)
+    cimi.delete_resource_by_owner("service-instance", "serviceInstances", user_id)
+    return cimi.delete_resource("user/" + user_id)
 
     # 1. check user's permissions on current device
-    current_user_id = vol.read_user_id()
-    current_user_id = current_user_id.replace('user/', '')
-    if current_user_id == user_id:
-        # 2. delete profiles, sharing models and services from user
-        cimi.delete_resource_by_owner("sharing-model", "sharingModels",user_id)
-        cimi.delete_resource_by_owner("user-profile", "userProfiles", user_id)
-        cimi.delete_resource_by_owner("service", "services", user_id)
+    #current_user_id = vol.read_user_id()
+    #current_user_id = current_user_id.replace('user/', '')
+    #if current_user_id == user_id:
+    #    # 2. delete profiles, sharing models and services from user
+    #    cimi.delete_resource_by_owner("sharing-model", "sharingModels",user_id)
+    #    cimi.delete_resource_by_owner("user-profile", "userProfiles", user_id)
+    #    cimi.delete_resource_by_owner("service", "services", user_id)
 
-        # 3. delete user
-        return cimi.delete_resource("user/" + user_id)
-    else:
-        return -1
+    #   # 3. delete user
+    #   return cimi.delete_resource("user/" + user_id)
+    #else:  #    return -1
 
 
 ###############################################################################

@@ -13,22 +13,13 @@ Created on 17 june 2019
 
 from usermgnt.data.mF2C import data as data
 
+
 # Data adapter class
 class Mf2cDataAdapter:
 
     # FUNCTION: get_current_device_id
     def get_current_device_id(self):
         return data.get_current_device_id()
-
-
-    # FUNCTION: get_current_device_ip
-    def get_current_device_ip(self):
-        return data.get_current_device_ip()
-
-
-    # FUNCTION: get_leader_device_ip
-    def get_leader_device_ip(self):
-        return data.get_leader_device_ip()
 
 
     # FUNCTION: get_agent_info
