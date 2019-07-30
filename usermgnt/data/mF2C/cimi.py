@@ -332,6 +332,14 @@ def get_sharing_model(device_id):
 # DEVICE DYNAMIC
 # DEVICE
 
+def __is_number(s):
+    try:
+        float(s)
+        return True
+    except ValueError:
+        return False
+
+
 # get_power
 def get_power(device_id):
     try:
@@ -345,11 +353,13 @@ def get_power(device_id):
             power_value = res.json()['deviceDynamics'][0]['powerRemainingStatus']
             if str(power_value).lower() == "unlimited":
                 return 100
+            elif __is_number(power_value):
+                return int(float(power_value))
             else:
                 return int(power_value)
         else:
             LOG.warning("[usermgnt.data.mF2C.cimi] [get_power] 'device-dynamic' not found [device_id=" + device_id + "]; Returning -1 ...")
             return -1
     except:
-        LOG.exception("[usermgnt.data.mF2C.cimi] [get_power] Exception; Returning None ...")
-        return None
+        LOG.exception("[usermgnt.data.mF2C.cimi] [get_power] Exception; Returning 100 ...")
+        return 100

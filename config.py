@@ -13,18 +13,18 @@ Created on 18 oct. 2018
 
 #!/usr/bin/python
 
-dic = { "VERSION":                      "1.2.8",
+dic = { "VERSION":                      "1.2.9",
 
         # USER MANAGEMENT MODULE MODE: "DEFAULT", "MF2C" , "STANDALONE"
         "UM_MODE":                      "MF2C",
 
         # CIMI
-        "CIMI_URL":                     "http://cimi:8201/api",         # https://dashboard.mf2c-project.eu/api
+        "CIMI_URL":                     "http://cimi:8201/api",
         "DEVICE_USER":                  "rsucasas",
 
         # SERVER - REST API
         "SERVER_PORT":                  46300,
-        "HOST_IP":                      "localhost",                       # if possible, read from env values
+        "HOST_IP":                      "localhost",
         "API_DOC_URL":                  "/api/v2/um",
 
         # working dir
@@ -41,8 +41,8 @@ dic = { "VERSION":                      "1.2.8",
         "ENABLE_ASSESSMENT":            True,
 
         # CIMI RESOURCES managed by this component
-        "CIMI_PROFILES":                "user-profile",  # "userProfiles",
-        "CIMI_SHARING_MODELS":          "sharing-model",  # "sharingModels",
+        "CIMI_PROFILES":                "user-profile",
+        "CIMI_SHARING_MODELS":          "sharing-model",
         "SERVICE_CONSUMER":             True,
         "RESOURCE_CONTRIBUTOR":         True,
         "MAX_APPS":                     2,
@@ -53,7 +53,7 @@ dic = { "VERSION":                      "1.2.8",
         "MAX_STO_USAGE":                50,
         "MAX_BANDWITH_USAGE":           50,
 
-        # URLs / ports from other mF2C components:
+        # URLs / ports from other components:
         # LIFECYCLE
         "URL_PM_LIFECYCLE":             "http://lifecycle:46000/api/v2/lm"
 }
