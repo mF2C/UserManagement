@@ -80,7 +80,7 @@ def init_sharing_model(data):
 
 # Updates shared resources values
 def update_sharing_model_by_id(sharing_model_id, data):
-    return data.update_sharing_model_by_id(sharing_model_id, data)
+    return adapter.update_sharing_model_by_id(sharing_model_id, data)
 
 
 # delete_sharing_model_by_id: Deletes  shared resources values

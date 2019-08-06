@@ -38,8 +38,9 @@ REST API
             /api/v2
                         GET:    get rest api service status
             User Management:
-                /um/user
+                /um/user/<string:user_id>
                         GET     get my personal data (user cimi resource)
+                /um/user
                         DELETE  remove user (user cimi resource)
                         
                 /um/current/<string:val>
@@ -122,9 +123,8 @@ def default_route():
 #
 # UserModule route:
 #
-#   /um/user
+#   /um/user/<string:user_id>
 #            GET     get my personal data (user cimi resource)
-#            DELETE  remove user (user cimi resource)
 #
 class UserModule(Resource):
     # GET
@@ -141,9 +141,6 @@ class UserModule(Resource):
                 "type": "string"
             }],
         responseMessages=[{
-            "code": 403,
-            "message": "Forbidden"
-        }, {
             "code": 500,
             "message": "Exception processing request"
         }])
@@ -151,6 +148,16 @@ class UserModule(Resource):
         return um_user.get_user(user_id)
 
 
+api.add_resource(UserModule, '/api/v2/um/user/<string:user_id>')
+
+
+#
+# UserModule route:
+#
+#   /um/user
+#            DELETE  remove user (user cimi resource)
+#
+class UserRemoveModule(Resource):
     # DELETE Deletes a user
     @swagger.operation(
         summary="Deletes a user",
@@ -165,9 +172,7 @@ class UserModule(Resource):
                 "type": "string"
             }],
         responseMessages=[{
-                "code": 403, "message": "Forbidden"
-            }, {
-                "code": 405, "message": "User IDparameter not found"
+                "code": 405, "message": "User ID parameter not found"
             }, {
                 "code": 500, "message": "Exception processing request"
             }])
@@ -175,7 +180,7 @@ class UserModule(Resource):
         return um_user.delete_user(request.get_json())
 
 
-api.add_resource(UserModule, '/api/v2/um/user')
+api.add_resource(UserRemoveModule, '/api/v2/um/user')
 
 
 

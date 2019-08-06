@@ -21,22 +21,22 @@ import config
 # save_device_id
 def save_device_id(device_id):
     try:
-        LOG.info("[usermgnt.data.app.volume] [save_device_id] Storing device_id [" + device_id + "] value in local VOLUME [" + config.dic['UM_WORKING_DIR_VOLUME'] + "] ...")
+        LOG.info("[usermgnt.data.app.volume] [save_device_id] Storing 'device_id' [" + device_id + "] value in local VOLUME [" + config.dic['UM_WORKING_DIR_VOLUME'] + "] ...")
         with open(config.dic['UM_WORKING_DIR_VOLUME'] + "device_id.txt", "w") as file:
             file.write(device_id)
     except:
-        LOG.error('[usermgnt.data.app.volume] [save_device_id] Error storing device_id')
+        LOG.error("[usermgnt.data.app.volume] [save_device_id] UM could not save 'device_id' value in " + config.dic['UM_WORKING_DIR_VOLUME'] + "device_id.txt. Returning None ...")
         return None
 
 
 # read_device_id
 def read_device_id():
-    LOG.info("[usermgnt.data.app.volume] [read_device_id] Reading device_id value from local VOLUME [" + config.dic['UM_WORKING_DIR_VOLUME'] + "] ...")
+    LOG.info("[usermgnt.data.app.volume] [read_device_id] Reading 'device_id' value from local VOLUME [" + config.dic['UM_WORKING_DIR_VOLUME'] + "] ...")
     try:
         with open(config.dic['UM_WORKING_DIR_VOLUME'] + "device_id.txt", "r") as file:
             return file.readline()
     except:
-        LOG.error('[usermgnt.data.app.volume] [read_device_id] Error getting device_id')
+        LOG.error("[usermgnt.data.app.volume] [read_device_id] UM could not get 'device_id' value from " + config.dic['UM_WORKING_DIR_VOLUME'] + "device_id.txt. Returning None ...")
         return None
 
 
@@ -47,7 +47,7 @@ def save_user_id(user_id):
         with open(config.dic['UM_WORKING_DIR_VOLUME'] + "user_id.txt", "w") as file:
             file.write(user_id)
     except:
-        LOG.error('[usermgnt.data.app.volume] [save_user_id] Error storing user_id')
+        LOG.error("[usermgnt.data.app.volume] [save_user_id] UM could not save 'user_id' value in " + config.dic['UM_WORKING_DIR_VOLUME'] + "user_id.txt. Returning None ...")
         return None
 
 
@@ -58,5 +58,5 @@ def read_user_id():
         with open(config.dic['UM_WORKING_DIR_VOLUME'] + "user_id.txt", "r") as file:
             return file.readline()
     except:
-        LOG.error('[usermgnt.data.app.volume] [read_user_id] Error getting user_id')
+        LOG.error("[usermgnt.data.app.volume] [read_user_id] UM could not save 'user_id' value in " + config.dic['UM_WORKING_DIR_VOLUME'] + "user_id.txt. Returning None ...")
         return None

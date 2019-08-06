@@ -59,8 +59,8 @@ class Mf2cDataAdapter:
 
 
     # Updates shared resources values
-    def update_sharing_model_by_id(self, sharing_model_id, data):
-        return data.update_sharing_model_by_id(sharing_model_id, data)
+    def update_sharing_model_by_id(self, sharing_model_id, d):
+        return data.update_sharing_model_by_id(sharing_model_id, d)
 
 
     # delete_sharing_model_by_id: Deletes  shared resources values
@@ -87,8 +87,8 @@ class Mf2cDataAdapter:
 
 
     # update_user_profile_by_id: Updates a profile
-    def update_user_profile_by_id(self, profile_id, data):
-        return data.update_user_profile_by_id(profile_id, data)
+    def update_user_profile_by_id(self, profile_id, d):
+        return data.update_user_profile_by_id(profile_id, d)
 
 
     # Deletes users profile

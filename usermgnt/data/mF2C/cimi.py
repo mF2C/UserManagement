@@ -193,7 +193,7 @@ def get_resource_by_id(resource_id):
                            verify=False)
         LOG.debug("[usermgnt.data.mF2C.cimi] [get_resource_by_id] response: " + str(res) + ", " + str(res.json()))
 
-        if res.status_code == 200:
+        if res.status_code == 200 and 'id' in res.json():
             return res.json()
 
         LOG.error("[usermgnt.data.mF2C.cimi] [get_resource_by_id] Request failed: " + res.status_code + "; Returning None ...")

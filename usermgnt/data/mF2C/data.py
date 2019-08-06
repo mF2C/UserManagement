@@ -66,13 +66,7 @@ def get_agent_info():
 def get_user_info(user_id):
     user_id = user_id.replace('user/', '')
     LOG.debug("[usermgnt.data.mF2C.data] [get_user_info] " + user_id)
-    # check user's permissions on current device
-    current_user_id = vol.read_user_id()
-    current_user_id = current_user_id.replace('user/', '')
-    if current_user_id == user_id:
-        return cimi.get_resource_by_id("user/" + user_id)
-    else:
-        return -1
+    return cimi.get_resource_by_id("user/" + user_id)
 
 
 # FUNCTION: delete_user: deletes user
@@ -153,7 +147,7 @@ def get_current_sharing_model():
     LOG.debug("[usermgnt.data.mF2C.data] [get_current_sharing_model] Getting information about current user and device ...")
 
     device_id = get_current_device_id()  # get 'my' device_id from 'agent' resource
-    LOG.debug("[usermgnt.data.mF2C.data] [get_current_sharing_model] device_id=" + device_id)
+    LOG.debug("[usermgnt.data.mF2C.data] [get_current_sharing_model] device_id=" + str(device_id))
 
     if device_id == -1:
         LOG.warning("[usermgnt.data.mF2C.data] [get_current_sharing_model] No device found; Returning None ...")
@@ -227,7 +221,7 @@ def get_current_user_profile():
     LOG.debug("[usermgnt.data.mF2C.data] [get_current_user_profile] Getting information about current user and device ...")
 
     device_id = get_current_device_id() # get 'my' device_id from 'agent' resource
-    LOG.debug("[usermgnt.data.mF2C.data] [get_current_user_profile] device_id=" + device_id)
+    LOG.debug("[usermgnt.data.mF2C.data] [get_current_user_profile] device_id=" + str(device_id))
 
     if device_id == -1:
         LOG.warning("[usermgnt.data.mF2C.data] [get_current_user_profile] No device found; Returning None ...")
