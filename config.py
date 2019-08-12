@@ -13,7 +13,7 @@ Created on 18 oct. 2018
 
 #!/usr/bin/python
 
-dic = { "VERSION":                      "1.3.6",
+dic = { "VERSION":                      "1.3.7",
 
         # USER MANAGEMENT MODULE MODE: "DEFAULT", "MF2C" , "STANDALONE"
         "UM_MODE":                      "MF2C",
@@ -27,7 +27,7 @@ dic = { "VERSION":                      "1.3.6",
         "HOST_IP":                      "localhost",
         "API_DOC_URL":                  "/api/v2/um",
 
-        # working dir
+        # working dir:  "C://TMP/tmp/mf2c/um/"   "/tmp/mf2c/um/"
         "UM_WORKING_DIR_VOLUME":        "/tmp/mf2c/um/",
 
         # db

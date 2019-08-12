@@ -61,7 +61,7 @@ def init():
     global DB_USER_PROFILE
     try:
         # DB_SHARING_MODEL:
-        LOG.info('[usermgnt.data.standalone.db] [init] Initializing DB_SHARING_MODEL ...')
+        LOG.info("[usermgnt.data.standalone.db] [init] Initializing DB_SHARING_MODEL [" + config.dic['UM_WORKING_DIR_VOLUME'] + config.dic['DB_SHARING_MODEL'] + "] ...")
         DB_SHARING_MODEL = Base(config.dic['UM_WORKING_DIR_VOLUME'] + config.dic['DB_SHARING_MODEL'])
         if not DB_SHARING_MODEL.exists():
             # create new base with field names
@@ -70,7 +70,7 @@ def init():
             DB_SHARING_MODEL.open()
 
         # DB_USER_PROFILE:
-        LOG.info('[usermgnt.data.standalone.db] [init] Initializing DB_USER_PROFILE ...')
+        LOG.info("[usermgnt.data.standalone.db] [init] Initializing DB_USER_PROFILE [" + config.dic['UM_WORKING_DIR_VOLUME'] + config.dic['DB_USER_PROFILE'] + "] ...")
         DB_USER_PROFILE = Base(config.dic['UM_WORKING_DIR_VOLUME'] + config.dic['DB_USER_PROFILE'])
         if not DB_USER_PROFILE.exists():
             # create new base with field names
@@ -100,7 +100,7 @@ def get_from_USER_PROFILE(user_id, device_id):
         LOG.debug("[usermgnt.data.standalone.db] [get_from_USER_PROFILE] records: " + str(records))
 
         if len(records) >= 1:
-            return records[0]
+            return list(records)[0]
         else:
             LOG.warning('[usermgnt.data.standalone.db] [get_from_USER_PROFILE] No records found')
     except:
@@ -116,7 +116,7 @@ def get_from_USER_PROFILE_by_device_id(device_id):
         LOG.debug("[usermgnt.data.standalone.db] [get_from_USER_PROFILE_by_device_id] records: " + str(records))
 
         if len(records) >= 1:
-            return records[0]
+            return list(records)[0]
         else:
             LOG.warning('[usermgnt.data.standalone.db] [get_from_USER_PROFILE_by_device_id] No records found')
     except:
@@ -132,7 +132,7 @@ def get_from_USER_PROFILE_by_id(id):
         LOG.debug("[usermgnt.data.standalone.db] [get_from_USER_PROFILE_by_id] records: " + str(records))
 
         if len(records) >= 1:
-            return records[0]
+            return list(records)[0]
         else:
             LOG.warning('[usermgnt.data.standalone.db] [get_from_USER_PROFILE_by_id] No records found')
     except:
@@ -147,7 +147,7 @@ def get_current_USER_PROFILE():
         LOG.debug("[usermgnt.data.standalone.db] [get_current_USER_PROFILE] records: " + str(records))
 
         if len(records) >= 1:
-            return records[0]
+            return list(records)[0]
         else:
             LOG.warning('[usermgnt.data.standalone.db] [get_current_USER_PROFILE] No records found')
     except:
@@ -260,7 +260,7 @@ def get_from_SHARING_MODEL(user_id, device_id):
         LOG.debug("[usermgnt.data.standalone.db] [get_from_SHARING_MODEL] records: " + str(records))
 
         if len(records) >= 1:
-            return records[0]
+            return list(records)[0]
         else:
             LOG.warning('[usermgnt.data.standalone.db] [get_from_SHARING_MODEL] No records found')
     except:
@@ -276,7 +276,7 @@ def get_from_SHARING_MODEL_by_device_id(device_id):
         LOG.debug("[usermgnt.data.standalone.db] [get_from_SHARING_MODEL_by_device_id] records: " + str(records))
 
         if len(records) >= 1:
-            return records[0]
+            return list(records)[0]
         else:
             LOG.warning('[usermgnt.data.standalone.db] [get_from_SHARING_MODEL_by_device_id] No records found')
     except:
@@ -292,7 +292,7 @@ def get_from_SHARING_MODEL_by_id(id):
         LOG.debug("[usermgnt.data.standalone.db] [get_from_SHARING_MODEL_by_id] records: " + str(records))
 
         if len(records) >= 1:
-            return records[0]
+            return list(records)[0]
         else:
             LOG.warning('[usermgnt.data.standalone.db] [get_from_SHARING_MODEL_by_id] No records found')
     except:
@@ -307,7 +307,7 @@ def get_current_SHARING_MODEL():
         LOG.debug("[usermgnt.data.standalone.db] [get_current_SHARING_MODEL] records: " + str(records))
 
         if len(records) >= 1:
-            return records[0]
+            return list(records)[0]
         else:
             LOG.warning('[usermgnt.data.standalone.db] [get_current_SHARING_MODEL] No records found')
     except:
