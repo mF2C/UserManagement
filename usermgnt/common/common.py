@@ -26,11 +26,13 @@ class ResponseCIMI():
 
 
 # Generate response 200
-def gen_response_ok(message, key, value, key2=None, value2=None):
+def gen_response_ok(message, key, value, key2=None, value2=None, key3=None, value3=None):
     dict = {'error': False, 'message': message}
     dict[key] = value
     if not (key2 is None) and not (value2 is None):
         dict[key2] = value2
+        if not (key3 is None) and not (value3 is None):
+            dict[key3] = value3
     LOG.debug("Generate response OK; dict=" + str(dict))
     return dict
 

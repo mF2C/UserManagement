@@ -81,5 +81,10 @@ def check_policies():
     global message
     message = ""
     if __up_policies() and __sm_policies():
-        return common.gen_response_ok("User Management Policies", "result", True, "message", message)
-    return common.gen_response_ok("User Management Policies", "result", False, "message", message)
+        # return content of sharing model, which includes the 'device_id'
+        sharing_model = data_adapter.get_current_sharing_model()
+        if sharing_model is None or sharing_model == -1:
+            return common.gen_response_ok("User Management Policies", "result", True, "message", message, "sharing_model", {})
+        else:
+            return common.gen_response_ok("User Management Policies", "result", True, "message", message, "sharing_model", sharing_model)
+    return common.gen_response_ok("User Management Policies", "result", False, "message", message, "sharing_model", {})
