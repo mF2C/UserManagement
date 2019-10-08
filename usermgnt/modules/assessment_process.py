@@ -93,9 +93,9 @@ def __daemon():
             else:
                 LOG.warning('[usermgnt.modules.assessment] [__daemon] << Assessment Process Thread >> cannot check values')
 
-            # wait 60 seconds
-            LOG.debug('[usermgnt.modules.assessment] [__daemon] << Assessment Process Thread >> Waiting 60s for next execution ...')
-            time.sleep(60)
+            # wait 300 seconds
+            LOG.debug('[usermgnt.modules.assessment] [__daemon] << Assessment Process Thread >> Waiting 5m (300s) for next execution ...')
+            time.sleep(300)
     except:
         LOG.exception('[usermgnt.modules.assessment] [__daemon] << Assessment Process Thread >> Exception')
 
