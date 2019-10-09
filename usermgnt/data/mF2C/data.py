@@ -22,21 +22,21 @@ import config
 
 # FUNCTION: get_current_device_id
 def get_current_device_id():
-    LOG.trace("[usermgnt.data.mF2C.data] [get_current_device_id] Getting 'my' device ID from 'agent' resource ...")
+    #LOG.debug("[usermgnt.data.mF2C.data] [get_current_device_id] Getting 'my' device ID from 'agent' resource ...")
     # get from local volume
     device_id = vol.read_device_id()
     if device_id is not None and not device_id == "" and len(device_id) > 0:
-        LOG.trace("[usermgnt.data.mF2C.data] [get_current_device_id] (LOCAL VOLUME) device_id = " + device_id)
+        #LOG.debug("[usermgnt.data.mF2C.data] [get_current_device_id] (LOCAL VOLUME) device_id = " + device_id)
         return device_id
     # get from AGENT resource
     else:
         agent = cimi.get_agent_info()
-        LOG.trace("[usermgnt.data.mF2C.data] [get_current_device_id] agent=" + str(agent))
+        #LOG.debug("[usermgnt.data.mF2C.data] [get_current_device_id] agent=" + str(agent))
         if not agent is None and agent != -1:
-            LOG.trace("[usermgnt.data.mF2C.data] [get_current_device_id] Getting device 'id' by 'deviceID'=" + agent['device_id'])
+            #LOG.debug("[usermgnt.data.mF2C.data] [get_current_device_id] Getting device 'id' by 'deviceID'=" + agent['device_id'])
             id = cimi.get_id_from_device(agent['device_id'])
             if not id is None and id != -1:
-                LOG.trace("[usermgnt.data.mF2C.data] [get_current_device_id] Returning 'my' device ID = " + id)
+                #LOG.debug("[usermgnt.data.mF2C.data] [get_current_device_id] Returning 'my' device ID = " + id)
                 return id
             else:
                 LOG.warning("[usermgnt.data.mF2C.data] [get_current_device_id] Device information not found. Returning -1 ...")
@@ -144,10 +144,10 @@ def delete_sharing_model_by_id(sharing_model_id):
 
 # FUNCTION: get_current_sharing_model: Get current SHARING-MODEL
 def get_current_sharing_model():
-    LOG.trace("[usermgnt.data.mF2C.data] [get_current_sharing_model] Getting information about current user and device ...")
+    #LOG.debug("[usermgnt.data.mF2C.data] [get_current_sharing_model] Getting information about current user and device ...")
 
     device_id = get_current_device_id()  # get 'my' device_id from 'agent' resource
-    LOG.trace("[usermgnt.data.mF2C.data] [get_current_sharing_model] device_id=" + str(device_id))
+    #LOG.debug("[usermgnt.data.mF2C.data] [get_current_sharing_model] device_id=" + str(device_id))
 
     if device_id == -1:
         LOG.warning("[usermgnt.data.mF2C.data] [get_current_sharing_model] No device found; Returning None ...")
@@ -218,10 +218,10 @@ def setAPPS_RUNNING(apps=0):
 
 # FUNCTION: get_current_user_profile: Get Current USER-PROFILE
 def get_current_user_profile():
-    LOG.trace("[usermgnt.data.mF2C.data] [get_current_user_profile] Getting information about current user and device ...")
+    #LOG.debug("[usermgnt.data.mF2C.data] [get_current_user_profile] Getting information about current user and device ...")
 
     device_id = get_current_device_id() # get 'my' device_id from 'agent' resource
-    LOG.trace("[usermgnt.data.mF2C.data] [get_current_user_profile] device_id=" + str(device_id))
+    #LOG.debug("[usermgnt.data.mF2C.data] [get_current_user_profile] device_id=" + str(device_id))
 
     if device_id == -1:
         LOG.warning("[usermgnt.data.mF2C.data] [get_current_user_profile] No device found; Returning None ...")

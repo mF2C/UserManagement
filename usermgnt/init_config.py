@@ -123,7 +123,7 @@ def __thr_create_user_profile(data):
                     created = True
                 else:
                     LOG.error('[usermgnt.init_config] [__thr_create_user_profile] << User Profile Creation Thread >> user-profile not created! Trying again in 60s ...')
-                    time.sleep(60)
+                    time.sleep(30)
         LOG.info('[usermgnt.init_config] [__thr_create_user_profile] << User Profile Creation Thread >> thread finishes')
     except:
         LOG.exception('[usermgnt.init_config] [__thr_create_user_profile] << User Profile Creation Thread >> Exception: Error while initializing application')
@@ -172,7 +172,7 @@ def __thr_create_sharing_model(data):
                     created = True
                 else:
                     LOG.error('[usermgnt.init_config] [__thr_create_sharing_model] << Sharing Model Creation Thread >> sharing-model not created! Trying again in 60s ...')
-                    time.sleep(60)
+                    time.sleep(30)
         LOG.info('[usermgnt.init_config] [__thr_create_sharing_model] << Sharing Model Creation Thread >> thread finishes')
     except:
         LOG.exception('[usermgnt.init_config] [__thr_create_sharing_model] << Sharing Model Creation Thread >> Exception: Error while initializing application')
