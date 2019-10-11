@@ -14,6 +14,7 @@ Created on 28 march 2019
 from usermgnt.common.logs import LOG
 from usermgnt.common import common as common
 from usermgnt.data import data_adapter as data_adapter
+from usermgnt.common.common import TRACE
 
 
 message = ""
@@ -22,7 +23,7 @@ message = ""
 def __up_policies():
     global message
     try:
-        LOG.debug("[usermgnt.modules.policies] [__up_policies] Checking policies ...")
+        LOG.log(TRACE, "[usermgnt.modules.policies] [__up_policies] Checking policies ...")
 
         # get current profile
         user_profile = data_adapter.get_current_user_profile()
@@ -31,7 +32,7 @@ def __up_policies():
         elif user_profile == -1:
             LOG.warning('[usermgnt.modules.policies] [__up_policies] user_profile not found')
         else:
-            LOG.debug('[usermgnt.modules.policies] [__up_policies] user_profile found. checking values ...')
+            LOG.log(TRACE, '[usermgnt.modules.policies] [__up_policies] user_profile found. checking values ...')
             if user_profile['resource_contributor']:
                 message = message + "ALLOWED: resource_contributor is set to TRUE; "
                 return True
@@ -45,7 +46,7 @@ def __up_policies():
 def __sm_policies():
     global message
     try:
-        LOG.debug("[usermgnt.modules.policies] [__sm_policies] Checking policies ...")
+        LOG.log(TRACE, "[usermgnt.modules.policies] [__sm_policies] Checking policies ...")
 
         # get current sharing model
         sharing_model = data_adapter.get_current_sharing_model()
@@ -54,15 +55,15 @@ def __sm_policies():
         elif sharing_model == -1:
             LOG.warning('[usermgnt.modules.policies] [__sm_policies] sharing_model not found')
         else:
-            LOG.debug('[usermgnt.modules.policies] [__sm_policies] sharing_model found. checking values ...')
+            LOG.log(TRACE, '[usermgnt.modules.policies] [__sm_policies] sharing_model found. checking values ...')
             # 1. battery_level
             battery_level = data_adapter.get_power()
-            LOG.debug("[usermgnt.modules.policies] [__sm_policies] 1. [battery_level=" + str(battery_level) + "] ... [sharing_model('battery_limit')=" +
+            LOG.log(TRACE, "[usermgnt.modules.policies] [__sm_policies] 1. [battery_level=" + str(battery_level) + "] ... [sharing_model('battery_limit')=" +
                       str(sharing_model['battery_limit']) + "]")
             if battery_level is None or battery_level == -1 or battery_level > sharing_model['battery_limit']:
                 # 2. total services running
                 apps_running = data_adapter.get_total_services_running()
-                LOG.debug("[usermgnt.modules.policies] [__sm_policies] 2. [apps_running=" + str(apps_running) + "] ... [sharing_model('max_apps')=" +
+                LOG.log(TRACE, "[usermgnt.modules.policies] [__sm_policies] 2. [apps_running=" + str(apps_running) + "] ... [sharing_model('max_apps')=" +
                           str(sharing_model['max_apps']) + "]")
                 if apps_running >= sharing_model['max_apps']:
                     message = message + "NOT ALLOWED: apps_running >= max_apps; "

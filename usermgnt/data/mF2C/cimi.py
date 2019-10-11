@@ -14,6 +14,7 @@ Created on 27 sept. 2017
 import requests, datetime
 import config
 from usermgnt.common.logs import LOG
+from usermgnt.common.common import TRACE
 
 
 '''
@@ -152,7 +153,7 @@ def get_agent_info():
         res = requests.get(config.dic['CIMI_URL'] + "/agent",
                            headers=CIMI_HEADER,
                            verify=False)
-        LOG.debug("[usermgnt.data.mF2C.cimi] [get_agent_info] response: " + str(res) + ", " + str(res.json()))
+        LOG.log(TRACE, "[usermgnt.data.mF2C.cimi] [get_agent_info] response: " + str(res) + ", " + str(res.json()))
 
         if res.status_code == 200 and res.json()['count'] == 0:
             LOG.warning("[usermgnt.data.mF2C.cimi] [get_agent_info] 'agent' not found")
@@ -173,7 +174,7 @@ def get_id_from_device(deviceID):
         res = requests.get(config.dic['CIMI_URL'] + "/device?$filter=deviceID=\"" + deviceID + "\"",
                            headers=CIMI_HEADER,
                            verify=False)
-        LOG.debug("[usermgnt.data.mF2C.cimi] [get_id_from_device] response: " + str(res)) # + ", " + str(res.json()))
+        LOG.log(TRACE, "[usermgnt.data.mF2C.cimi] [get_id_from_device] response: " + str(res)) # + ", " + str(res.json()))
 
         if res.status_code == 200 and len(res.json()['devices']) > 0:
             return res.json()['devices'][0]['id']
@@ -191,7 +192,7 @@ def get_resource_by_id(resource_id):
         res = requests.get(config.dic['CIMI_URL'] + "/" + resource_id,
                            headers=CIMI_HEADER,
                            verify=False)
-        LOG.debug("[usermgnt.data.mF2C.cimi] [get_resource_by_id] response: " + str(res) + ", " + str(res.json()))
+        LOG.log(TRACE, "[usermgnt.data.mF2C.cimi] [get_resource_by_id] response: " + str(res) + ", " + str(res.json()))
 
         if res.status_code == 200 and 'id' in res.json():
             return res.json()
@@ -214,7 +215,7 @@ def add_resource(resource_name, content):
                             headers=CIMI_HEADER,
                             verify=False,
                             json=content)
-        LOG.debug("[usermgnt.data.mF2C.cimi] [add_resource] response: " + str(res) + ", " + str(res.json()))
+        LOG.log(TRACE, "[usermgnt.data.mF2C.cimi] [add_resource] response: " + str(res) + ", " + str(res.json()))
 
         if res.status_code == 201:
             return get_resource_by_id(res.json()['resource-id'])
@@ -228,7 +229,7 @@ def add_resource(resource_name, content):
 # FUNCTION: add_resource: add resource to cimi
 def update_resource(resource_id, content):
     try:
-        LOG.debug("[usermgnt.data.mF2C.cimi] [update_resource] (1) Updating resource [" + resource_id + "] with content [" + str(content) + "] ... ")
+        LOG.log(TRACE, "[usermgnt.data.mF2C.cimi] [update_resource] (1) Updating resource [" + resource_id + "] with content [" + str(content) + "] ... ")
         # complete map and update resource
         content.update(common_update_map_fields())
         LOG.debug("[usermgnt.data.mF2C.cimi] [update_resource] (2) Updating resource [" + resource_id + "] with content [" + str(content) + "] ... ")
@@ -236,7 +237,7 @@ def update_resource(resource_id, content):
                            headers=CIMI_HEADER,
                            verify=False,
                            json=content)
-        LOG.debug("[usermgnt.data.mF2C.cimi] [update_resource] response: " + str(res) + ", " + str(res.json()))
+        LOG.log(TRACE, "[usermgnt.data.mF2C.cimi] [update_resource] response: " + str(res) + ", " + str(res.json()))
 
         if res.status_code == 200:
             return get_resource_by_id(resource_id)
@@ -253,12 +254,13 @@ def delete_resource(resource_id):
         res = requests.delete(config.dic['CIMI_URL'] + '/' + resource_id,
                               headers=CIMI_HEADER,
                               verify=False)
-        LOG.debug("[usermgnt.data.mF2C.cimi] [delete_resource] response: " + str(res) + ", " + str(res.json()))
+        LOG.log(TRACE, "[usermgnt.data.mF2C.cimi] [delete_resource] response: " + str(res) + ", " + str(res.json()))
 
         if res.status_code == 200:
             return res.json()
     except:
         LOG.exception("[usermgnt.data.mF2C.cimi] [delete_resource] Exception; Returning None ...")
+    LOG.warning("[usermgnt.data.mF2C.cimi] [delete_resource] Returning None ...")
     return None
 
 
@@ -268,7 +270,7 @@ def delete_resource_by_owner(resource, resources, owner_id):
         res = requests.get(config.dic['CIMI_URL'] + "/" + resource + "?$filter=acl/owner/principal='" + owner_id + "'",
                            headers=CIMI_HEADER,
                            verify=False)
-        LOG.debug("[usermgnt.data.mF2C.cimi] [delete_resource_by_owner] response: " + str(res)) # + ", " + str(res.json()))
+        LOG.log(TRACE, "[usermgnt.data.mF2C.cimi] [delete_resource_by_owner] response: " + str(res)) # + ", " + str(res.json()))
 
         if res.status_code == 200 and len(res.json()[resources]) > 0:
             for r in res.json()[resources]:
@@ -297,7 +299,7 @@ def get_user_profile(device_id):
         res = requests.get(config.dic['CIMI_URL'] + "/user-profile?$filter=device_id=\"device/" + device_id + "\"",
                            headers=CIMI_HEADER,
                            verify=False)
-        LOG.debug("[usermgnt.data.mF2C.cimi] [get_user_profile] response: " + str(res) + ", " + str(res.json()))
+        LOG.log(TRACE, "[usermgnt.data.mF2C.cimi] [get_user_profile] response: " + str(res) + ", " + str(res.json()))
 
         if res.status_code == 200 and len(res.json()['userProfiles']) > 0:
             return res.json()['userProfiles'][0]
@@ -316,7 +318,7 @@ def get_sharing_model(device_id):
         res = requests.get(config.dic['CIMI_URL'] + "/sharing-model?$filter=device_id=\"device/" + device_id + "\"",
                            headers=CIMI_HEADER,
                            verify=False)
-        LOG.debug("[usermgnt.data.mF2C.cimi] [get_sharing_model] response: " + str(res) + ", " + str(res.json()))
+        LOG.log(TRACE, "[usermgnt.data.mF2C.cimi] [get_sharing_model] response: " + str(res) + ", " + str(res.json()))
 
         if res.status_code == 200 and len(res.json()['sharingModels']) > 0:
             return res.json()['sharingModels'][0]
@@ -347,7 +349,7 @@ def get_power(device_id):
         res = requests.get(config.dic['CIMI_URL'] + "/device-dynamic?$filter=device/href='device/" + device_id + "'",
                            headers=CIMI_HEADER,
                            verify=False)
-        LOG.debug("[usermgnt.data.mF2C.cimi] [get_power] response: " + str(res) + ", " + str(res.json()))
+        LOG.log(TRACE, "[usermgnt.data.mF2C.cimi] [get_power] response: " + str(res) + ", " + str(res.json()))
 
         if res.status_code == 200 and res.json()['count'] > 0:
             power_value = res.json()['deviceDynamics'][0]['powerRemainingStatus']

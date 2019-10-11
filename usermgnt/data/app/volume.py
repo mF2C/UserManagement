@@ -12,6 +12,7 @@ Created on 09 april 2019
 """
 
 from usermgnt.common.logs import LOG
+from usermgnt.common.common import TRACE
 import config
 
 
@@ -21,7 +22,7 @@ import config
 # save_device_id
 def save_device_id(device_id):
     try:
-        #LOG.debug("[usermgnt.data.app.volume] [save_device_id] Storing 'device_id' [" + device_id + "] value in local VOLUME [" + config.dic['UM_WORKING_DIR_VOLUME'] + "] ...")
+        LOG.log(TRACE, "[usermgnt.data.app.volume] [save_device_id] Storing 'device_id' [" + device_id + "] value in local VOLUME [" + config.dic['UM_WORKING_DIR_VOLUME'] + "] ...")
         with open(config.dic['UM_WORKING_DIR_VOLUME'] + "device_id.txt", "w") as file:
             file.write(device_id)
     except:
@@ -31,7 +32,7 @@ def save_device_id(device_id):
 
 # read_device_id
 def read_device_id():
-    #LOG.debug("[usermgnt.data.app.volume] [read_device_id] Reading 'device_id' value from local VOLUME [" + config.dic['UM_WORKING_DIR_VOLUME'] + "] ...")
+    LOG.log(TRACE, "[usermgnt.data.app.volume] [read_device_id] Reading 'device_id' value from local VOLUME [" + config.dic['UM_WORKING_DIR_VOLUME'] + "] ...")
     try:
         with open(config.dic['UM_WORKING_DIR_VOLUME'] + "device_id.txt", "r") as file:
             return file.readline()
@@ -43,7 +44,7 @@ def read_device_id():
 # save_user_id
 def save_user_id(user_id):
     try:
-        #LOG.debug("[usermgnt.app.volume] [save_user_id] Storing user_id [" + user_id + "] value in local VOLUME [" + config.dic['UM_WORKING_DIR_VOLUME'] + "] ...")
+        LOG.log(TRACE, "[usermgnt.app.volume] [save_user_id] Storing user_id [" + user_id + "] value in local VOLUME [" + config.dic['UM_WORKING_DIR_VOLUME'] + "] ...")
         with open(config.dic['UM_WORKING_DIR_VOLUME'] + "user_id.txt", "w") as file:
             file.write(user_id)
     except:
@@ -53,7 +54,7 @@ def save_user_id(user_id):
 
 # read_user_id
 def read_user_id():
-    #LOG.debug("[usermgnt.data.app.volume] [read_user_id] Reading user_id value from local VOLUME [" + config.dic['UM_WORKING_DIR_VOLUME'] + "] ...")
+    LOG.log(TRACE, "[usermgnt.data.app.volume] [read_user_id] Reading user_id value from local VOLUME [" + config.dic['UM_WORKING_DIR_VOLUME'] + "] ...")
     try:
         with open(config.dic['UM_WORKING_DIR_VOLUME'] + "user_id.txt", "r") as file:
             return file.readline()

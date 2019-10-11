@@ -15,6 +15,7 @@ import time, threading
 from usermgnt.data import data_adapter as data_adapter
 from usermgnt.data.atos import lifecycle as mf2c
 from usermgnt.common.logs import LOG
+from usermgnt.common.common import TRACE
 
 
 execute = False
@@ -24,7 +25,7 @@ d = None
 # check_resources_used: checks if the resources used by mF2C apps, match the user's profiling and sharing model properties
 def __check_resources_used(user_profile, sharing_model, battery_level, total_services):
     try:
-        LOG.debug("[usermgnt.modules.assessment] [__check_resources_used] << Assessment Process >> [battery_level=" + str(battery_level) + "], "
+        LOG.log(TRACE, "[usermgnt.modules.assessment] [__check_resources_used] << Assessment Process >> [battery_level=" + str(battery_level) + "], "
                   "[total_services=" + str(total_services) + "]")
 
         result = {}
@@ -60,7 +61,7 @@ def __daemon():
             else:
                 user_id = user_profile['user_id']
                 device_id = user_profile['device_id']
-                LOG.debug('[usermgnt.modules.assessment] [__daemon] << Assessment Process Thread >> user_profile found')
+                LOG.log(TRACE, '[usermgnt.modules.assessment] [__daemon] << Assessment Process Thread >> user_profile found')
 
             # 2. get current sharing model
             sharing_model = data_adapter.get_current_sharing_model()
@@ -71,10 +72,10 @@ def __daemon():
             else:
                 user_id = sharing_model['user_id']
                 device_id = sharing_model['device_id']
-                LOG.debug('[usermgnt.modules.assessment] [__daemon] << Assessment Process Thread >> sharing_model found')
+                LOG.log(TRACE, '[usermgnt.modules.assessment] [__daemon] << Assessment Process Thread >> sharing_model found')
 
             if not user_id is None and not device_id is None:
-                LOG.debug('[usermgnt.modules.assessment] [__daemon] << Assessment Process Thread >> checking values ...')
+                LOG.log(TRACE, '[usermgnt.modules.assessment] [__daemon] << Assessment Process Thread >> checking values ...')
                 # 3. Get information:
                 #   - battery
                 battery_level = data_adapter.get_power()
@@ -88,7 +89,7 @@ def __daemon():
                     LOG.debug("[usermgnt.modules.assessment] [__daemon] << Assessment Process Thread >> no violations: result: " + str(result))
                 else:
                     LOG.debug("[usermgnt.modules.assessment] [__daemon] << Assessment Process Thread >> violations found: result: " + str(result))
-                    LOG.debug('[usermgnt.modules.assessment] [__daemon] << Assessment Process Thread >> generating warning / sending notification ...')
+                    LOG.log(TRACE, '[usermgnt.modules.assessment] [__daemon] << Assessment Process Thread >> generating warning / sending notification ...')
                     mf2c.send_warning(user_id, device_id, user_profile, sharing_model, result)
             else:
                 LOG.warning('[usermgnt.modules.assessment] [__daemon] << Assessment Process Thread >> cannot check values')

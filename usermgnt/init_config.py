@@ -19,6 +19,7 @@ from usermgnt.modules import um_profiling as um_profiling
 from usermgnt.modules import um_sharing_model as um_sharing_model
 from usermgnt.data import data_adapter as data_adapter
 from usermgnt.data.standalone import db as db
+from usermgnt.common.common import TRACE
 
 
 # FUNCTION: init: initializes all global properties from config file and environment variables
@@ -107,12 +108,12 @@ def __thr_create_user_profile(data):
         LOG.info("[usermgnt.init_config] [__thr_create_user_profile] << User Profile Creation Thread >> Creating USER-PROFILE [" + str(data) + "] in current device ...")
         created = False
         while not created:
-            LOG.debug('[usermgnt.init_config] [__thr_create_user_profile] << User Profile Creation Thread >> executing ...')
+            LOG.log(TRACE, '[usermgnt.init_config] [__thr_create_user_profile] << User Profile Creation Thread >> executing ...')
 
             # get device_id
             device_id = data_adapter.get_current_device_id()
             if device_id == -1:
-                LOG.info('[usermgnt.init_config] [__thr_create_user_profile] << User Profile Creation Thread >> trying again in 45s ...')
+                LOG.log(TRACE, '[usermgnt.init_config] [__thr_create_user_profile] << User Profile Creation Thread >> trying again in 45s ...')
                 time.sleep(45)
             else:
                 # create user-profile
@@ -133,7 +134,7 @@ def __thr_create_user_profile(data):
 def create_user_profile():
     if config.dic['UM_MODE'] == "MF2C":
         try:
-            LOG.info('[usermgnt.init_config] [create_user_profile] Creating USER-PROFILE [MF2C] in current device ...')
+            LOG.log(TRACE, '[usermgnt.init_config] [create_user_profile] Creating USER-PROFILE [MF2C] in current device ...')
             data = {
                 "service_consumer": config.dic['SERVICE_CONSUMER'],
                 "resource_contributor": config.dic['RESOURCE_CONTRIBUTOR'],
@@ -156,12 +157,12 @@ def __thr_create_sharing_model(data):
         LOG.info("[usermgnt.init_config] [__thr_create_sharing_model] << Sharing Model Creation Thread >> Creating SHARING-MODEL [" + str(data) + "] in current device ...")
         created = False
         while not created:
-            LOG.debug('[usermgnt.init_config] [__thr_create_sharing_model] << Sharing Model Creation Thread >> executing ...')
+            LOG.log(TRACE, '[usermgnt.init_config] [__thr_create_sharing_model] << Sharing Model Creation Thread >> executing ...')
 
             # get device_id
             device_id = data_adapter.get_current_device_id()
             if device_id == -1:
-                LOG.info('[usermgnt.init_config] [__thr_create_sharing_model] << Sharing Model Creation Thread >> trying again in 45s ...')
+                LOG.log(TRACE, '[usermgnt.init_config] [__thr_create_sharing_model] << Sharing Model Creation Thread >> trying again in 45s ...')
                 time.sleep(45)
             else:
                 # create sharing-model
@@ -182,7 +183,7 @@ def __thr_create_sharing_model(data):
 def create_sharing_model():
     if config.dic['UM_MODE'] == "MF2C":
         try:
-            LOG.info('[usermgnt.init_config] [create_sharing_model] Creating SHARING-MODEL in current device ...')
+            LOG.log(TRACE, '[usermgnt.init_config] [create_sharing_model] Creating SHARING-MODEL in current device ...')
             data = {
                 "gps_allowed": config.dic['GPS_ALLOWED'],
                 "max_cpu_usage": config.dic['MAX_CPU_USAGE'],
